@@ -1,260 +1,575 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>COMEP - Sistema de Gestão</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PME Pereiro Monitor — COMEP</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏛️</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg-950:#020617;--bg-900:#0f172a;--bg-800:#1e293b;--bg-700:#334155;
+  --bg-600:#475569;--text-50:#f8fafc;--text-100:#f1f5f9;--text-200:#e2e8f0;
+  --text-300:#cbd5e1;--text-400:#94a3b8;--text-500:#64748b;--text-600:#475569;
+  --emerald:#10b981;--emerald-d:#059669;--emerald-l:#34d399;
+  --amber:#f59e0b;--red:#ef4444;--blue:#3b82f6;--teal:#14b8a6;
+  --sidebar-w:260px;
+}
+html{font-size:14px}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg-950);color:var(--text-200);min-height:100vh;overflow:hidden}
+input,select,textarea,button{font-family:inherit}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(148,163,184,.2);border-radius:99px}
+::-webkit-scrollbar-thumb:hover{background:rgba(148,163,184,.4)}
+
+/* Animations */
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:translateX(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@keyframes toast{0%{opacity:0;transform:translateY(12px) scale(.96)}10%{opacity:1;transform:translateY(0) scale(1)}85%{opacity:1}100%{opacity:0;transform:translateY(-8px) scale(.96)}}
+@keyframes glow{0%,100%{box-shadow:0 0 20px rgba(16,185,129,.08)}50%{box-shadow:0 0 40px rgba(16,185,129,.18)}}
+@keyframes drift1{0%{transform:translate(0,0) scale(1)}50%{transform:translate(30px,-20px) scale(1.1)}100%{transform:translate(0,0) scale(1)}}
+@keyframes drift2{0%{transform:translate(0,0) scale(1)}50%{transform:translate(-20px,25px) scale(.95)}100%{transform:translate(0,0) scale(1)}}
+@keyframes barGrow{from{width:0}}
+.fade-in{animation:fadeIn .3s ease-out both}
+
+/* LOGIN */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,#020617,#0f172a 40%,#0f2240 80%);position:relative;overflow:hidden}
+.login-orb{position:absolute;border-radius:50%;pointer-events:none}
+.login-orb-1{top:12%;left:8%;width:320px;height:320px;background:radial-gradient(circle,rgba(16,185,129,.07),transparent 70%);animation:drift1 16s ease-in-out infinite}
+.login-orb-2{bottom:8%;right:12%;width:280px;height:280px;background:radial-gradient(circle,rgba(59,130,246,.05),transparent 70%);animation:drift2 20s ease-in-out infinite}
+.login-grid{position:absolute;inset:0;background-image:radial-gradient(rgba(16,185,129,.02) 1px,transparent 1px);background-size:42px 42px}
+.login-card{width:420px;max-width:94vw;padding:40px 36px;background:rgba(15,23,42,.88);backdrop-filter:blur(20px);border-radius:20px;border:1px solid rgba(16,185,129,.12);box-shadow:0 20px 60px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.03);animation:fadeIn .5s ease-out,glow 5s ease-in-out infinite;position:relative;z-index:1}
+.login-logo{width:64px;height:64px;border-radius:16px;margin:0 auto 18px;background:linear-gradient(135deg,rgba(16,185,129,.15),rgba(20,184,166,.1));border:1px solid rgba(16,185,129,.2);display:flex;align-items:center;justify-content:center;font-size:30px}
+.login-input{width:100%;padding:12px 14px 12px 42px;font-size:14px;font-weight:500;background:rgba(255,255,255,.04);border:1.5px solid rgba(16,185,129,.12);border-radius:10px;color:var(–text-100);outline:none;transition:all .2s}
+.login-input:focus{border-color:var(–emerald);box-shadow:0 0 0 3px rgba(16,185,129,.1);background:rgba(255,255,255,.06)}
+.login-input::placeholder{color:var(–text-600)}
+.login-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(–text-600);font-size:15px}
+.login-btn{width:100%;padding:13px;font-size:14px;font-weight:700;background:linear-gradient(135deg,var(–emerald),var(–emerald-d));color:white;border:none;border-radius:10px;cursor:pointer;box-shadow:0 4px 16px rgba(16,185,129,.25);transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.login-btn:hover:not(:disabled){background:linear-gradient(135deg,var(–emerald-l),var(–emerald));transform:translateY(-1px);box-shadow:0 6px 24px rgba(16,185,129,.3)}
+.login-btn:disabled{background:var(–bg-700);color:var(–text-500);cursor:not-allowed;box-shadow:none}
+.login-error{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:8px;padding:8px 12px;font-size:12px;color:#fca5a5;font-weight:500;animation:shake .4s ease-out;display:flex;align-items:center;gap:6px}
+
+/* LAYOUT */
+.app-wrap{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:var(–sidebar-w);background:var(–bg-900);border-right:1px solid rgba(148,163,184,.06);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;animation:slideIn .2s ease-out}
+.sidebar-header{height:60px;display:flex;align-items:center;gap:12px;padding:0 18px;border-bottom:1px solid rgba(148,163,184,.06)}
+.sidebar-logo{width:40px;height:40px;background:linear-gradient(135deg,var(–emerald),var(–teal));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.sidebar-nav{padding:14px 12px;flex:1}
+.sidebar-label{font-size:10px;font-weight:700;letter-spacing:2px;color:var(–text-600);text-transform:uppercase;padding:0 8px;margin-bottom:8px}
+.sidebar-item{width:100%;display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;border:1px solid transparent;background:transparent;color:var(–text-500);cursor:pointer;font-size:13px;font-weight:500;text-align:left;transition:all .15s;margin-bottom:2px}
+.sidebar-item:hover{background:rgba(255,255,255,.03);color:var(–text-300)}
+.sidebar-item.active{background:rgba(16,185,129,.08);color:var(–emerald-l);border-color:rgba(16,185,129,.2)}
+.sidebar-item .icon{font-size:16px;width:22px;text-align:center;flex-shrink:0}
+.sidebar-item .arrow{margin-left:auto;font-size:11px;opacity:.5}
+.sidebar-user{padding:14px 16px;border-top:1px solid rgba(148,163,184,.06);display:flex;align-items:center;gap:10px}
+.sidebar-avatar{width:36px;height:36px;border-radius:50%;background:var(–bg-800);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(–text-400);flex-shrink:0}
+.sidebar-user-info{flex:1;min-width:0}
+.sidebar-user-info .name{font-size:12px;font-weight:600;color:var(–text-200);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sidebar-user-info .role{font-size:10px;color:var(–emerald);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+
+.main-area{flex:1;display:flex;flex-direction:column;min-width:0}
+.top-header{height:56px;background:rgba(15,23,42,.8);backdrop-filter:blur(12px);border-bottom:1px solid rgba(148,163,184,.06);display:flex;align-items:center;justify-content:space-between;padding:0 20px;flex-shrink:0}
+.top-header .title{font-size:15px;font-weight:700;color:var(–text-100);display:flex;align-items:center;gap:8px}
+.top-header .date{font-size:12px;color:var(–text-500)}
+.content-area{flex:1;overflow-y:auto;padding:20px}
+
+.menu-toggle{background:none;border:none;color:var(–text-400);cursor:pointer;font-size:18px;display:none;padding:4px}
+@media(max-width:768px){
+.sidebar{position:fixed;inset:0;z-index:100;transform:translateX(-100%);transition:transform .3s}
+.sidebar.open{transform:translateX(0)}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99}
+.sidebar-overlay.open{display:block}
+.menu-toggle{display:flex}
+}
+
+/* CARDS */
+.card{background:rgba(30,41,59,.5);border:1px solid var(–bg-700);border-radius:12px;backdrop-filter:blur(8px);transition:box-shadow .2s}
+.card:hover{box-shadow:0 4px 20px rgba(0,0,0,.15)}
+.card-header{padding:16px 18px 10px;display:flex;align-items:center;justify-content:space-between}
+.card-title{font-size:15px;font-weight:700;color:var(–text-100)}
+.card-body{padding:6px 18px 18px}
+
+/* STATS GRID */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+.stat-card{border-radius:12px;padding:16px;border:1px solid;display:flex;align-items:center;justify-content:space-between}
+.stat-card .val{font-size:26px;font-weight:900;font-family:‘JetBrains Mono’,monospace}
+.stat-card .lbl{font-size:11px;font-weight:500;color:var(–text-400);margin-top:2px}
+.stat-card .ico{font-size:24px}
+
+/* METRIC CARD */
+.metric-card{border-radius:10px;padding:14px 16px;margin-bottom:10px;border:1.5px solid;transition:all .2s;position:relative}
+.metric-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.15)}
+.metric-tag{font-size:9px;font-weight:700;border-radius:4px;padding:2px 7px;display:inline-block}
+.metric-label{font-size:13px;font-weight:700;color:var(–text-100);line-height:1.5}
+.metric-hint-btn{background:none;border:none;font-size:10px;color:var(–blue);font-weight:500;cursor:pointer;padding:3px 0;display:flex;align-items:center;gap:3px}
+.metric-hint{margin-top:5px;font-size:10px;color:var(–text-500);font-style:italic;line-height:1.5;padding:5px 10px;background:rgba(0,0,0,.2);border-radius:6px;border-left:3px solid var(–bg-700);animation:fadeIn .15s ease-out}
+.metric-input{width:100%;border:1.5px solid var(–bg-700);border-radius:7px;padding:7px 10px;font-size:12px;color:var(–text-100);background:rgba(0,0,0,.2);outline:none;transition:all .15s}
+.metric-input:focus{border-color:var(–emerald);background:rgba(0,0,0,.3);box-shadow:0 0 0 3px rgba(16,185,129,.08)}
+.metric-input:disabled{opacity:.5;cursor:not-allowed}
+.metric-select{width:100%;border:1.5px solid var(–bg-700);border-radius:7px;padding:7px 10px;font-size:12px;color:var(–text-100);background:var(–bg-800);cursor:pointer;outline:none}
+.metric-select:disabled{opacity:.5;cursor:not-allowed}
+.metric-select option{background:var(–bg-800);color:var(–text-200)}
+
+/* STATUS BADGE */
+.status-badge{border-radius:6px;padding:3px 9px;font-size:10px;font-weight:700;white-space:nowrap;display:inline-flex;align-items:center;gap:4px}
+
+/* PROGRESS BAR */
+.progress-bar{height:8px;border-radius:99px;overflow:hidden;display:flex}
+.progress-bar.sm{height:4px}
+.progress-seg{height:100%;transition:width .5s cubic-bezier(.4,0,.2,1)}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;z-index:9999;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;box-shadow:0 8px 32px rgba(0,0,0,.3);animation:toast 2.5s ease-in-out forwards;display:flex;align-items:center;gap:8px;color:white}
+.toast.success{background:var(–emerald-d)}
+.toast.error{background:var(–red)}
+
+/* NAV BUTTONS */
+.nav-btn{border:none;border-radius:9px;padding:9px 18px;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px}
+.nav-btn:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.2)}
+.nav-btn.primary{background:linear-gradient(135deg,var(–emerald),var(–emerald-d));color:white}
+.nav-btn.secondary{background:var(–bg-800);border:1.5px solid var(–bg-700);color:var(–text-300)}
+.nav-btn.save{background:linear-gradient(135deg,#f59e0b,#d97706);color:#1c1917}
+
+/* TABLE */
+.data-table{width:100%;border-collapse:collapse;font-size:11px}
+.data-table thead th{padding:8px 12px;text-align:left;font-size:9px;font-weight:700;color:var(–text-500);text-transform:uppercase;letter-spacing:.7px;background:rgba(0,0,0,.15)}
+.data-table tbody tr{border-top:1px solid rgba(148,163,184,.06);transition:background .15s}
+.data-table tbody tr:hover{background:rgba(16,185,129,.03)}
+.data-table tbody td{padding:8px 12px}
+
+/* FILTER SELECT */
+.filter-select{font-size:11px;border:1.5px solid var(–bg-700);border-radius:8px;padding:6px 10px;color:var(–text-300);background:var(–bg-800);cursor:pointer;font-weight:500}
+
+/* ALERT */
+.alert-critical{background:linear-gradient(135deg,rgba(249,115,22,.08),rgba(234,179,8,.05));border:1.5px solid rgba(249,115,22,.3);border-radius:12px;padding:14px 18px;display:flex;gap:14px;align-items:flex-start}
+.alert-readonly{background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.2);border-radius:10px;padding:10px 16px;font-size:11px;color:var(–blue);font-weight:500;display:flex;align-items:center;gap:8px}
+
+/* SOURCES GRID */
+.sources-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;font-size:10px}
+.source-item{background:rgba(0,0,0,.2);border-radius:6px;padding:6px 10px;border:1px solid var(–bg-700)}
+.source-item .title{font-weight:700;color:var(–text-200);margin-bottom:2px}
+.source-item .url{color:var(–text-500);word-break:break-all;line-height:1.4}
+
+/* SECTION INTRO */
+.section-intro{margin-top:10px;background:rgba(16,185,129,.04);border:1px solid rgba(16,185,129,.12);border-radius:8px;padding:8px 12px;font-size:11px;color:var(–emerald-l);line-height:1.6}
+
+/* LOADING */
+.loading-screen{min-height:100vh;background:var(–bg-950);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px}
+.spinner{width:36px;height:36px;border:3px solid rgba(16,185,129,.15);border-top-color:var(–emerald);border-radius:50%;animation:spin .8s linear infinite}
+</style>
+
 </head>
 <body>
-    <div class="app-container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <div class="logo">
-                    <i class="fas fa-chart-line"></i>
-                    <span>COMEP</span>
-                </div>
-            </div>
+<div id="app"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.9/babel.min.js"></script>
+<script type="text/babel">
+const {useState,useEffect,useCallback,useRef,useMemo}=React;
 
-            <nav class="sidebar-nav">
-                <ul>
-                    <li class="active">
-                        <a href="#dashboard">
-                            <i class="fas fa-home"></i>
-                            <span>Dashboard</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#indicadores">
-                            <i class="fas fa-tachometer-alt"></i>
-                            <span>Indicadores</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#relatorios">
-                            <i class="fas fa-file-alt"></i>
-                            <span>Relatórios</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#usuarios">
-                            <i class="fas fa-users"></i>
-                            <span>Usuários</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#configuracoes">
-                            <i class="fas fa-cog"></i>
-                            <span>Configurações</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+// ═══════════════════════════════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════════════════════════════
+const hashPass=s=>{let h=0;for(let i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h|=0}return h.toString(36)};
+const USERS=[
+{user:“admin”,hash:hashPass(“Comep@2025”),name:“Administrador COMEP”,email:“admin@pereiro.ce.gov.br”,role:“admin”},
+{user:“jobenemar”,hash:hashPass(“Pme#2025”),name:“Jobenemar — Coordenação”,email:“jobenemar@comep.pereiro.ce.gov.br”,role:“admin”},
+{user:“alcides”,hash:hashPass(“Dme@Pereiro”),name:“Alcides Leite — DME”,email:“alcides@pereiro.ce.gov.br”,role:“editor”},
+{user:“secretaria”,hash:hashPass(“Smed2025!”),name:“Secretaria Municipal”,email:“smed@pereiro.ce.gov.br”,role:“editor”},
+{user:“consulta”,hash:hashPass(“Consulta@1”),name:“Acesso Consulta”,email:“consulta@pereiro.ce.gov.br”,role:“viewer”},
+];
+const MAX_ATTEMPTS=5,LOCKOUT_MS=300000;
 
-            <div class="sidebar-footer">
-                <div class="user-info">
-                    <div class="user-avatar">
-                        <i class="fas fa-user-circle"></i>
-                    </div>
-                    <div class="user-details">
-                        <span class="user-name">Administrador</span>
-                        <span class="user-role">Gestor COMEP</span>
-                    </div>
-                </div>
-            </div>
-        </aside>
+// ═══════════════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════════════
+const sanitize=s=>typeof s!==“string”?””:s.replace(/[<>]/g,””).slice(0,2000);
+const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+const safeJSON=(s,fb)=>{try{const p=JSON.parse(s);return p&&typeof p===“object”?p:fb}catch{return fb}};
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Header -->
-            <header class="header">
-                <div class="header-left">
-                    <button class="menu-toggle" id="menuToggle">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                    <h1>Dashboard</h1>
-                </div>
-                <div class="header-right">
-                    <div class="search-box">
-                        <i class="fas fa-search"></i>
-                        <input type="text" placeholder="Buscar...">
-                    </div>
-                    <button class="notification-btn">
-                        <i class="fas fa-bell"></i>
-                        <span class="badge">3</span>
-                    </button>
-                </div>
-            </header>
+// ═══════════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════════
+const PREFILLED={“inst-1”:{value:“Lei nº 0708/2015”,status:“alcancado”,notes:“PME aprovado em 02/06/2015. Fonte: planilha SEDUC.”},“inst-2”:{value:“Lei nº 946/2025”,status:“alcancado”,notes:“Lei de prorrogação aprovada em 2025.”},“inst-3”:{value:“SIM”,status:“alcancado”,notes:“Município declarou possuir relatórios.”},“inst-4”:{value:“NÃO — Comissão provisória ativa”,status:“nao-alcancado”,notes:“COMEP não formalmente constituído.”},“inst-5”:{value:“NÃO”,status:“nao-alcancado”,notes:“FME não constituído.”},“inst-6”:{value:“SIM”,status:“alcancado”,notes:“Município possui PCCR.”},“inst-7”:{value:“Lei nº 629/2009”,status:“alcancado”,notes:“Lei do PCCR.”},“inst-8”:{value:“NÃO”,status:“nao-alcancado”,notes:“SME não instituído.”},“inst-9”:{value:“NÃO”,status:“nao-alcancado”,notes:“Comissão do novo PME não criada.”},“inst-10”:{value:“CRÍTICO”,status:“nao-alcancado”,notes:“Diagnóstico geral SEDUC: CRÍTICO.”}};
 
-            <!-- Content -->
-            <div class="content">
-                <!-- Stats Cards -->
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon blue">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h3>Total de Usuários</h3>
-                            <p class="stat-number" id="totalUsers">0</p>
-                            <span class="stat-change positive">
-                                <i class="fas fa-arrow-up"></i> 12% este mês
-                            </span>
-                        </div>
-                    </div>
+const SECTIONS=[
+{id:“institucional”,title:“Governança Institucional”,icon:“🏛️”,badge:“Planilha SEDUC”,intro:“⚠️ DIAGNÓSTICO SEDUC: CRÍTICO · DME: Alcides Leite · 88 99902-1589. Itens críticos: COMEP, FME, SME, comissão do novo PME.”,metrics:[{id:“inst-1”,label:“Lei do PME”,target:“Lei nº 708/2015”,source:“Planilha SEDUC col. J”,hint:“✅ Lei nº 0708/2015, aprovada em 02/06/2015.”},{id:“inst-2”,label:“Lei de prorrogação do PME”,target:“Aprovada pós-2024”,source:“Planilha SEDUC col. K”,hint:“✅ Lei nº 946/2025.”},{id:“inst-3”,label:“Relatórios de monitoramento”,target:“Sim”,source:“Planilha SEDUC col. L”,hint:“✅ Declarado SIM.”},{id:“inst-4”,label:“COMEP formalmente ativo”,target:“Sim”,source:“Planilha SEDUC col. M”,hint:“🔴 CRÍTICO: NÃO.”},{id:“inst-5”,label:“Fórum Municipal de Educação”,target:“Sim”,source:“Planilha SEDUC col. O”,hint:“🔴 CRÍTICO: NÃO.”},{id:“inst-6”,label:“PCCR existe”,target:“Sim”,source:“Planilha SEDUC col. Q”,hint:“✅ Confirmado.”},{id:“inst-7”,label:“Lei do PCCR”,target:“Lei aprovada”,source:“Planilha SEDUC col. R”,hint:“✅ Lei nº 629/2009.”},{id:“inst-8”,label:“Sistema Municipal de Ensino”,target:“Sim”,source:“Planilha SEDUC col. S”,hint:“🔴 CRÍTICO: NÃO.”},{id:“inst-9”,label:“Comissão do novo PME”,target:“Sim + decreto”,source:“Planilha SEDUC col. U”,hint:“🔴 CRÍTICO: NÃO.”},{id:“inst-10”,label:“Diagnóstico geral SEDUC”,target:“Adequado”,source:“Planilha SEDUC col. W”,hint:“⚠️ CRÍTICO.”}]},
+{id:“ed-infantil”,title:“Educação Infantil”,icon:“🧒”,badge:“Meta 1 | Censo/IBGE”,intro:“Indicadores do Censo Escolar INEP e IBGE.”,metrics:[{id:“ei-1”,label:“Atendimento creche (0–3 anos)”,target:“≥ 50%”,source:“Censo Escolar / IBGE”,hint:“Brasil distante da meta.”},{id:“ei-2”,label:“Atendimento pré-escola (4–5 anos)”,target:“100%”,source:“Censo Escolar INEP”,hint:“Meta para 2016.”},{id:“ei-3”,label:“Matrículas creche (rede municipal)”,target:“Crescente”,source:“Censo Escolar INEP 2023”,hint:“Cod. 2310209.”},{id:“ei-4”,label:“Matrículas pré-escola”,target:“Crescente”,source:“Censo Escolar INEP 2023”,hint:“Microdados.”},{id:“ei-5”,label:“CEI ou creche tipo B na sede”,target:“1 unidade”,source:“Patrimônio / PAR”,hint:“PAR/FNDE.”},{id:“ei-6”,label:“Avaliação ed. infantil (bianual)”,target:“Sim”,source:“SME / COMEP”,hint:“Estratégia 1.6.”}]},
+{id:“ef”,title:“Ensino Fundamental”,icon:“📚”,badge:“Meta 2 | Censo”,intro:“Acesso, fluxo e cobertura do EF.”,metrics:[{id:“ef-1”,label:“Taxa líquida EF (6–14 anos)”,target:“100%”,source:“Censo Escolar INEP 2023”,hint:“Cruzar com IBGE.”},{id:“ef-2”,label:“Aprovação EF — Anos Iniciais”,target:“Alta”,source:“Taxas Rendimento INEP”,hint:“CE ~97%.”},{id:“ef-3”,label:“Aprovação EF — Anos Finais”,target:“Alta”,source:“Taxas Rendimento INEP”,hint:“Menor que AI.”},{id:“ef-4”,label:“Abandono EF — Anos Iniciais”,target:“≤ 1%”,source:“Taxas Rendimento INEP”,hint:“Brasil ~1%.”},{id:“ef-5”,label:“Abandono EF — Anos Finais”,target:“≤ 3%”,source:“Taxas Rendimento INEP”,hint:“Brasil ~3%.”},{id:“ef-6”,label:“Distorção idade-série — AI”,target:”< 10%”,source:“Indicadores INEP”,hint:“CE < média.”},{id:“ef-7”,label:“Distorção idade-série — AF”,target:”< 20%”,source:“Indicadores INEP”,hint:“Maior nos AF.”},{id:“ef-8”,label:“Conclusão EF na idade certa”,target:“≥ 95%”,source:“PNAD/IBGE”,hint:“Meta 2.”},{id:“ef-9”,label:“Matrículas EF rede municipal”,target:“Estável”,source:“Censo Escolar INEP 2023”,hint:“Tendência demográfica.”},{id:“ef-10”,label:“Escolas EF ativas”,target:“Estável”,source:“Censo Escolar INEP 2023”,hint:“Nucleação rural.”}]},
+{id:“ed-especial”,title:“Educação Especial / AEE”,icon:“♿”,badge:“Meta 4 | Censo”,intro:“Brasil: 1,8 mi matrículas em 2023.”,metrics:[{id:“ee-1”,label:“PcD em classes comuns”,target:“100%”,source:“Censo Escolar INEP 2023”,hint:“~95% no Brasil.”},{id:“ee-2”,label:“Matrículas ed. especial”,target:“Crescente”,source:“Censo Escolar INEP 2023”,hint:“Microdados.”},{id:“ee-3”,label:“Salas recursos multifuncionais”,target:“≥ 1/escola”,source:“SMED / Censo”,hint:“AEE.”},{id:“ee-4”,label:“Professores capacitados AEE”,target:“Todos”,source:“SMED / RH”,hint:“Estratégia 4.3.”},{id:“ee-5”,label:“Educação bilíngue/LIBRAS”,target:“Garantida”,source:“SMED”,hint:“Prof. LIBRAS.”}]},
+{id:“alfabetizacao”,title:“Alfabetização”,icon:“✏️”,badge:“Meta 5 | SPAECE”,intro:“SPAECE-Alfa e SAEB. PAIC desde 2007.”,metrics:[{id:“af-1”,label:“Alfabetizadas até 2º ano”,target:“≥ 90%”,source:“SPAECE-Alfa / SAEB”,hint:“Meta PAIC.”},{id:“af-2”,label:“Alfabetizadas até 3º ano”,target:“100%”,source:“SAEB / SPAECE”,hint:“Meta 5.”},{id:“af-3”,label:“Nível adequado leitura 2º ano”,target:“≥ 85%”,source:“SPAECE-Alfa SEDUC”,hint:“Portal SEDUC.”},{id:“af-4”,label:“Avaliação municipal alfabetização”,target:“Bianual”,source:“SMED / COMEP”,hint:“Estratégia 5.2.”},{id:“af-5”,label:“Alfabetizadores c/ formação”,target:“100%”,source:“SMED / RH”,hint:“PNAIC / CAPES.”}]},
+{id:“tempo-integral”,title:“Tempo Integral”,icon:“⏰”,badge:“Meta 6 | Censo”,intro:“Censo 2023: +2,8 p.p. nos anos finais.”,metrics:[{id:“ti-1”,label:“Escolas com tempo integral”,target:“≥ 50%”,source:“Censo Escolar INEP 2023”,hint:“Meta 6.”},{id:“ti-2”,label:“Alunos em tempo integral”,target:“≥ 25%”,source:“Censo Escolar INEP 2023”,hint:“Crescimento.”},{id:“ti-3”,label:“Carga horária (integral)”,target:“≥ 7h/dia”,source:“SMED”,hint:“Estratégia 6.1.”},{id:“ti-4”,label:“Escolas rurais c/ integral”,target:“Conforme demanda”,source:“Censo / SMED”,hint:“Estratégia 6.5.”}]},
+{id:“ideb”,title:“Qualidade — IDEB/SAEB”,icon:“📊”,badge:“Meta 7 | INEP”,intro:“IDEB 2023. CE: melhor rede pública. Cod. 2310209.”,metrics:[{id:“ideb-1”,label:“IDEB 2023 — Anos Iniciais”,target:“≥ 6,3”,source:“INEP/IDEB 2023”,hint:“CE: 6,5. Brasil: 5,7.”},{id:“ideb-2”,label:“IDEB 2023 — Anos Finais”,target:“≥ 5,2”,source:“INEP/IDEB 2023”,hint:“CE: 5,4. Brasil: 4,7.”},{id:“ideb-3”,label:“IDEB 2019 — Anos Iniciais”,target:“6,1”,source:“INEP/IDEB 2019”,hint:“Comparar 2023.”},{id:“ideb-4”,label:“IDEB 2019 — Anos Finais”,target:“5,0”,source:“INEP/IDEB 2019”,hint:“Comparar 2023.”},{id:“ideb-5”,label:“SAEB — Língua Portuguesa”,target:“Crescente”,source:“INEP/SAEB 2023”,hint:“Componente IDEB.”},{id:“ideb-6”,label:“SAEB — Matemática”,target:“Crescente”,source:“INEP/SAEB 2023”,hint:“Componente IDEB.”},{id:“ideb-7”,label:“Participação SAEB 2023”,target:“≥ 80%”,source:“INEP/SAEB 2023”,hint:”< 80% = sem IDEB.”},{id:“ideb-8”,label:“Nível suficiente 5º ano”,target:“≥ 40%”,source:“SAEB/INEP 2023”,hint:“Meta 7.2a.”},{id:“ideb-9”,label:“Nível desejável 5º ano”,target:“≥ 20%”,source:“SAEB/INEP 2023”,hint:“Meta 7.2a.”},{id:“ideb-10”,label:“Escolas abaixo da média”,target:“Zero”,source:“INEP/IDEB 2023”,hint:“Estratégia 7.8.”}]},
+{id:“infraestrutura”,title:“Infraestrutura Escolar”,icon:“🏗️”,badge:“Transversal”,intro:“Censo Escolar 2023/2024.”,metrics:[{id:“inf-1”,label:“Acesso à internet”,target:“100%”,source:“Censo Escolar INEP 2023”,hint:”< 65% em alguns estados.”},{id:“inf-2”,label:“Banda larga”,target:“100%”,source:“Censo Escolar INEP 2023”,hint:“Estratégia 7.13.”},{id:“inf-3”,label:“Computadores/alunos”,target:“Triplicar”,source:“Censo Escolar INEP 2023”,hint:“Por escola.”},{id:“inf-4”,label:“Lab. informática”,target:“100% (EF II)”,source:“Censo Escolar INEP 2023”,hint:“Estratégia 7.17.”},{id:“inf-5”,label:“Biblioteca/sala leitura”,target:“100%”,source:“Censo Escolar INEP 2023”,hint:“Estratégia 5.8.”},{id:“inf-6”,label:“Quadra poliesportiva”,target:“Progressivo”,source:“Censo Escolar INEP 2023”,hint:“Verificar Censo.”},{id:“inf-7”,label:“Acessibilidade PcD”,target:“100%”,source:“Censo Escolar INEP 2023”,hint:“Rampas, banheiros.”},{id:“inf-8”,label:“Água tratada”,target:“100%”,source:“Censo Escolar INEP 2023”,hint:“Estratégia 7.15.”},{id:“inf-9”,label:“Esgoto adequado”,target:“100%”,source:“Censo Escolar INEP 2023”,hint:“Estratégia 7.15.”},{id:“inf-10”,label:“Sede SMED reformada”,target:“Até 2017”,source:“Patrimônio Municipal”,hint:“Estratégia 2.14.”}]},
+{id:“formacao”,title:“Formação Docente”,icon:“👩‍🏫”,badge:“Metas 15–18”,intro:“Adequação, Regularidade, Esforço Docente.”,metrics:[{id:“fd-1”,label:“Licenciatura na área”,target:“100%”,source:“Indicadores INEP 2023”,hint:“Adequação.”},{id:“fd-2”,label:“Ensino superior”,target:“100%”,source:“Indicadores INEP 2023”,hint:“Censo.”},{id:“fd-3”,label:“Pós-graduação (Meta 16)”,target:“≥ 50%”,source:“SMED / RH”,hint:“Meta 16.”},{id:“fd-4”,label:“Regularidade docente (IED)”,target:“Alta”,source:“Indicadores INEP 2023”,hint:“Estabilidade.”},{id:“fd-5”,label:“Formação continuada”,target:“100%”,source:“SMED”,hint:“CAPES, PNAIC.”},{id:“fd-6”,label:“PCCR reestruturado”,target:“Até 2017”,source:“Legislação”,hint:“SEDUC linha 116.”},{id:“fd-7”,label:“Magistério efetivos”,target:“≥ 90%”,source:“RH Municipal”,hint:“Estratégia 18.1.”},{id:“fd-8”,label:“Não-docentes efetivos”,target:“≥ 80%”,source:“RH Municipal”,hint:“Estratégia 18.1.”},{id:“fd-9”,label:“Piso salarial (Meta 17)”,target:“Sim”,source:“Folha / TCM-CE”,hint:“R$ 4.580,57.”},{id:“fd-10”,label:“Fórum de valorização”,target:“Até 1º ano”,source:“SME / Legislação”,hint:“Estratégia 17.1.”}]},
+{id:“eja”,title:“EJA e Alfabetização Adultos”,icon:“📖”,badge:“Metas 8–10”,intro:“Censo 2022/PNAD: analfabetismo.”,metrics:[{id:“eja-1”,label:“Analfabetismo 15+”,target:”< 20%”,source:“IBGE Censo 2022”,hint:“CE ~13%.”},{id:“eja-2”,label:“Analfabetismo funcional”,target:“Redução 50%”,source:“PNAD IBGE”,hint:“Meta 9.”},{id:“eja-3”,label:“Escolaridade 18–29 anos”,target:“≥ 12 anos”,source:“IBGE / PNAD”,hint:“Meta 8.”},{id:“eja-4”,label:“Matrículas EJA”,target:“Mantidas”,source:“Censo Escolar INEP 2023”,hint:“Queda 20,9% Brasil.”},{id:“eja-5”,label:“EJA + ed. profissional”,target:“≥ 10%”,source:“Censo Escolar INEP 2023”,hint:“Meta 10.”},{id:“eja-6”,label:“Igualdade escolaridade racial”,target:“Igualada”,source:“PNAD/IBGE”,hint:“Meta 8.”}]},
+{id:“superior”,title:“Ed. Superior e Profissional”,icon:“🎓”,badge:“Metas 11–14”,intro:“Apoio municipal.”,metrics:[{id:“sup-1”,label:“Transporte universitário”,target:“Ativo”,source:“Prefeitura”,hint:“Estratégia 12.3.”},{id:“sup-2”,label:“Residência universitária”,target:“Ativa”,source:“Prefeitura”,hint:“Estratégia 12.4.”},{id:“sup-3”,label:“Ed. profissional técnica”,target:“Crescente”,source:“Censo Escolar INEP 2023”,hint:“Estratégia 11.1.”},{id:“sup-4”,label:“Apoio ENEM”,target:“Garantido”,source:“SMED / Prefeitura”,hint:“Transporte, apoio.”}]},
+{id:“gestao”,title:“Gestão Democrática”,icon:“🤝”,badge:“Meta 19”,intro:“Planilha SEDUC (CME, FME, SME).”,metrics:[{id:“gd-1”,label:“Lei gestão democrática”,target:“Até 2017”,source:“Câmara Municipal”,hint:“Estratégia 19.”},{id:“gd-2”,label:“COMEP composição plena”,target:“Sim”,source:“COMEP”,hint:“Paridade.”},{id:“gd-3”,label:“Conselhos escolares”,target:“100%”,source:“SMED / Censo”,hint:“Censo 2023.”},{id:“gd-4”,label:“Reuniões dos conselhos”,target:“≥ 4/ano”,source:“SMED”,hint:“Atas.”},{id:“gd-5”,label:“FME ativo”,target:“Sim”,source:“Planilha SEDUC”,hint:“Coluna FME.”},{id:“gd-6”,label:“Conferências de Educação”,target:“≥ 2”,source:“COMEP”,hint:“Art. 6º.”},{id:“gd-7”,label:“Grêmios estudantis”,target:“Fomentados”,source:“SMED”,hint:“Estratégia 19.4.”},{id:“gd-8”,label:“PPP atualizado”,target:“Sim”,source:“SMED / escolas”,hint:“Estratégia 19.6.”}]},
+{id:“financiamento”,title:“Financiamento”,icon:“💰”,badge:“Meta 20”,intro:“LOA, RREO, TCM-CE.”,metrics:[{id:“fin-1”,label:”% receita MDE”,target:“≥ 25%”,source:“LOA / TCM-CE / SIOPE”,hint:“Mínimo constitucional.”},{id:“fin-2”,label:“Gasto aluno/ano (CAQ)”,target:“≥ CAQ”,source:“SIOPE / MEC”,hint:“R$ 5.256,11.”},{id:“fin-3”,label:“Portal transparência”,target:“Criado”,source:“Prefeitura”,hint:“Estratégia 20.4.”},{id:“fin-4”,label:“Audiências públicas”,target:“Periódicas”,source:“SME / COMEP”,hint:“Estratégia 20.4.”},{id:“fin-5”,label:“FUNDEB aplicado”,target:“100%”,source:“SIOPE / TCM-CE”,hint:“70% remuneração.”}]}
+];
 
-                    <div class="stat-card">
-                        <div class="stat-icon green">
-                            <i class="fas fa-check-circle"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h3>Indicadores Ativos</h3>
-                            <p class="stat-number" id="activeIndicators">0</p>
-                            <span class="stat-change positive">
-                                <i class="fas fa-arrow-up"></i> 5 novos
-                            </span>
-                        </div>
-                    </div>
+const STATUS_OPTIONS=[{value:””,label:”— Não avaliado —”},{value:“alcancado”,label:“✅ Alcançado”},{value:“parcial”,label:“🟡 Parcialmente alcançado”},{value:“nao-alcancado”,label:“🔴 Não alcançado”},{value:“nao-se-aplica”,label:“⚪ Não se aplica”}];
+const VALID_S=new Set(STATUS_OPTIONS.map(o=>o.value));
+const SC={“alcancado”:{l:“Alcançado”,e:“✅”,bg:“rgba(16,185,129,.1)”,c:”#34d399”,bd:“rgba(16,185,129,.25)”},“parcial”:{l:“Parcial”,e:“🟡”,bg:“rgba(234,179,8,.1)”,c:”#fbbf24”,bd:“rgba(234,179,8,.25)”},“nao-alcancado”:{l:“Não alcançado”,e:“🔴”,bg:“rgba(239,68,68,.1)”,c:”#f87171”,bd:“rgba(239,68,68,.25)”},“nao-se-aplica”:{l:“N/A”,e:“⚪”,bg:“rgba(148,163,184,.06)”,c:”#94a3b8”,bd:“rgba(148,163,184,.15)”},””:{l:“Não avaliado”,e:“⬜”,bg:“rgba(148,163,184,.04)”,c:”#64748b”,bd:“rgba(148,163,184,.1)”}};
+const gc=s=>SC[s]||SC[””];
+const STORAGE_KEY=“pme-pereiro-v4”;
 
-                    <div class="stat-card">
-                        <div class="stat-icon orange">
-                            <i class="fas fa-exclamation-triangle"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h3>Pendentes</h3>
-                            <p class="stat-number" id="pendingItems">0</p>
-                            <span class="stat-change negative">
-                                <i class="fas fa-arrow-down"></i> 2 resolvidos
-                            </span>
-                        </div>
-                    </div>
+const ALL_IDS=new Set();
+const buildDefault=()=>{const d={};SECTIONS.forEach(s=>s.metrics.forEach(m=>{ALL_IDS.add(m.id);const p=PREFILLED[m.id];d[m.id]=p?{value:String(p.value||””),status:VALID_S.has(p.status)?p.status:””,notes:String(p.notes||””)}:{value:””,status:””,notes:””}}));return d};
 
-                    <div class="stat-card">
-                        <div class="stat-icon purple">
-                            <i class="fas fa-chart-pie"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h3>Meta Atingida</h3>
-                            <p class="stat-number">87%</p>
-                            <span class="stat-change positive">
-                                <i class="fas fa-arrow-up"></i> 3% vs mês passado
-                            </span>
-                        </div>
-                    </div>
-                </div>
+const MENU=[
+{id:“dashboard”,label:“Dashboard”,icon:“📊”},
+{id:“form”,label:“Formulário”,icon:“📋”},
+{id:“consolidado”,label:“Consolidado”,icon:“📑”},
+{id:“config”,label:“Configurações”,icon:“⚙️”},
+];
 
-                <!-- Charts Section -->
-                <div class="charts-grid">
-                    <div class="chart-container">
-                        <div class="chart-header">
-                            <h3>Desempenho por Categoria</h3>
-                            <select class="chart-filter">
-                                <option>Últimos 30 dias</option>
-                                <option>Últimos 3 meses</option>
-                                <option>Este ano</option>
-                            </select>
-                        </div>
-                        <div class="chart-body">
-                            <canvas id="performanceChart"></canvas>
-                        </div>
-                    </div>
+// ═══════════════════════════════════════════════════════════════
+// LOGIN SCREEN
+// ═══════════════════════════════════════════════════════════════
+function LoginScreen({onLogin}){
+const[user,setUser]=useState(””);const[pass,setPass]=useState(””);
+const[error,setError]=useState(””);const[show,setShow]=useState(false);
+const[attempts,setAttempts]=useState(0);const[lock,setLock]=useState(0);
+const[loading,setLoading]=useState(false);const ref=useRef(null);
+useEffect(()=>{ref.current?.focus()},[]);
+const locked=Date.now()<lock;
+useEffect(()=>{if(!locked)return;const t=setInterval(()=>{if(Date.now()>=lock){setAttempts(0);setError(””);clearInterval(t)}},1000);return()=>clearInterval(t)},[lock,locked]);
+const submit=()=>{
+if(locked||loading)return;if(!user.trim()||!pass.trim()){setError(“Preencha usuário e senha.”);return}
+setLoading(true);
+setTimeout(()=>{
+const f=USERS.find(u=>u.user===user.trim().toLowerCase()&&u.hash===hashPass(pass));
+if(f){setError(””);onLogin(f)}else{const n=attempts+1;setAttempts(n);if(n>=MAX_ATTEMPTS){setLock(Date.now()+LOCKOUT_MS);setError(“Bloqueado por 5 min.”)}else setError(`Credenciais inválidas. ${n}/${MAX_ATTEMPTS}`)}
+setLoading(false);
+},600);
+};
+const lockSec=locked?Math.ceil((lock-Date.now())/1000):0;
+return(
+<div className="login-wrap">
+<div className="login-orb login-orb-1"/><div className="login-orb login-orb-2"/>
+<div className="login-grid"/>
+<div className="login-card">
+<div style={{textAlign:“center”,marginBottom:28}}>
+<div className="login-logo">🏛️</div>
+<div style={{fontSize:9,letterSpacing:4,textTransform:“uppercase”,color:“var(–emerald)”,fontWeight:700,marginBottom:6}}>COMEP · Pereiro/CE</div>
+<h1 style={{fontSize:24,fontWeight:800,color:“var(–text-50)”,letterSpacing:-.5}}>PME Pereiro Monitor</h1>
+<p style={{margin:“6px 0 0”,fontSize:12,color:“var(–text-500)”}}>Sistema de Monitoramento · PME 2015–2024</p>
+</div>
+<div style={{display:“flex”,flexDirection:“column”,gap:14}}>
+<div><label style={{display:“block”,fontSize:10,fontWeight:700,color:“var(–text-500)”,marginBottom:6,textTransform:“uppercase”,letterSpacing:1.5}}>Usuário</label>
+<div style={{position:“relative”}}><span className="login-icon">👤</span>
+<input ref={ref} type=“text” className=“login-input” value={user} onChange={e=>setUser(e.target.value.slice(0,30))} onKeyDown={e=>e.key===“Enter”&&submit()} disabled={locked||loading} placeholder=“Digite seu usuário” autoComplete=“username”/>
+</div>
+</div>
+<div><label style={{display:“block”,fontSize:10,fontWeight:700,color:“var(–text-500)”,marginBottom:6,textTransform:“uppercase”,letterSpacing:1.5}}>Senha</label>
+<div style={{position:“relative”}}><span className="login-icon">🔒</span>
+<input type={show?“text”:“password”} className=“login-input” value={pass} onChange={e=>setPass(e.target.value.slice(0,50))} onKeyDown={e=>e.key===“Enter”&&submit()} disabled={locked||loading} placeholder=“Digite sua senha” autoComplete=“current-password”/>
+<button onClick={()=>setShow(s=>!s)} style={{position:“absolute”,right:10,top:“50%”,transform:“translateY(-50%)”,background:“none”,border:“none”,color:“var(–text-600)”,cursor:“pointer”,fontSize:16}}>{show?“🙈”:“👁️”}</button>
+</div>
+</div>
+{error&&<div className="login-error"><span>🔒</span>{locked?`Bloqueado (${lockSec}s)`:error}</div>}
+<button onClick={submit} disabled={locked||loading} className="login-btn" style={{marginTop:4}}>
+{loading?<><div className="spinner" style={{width:16,height:16,borderWidth:2}}/>Autenticando…</>:locked?`Bloqueado (${lockSec}s)`:“Entrar”}
+</button>
+</div>
+<div style={{textAlign:“center”,marginTop:20,paddingTop:14,borderTop:“1px solid rgba(16,185,129,.08)”}}>
+<p style={{fontSize:10,color:“var(–text-600)”,lineHeight:1.6}}>Conselho Municipal de Educação de Pereiro<br/><span style={{color:“var(–text-700)”}}>Lei nº 708/2015 · v4.0</span></p>
+</div>
+</div>
+</div>
+);
+}
 
-                    <div class="chart-container">
-                        <div class="chart-header">
-                            <h3>Distribuição de Indicadores</h3>
-                        </div>
-                        <div class="chart-body">
-                            <canvas id="distributionChart"></canvas>
-                        </div>
-                    </div>
-                </div>
+// ═══════════════════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════════════════
+function Toast({msg,type}){if(!msg)return null;return<div className={`toast ${type}`}><span>{type===“error”?“⚠️”:“✓”}</span>{msg}</div>}
 
-                <!-- Data Table -->
-                <div class="table-container">
-                    <div class="table-header">
-                        <h3>Lista de Indicadores</h3>
-                        <div class="table-actions">
-                            <button class="btn btn-secondary" onclick="exportData()">
-                                <i class="fas fa-download"></i> Exportar
-                            </button>
-                            <button class="btn btn-primary" onclick="addNewIndicator()">
-                                <i class="fas fa-plus"></i> Novo Indicador
-                            </button>
-                        </div>
-                    </div>
-                    <div class="table-responsive">
-                        <table id="indicatorsTable">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Nome</th>
-                                    <th>Categoria</th>
-                                    <th>Valor Atual</th>
-                                    <th>Meta</th>
-                                    <th>Status</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tableBody">
-                                <!-- Dados serão carregados via JavaScript -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
+// ═══════════════════════════════════════════════════════════════
+// MAIN APP
+// ═══════════════════════════════════════════════════════════════
+function MainApp(){
+const[loggedUser,setLoggedUser]=useState(null);
+const[activeTab,setActiveTab]=useState(“dashboard”);
+const[activeSection,setActiveSection]=useState(“institucional”);
+const[data,setData]=useState(buildDefault);
+const[saving,setSaving]=useState(false);
+const[toast,setToast]=useState({msg:””,type:””});
+const[sidebarOpen,setSidebarOpen]=useState(false);
+const[filterStatus,setFilterStatus]=useState(””);
+const[loaded,setLoaded]=useState(false);
+const[hints,setHints]=useState(new Set());
+const saveRef=useRef(false);const mainRef=useRef(null);
 
-    <!-- Modal para adicionar/editar indicador -->
-    <div id="indicatorModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modalTitle">Novo Indicador</h2>
-                <button class="close-btn" onclick="closeModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="indicatorForm">
-                    <div class="form-group">
-                        <label for="indicatorName">Nome do Indicador</label>
-                        <input type="text" id="indicatorName" required>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="indicatorCategory">Categoria</label>
-                            <select id="indicatorCategory" required>
-                                <option value="">Selecione...</option>
-                                <option value="Financeiro">Financeiro</option>
-                                <option value="Operacional">Operacional</option>
-                                <option value="Qualidade">Qualidade</option>
-                                <option value="Segurança">Segurança</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="indicatorValue">Valor Atual</label>
-                            <input type="number" id="indicatorValue" step="0.01" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="indicatorTarget">Meta</label>
-                        <input type="number" id="indicatorTarget" step="0.01" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="indicatorDescription">Descrição</label>
-                        <textarea id="indicatorDescription" rows="3"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
-                <button class="btn btn-primary" onclick="saveIndicator()">Salvar</button>
-            </div>
-        </div>
-    </div>
+useEffect(()=>{if(!loggedUser)return;let c=false;
+try{const s=localStorage.getItem(STORAGE_KEY);if(s){const p=safeJSON(s,null);if(p)setData(prev=>({…prev,…p}))}}catch{}
+if(!c)setLoaded(true);return()=>{c=true}},[loggedUser]);
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="app.js"></script>
+const showToast=useCallback((msg,type=“success”)=>{setToast({msg,type});setTimeout(()=>setToast({msg:””,type:””}),2600)},[]);
+const save=useCallback(async()=>{if(saveRef.current)return;saveRef.current=true;setSaving(true);
+try{localStorage.setItem(STORAGE_KEY,JSON.stringify(data));showToast(“Dados salvos”)}catch{showToast(“Erro ao salvar”,“error”)}
+finally{setSaving(false);saveRef.current=false}},[data,showToast]);
+
+const isRO=loggedUser?.role===“viewer”;
+const update=useCallback((id,f,v)=>{if(isRO||!ALL_IDS.has(id))return;if(f===“status”&&!VALID_S.has(v))return;const cl=f===“status”?v:sanitize(v);setData(p=>({…p,[id]:{…p[id],[f]:cl}}))},[isRO]);
+const toggleHint=useCallback(id=>{setHints(p=>{const n=new Set(p);n.has(id)?n.delete(id):n.add(id);return n})},[]);
+
+const allMetrics=useMemo(()=>SECTIONS.flatMap(s=>s.metrics),[]);
+const total=allMetrics.length;
+const counts=useMemo(()=>{const c={alcancado:0,parcial:0,“nao-alcancado”:0,“nao-se-aplica”:0,””:0};allMetrics.forEach(m=>{const st=data[m.id]?.status||””;c[st]!==undefined?c[st]++:c[””]++});return c},[data,allMetrics]);
+const evaluated=total-counts[””];const pct=total>0?Math.round(evaluated/total*100):0;
+const curSection=useMemo(()=>SECTIONS.find(s=>s.id===activeSection)||SECTIONS[0],[activeSection]);
+const filtered=useMemo(()=>filterStatus?curSection.metrics.filter(m=>(data[m.id]?.status||””)===filterStatus):curSection.metrics,[curSection,filterStatus,data]);
+const sIdx=SECTIONS.findIndex(s=>s.id===activeSection);
+const prev=SECTIONS[sIdx-1]||null,next=SECTIONS[sIdx+1]||null;
+const secCounts=useCallback(sec=>{const c={alcancado:0,parcial:0,“nao-alcancado”:0,pending:0};sec.metrics.forEach(m=>{const st=data[m.id]?.status||””;if(st===“alcancado”)c.alcancado++;else if(st===“parcial”)c.parcial++;else if(st===“nao-alcancado”)c[“nao-alcancado”]++;else c.pending++});return c},[data]);
+useEffect(()=>{if(mainRef.current)mainRef.current.scrollTop=0},[activeSection,activeTab]);
+
+if(!loggedUser)return<LoginScreen onLogin={setLoggedUser}/>;
+if(!loaded)return<div className="loading-screen"><div className="spinner"/><div style={{color:“var(–text-500)”,fontSize:12}}>Carregando…</div></div>;
+
+const roleLabel={admin:“Administrador”,editor:“Editor”,viewer:“Somente leitura”};
+const today=new Date().toLocaleDateString(“pt-BR”,{weekday:“long”,year:“numeric”,month:“long”,day:“numeric”});
+
+// ─── DASHBOARD ───
+const renderDashboard=()=>(
+<div className=“fade-in” style={{maxWidth:1000,margin:“0 auto”}}>
+<div style={{marginBottom:20}}><h2 style={{fontSize:22,fontWeight:800,color:“var(–text-50)”}}>Dashboard</h2><p style={{color:“var(–text-500)”,fontSize:13}}>Visão geral do Plano Municipal de Educação</p></div>
+<div className="stats-grid">
+{[{l:“Total”,v:total,c:”#60a5fa”,bg:“rgba(59,130,246,.08)”,bd:“rgba(59,130,246,.2)”,i:“🎯”},{l:“Alcançados”,v:counts.alcancado,c:”#34d399”,bg:“rgba(16,185,129,.08)”,bd:“rgba(16,185,129,.2)”,i:“✅”},{l:“Parciais”,v:counts.parcial,c:”#fbbf24”,bg:“rgba(234,179,8,.08)”,bd:“rgba(234,179,8,.2)”,i:“🟡”},{l:“Não alcançados”,v:counts[“nao-alcancado”],c:”#f87171”,bg:“rgba(239,68,68,.08)”,bd:“rgba(239,68,68,.2)”,i:“🔴”},{l:“Pendentes”,v:counts[””],c:”#94a3b8”,bg:“rgba(148,163,184,.06)”,bd:“rgba(148,163,184,.15)”,i:“⬜”},{l:“Progresso”,v:pct+”%”,c:”#2dd4bf”,bg:“rgba(20,184,166,.08)”,bd:“rgba(20,184,166,.2)”,i:“📈”}].map((c,i)=>(
+<div key={i} className="stat-card" style={{background:c.bg,borderColor:c.bd}}>
+<div><div className="val" style={{color:c.c}}>{c.v}</div><div className="lbl">{c.l}</div></div>
+<div className="ico">{c.i}</div>
+</div>
+))}
+</div>
+<div className="card" style={{marginBottom:16}}>
+<div className="card-header"><span className="card-title">Progresso por Eixo</span></div>
+<div className="card-body">
+{SECTIONS.map(s=>{const sc=secCounts(s);const done=sc.alcancado+sc.parcial+sc[“nao-alcancado”];const cp=s.metrics.length>0?Math.round(done/s.metrics.length*100):0;
+return(<div key={s.id} style={{display:“flex”,alignItems:“center”,gap:12,padding:“8px 0”,borderBottom:“1px solid rgba(148,163,184,.06)”}}>
+<span style={{fontSize:16,width:24,textAlign:“center”}}>{s.icon}</span>
+<div style={{flex:1,minWidth:0}}>
+<div style={{display:“flex”,justifyContent:“space-between”,marginBottom:4}}>
+<span style={{fontSize:12,fontWeight:600,color:“var(–text-200)”,whiteSpace:“nowrap”,overflow:“hidden”,textOverflow:“ellipsis”}}>{s.title}</span>
+<span style={{fontSize:11,color:“var(–text-500)”,fontFamily:”‘JetBrains Mono’”,flexShrink:0,marginLeft:8}}>{done}/{s.metrics.length}</span>
+</div>
+<div className=“progress-bar sm” style={{background:“rgba(255,255,255,.05)”}}>
+{sc.alcancado>0&&<div className=“progress-seg” style={{width:`${sc.alcancado/s.metrics.length*100}%`,background:”#16a34a”}}/>}
+{sc.parcial>0&&<div className=“progress-seg” style={{width:`${sc.parcial/s.metrics.length*100}%`,background:”#d97706”}}/>}
+{sc[“nao-alcancado”]>0&&<div className=“progress-seg” style={{width:`${sc["nao-alcancado"]/s.metrics.length*100}%`,background:”#dc2626”}}/>}
+</div>
+</div>
+</div>)
+})}
+</div>
+</div>
+<div className="card">
+<div className="card-header"><span className="card-title">Progresso Geral de Avaliação</span><span style={{fontSize:12,color:“var(–text-500)”,fontFamily:”‘JetBrains Mono’”}}>{evaluated}/{total} ({pct}%)</span></div>
+<div className="card-body">
+<div className=“progress-bar” style={{background:“rgba(255,255,255,.05)”,height:12,borderRadius:99,marginBottom:10}}>
+<div className=“progress-seg” style={{width:`${counts.alcancado/total*100}%`,background:”#16a34a”,animation:“barGrow .8s ease-out”}}/>
+<div className=“progress-seg” style={{width:`${counts.parcial/total*100}%`,background:”#d97706”}}/>
+<div className=“progress-seg” style={{width:`${counts["nao-alcancado"]/total*100}%`,background:”#dc2626”}}/>
+<div className=“progress-seg” style={{width:`${counts["nao-se-aplica"]/total*100}%`,background:”#6b7280”}}/>
+</div>
+<div style={{display:“flex”,gap:16,flexWrap:“wrap”}}>
+{[[“alcancado”,”#16a34a”],[“parcial”,”#d97706”],[“nao-alcancado”,”#dc2626”],[“nao-se-aplica”,”#6b7280”]].map(([k,c])=>(
+<div key={k} style={{display:“flex”,alignItems:“center”,gap:5,fontSize:11,color:“var(–text-500)”}}><span style={{width:10,height:10,borderRadius:99,background:c,display:“inline-block”}}/>{gc(k).l}: {counts[k]||0}</div>
+))}
+</div>
+</div>
+</div>
+</div>
+);
+
+// ─── FORM ───
+const renderForm=()=>(
+<div className=“fade-in” style={{maxWidth:900,margin:“0 auto”}}>
+{isRO&&<div className="alert-readonly" style={{marginBottom:14}}>🔒 Modo somente leitura.</div>}
+{activeSection===“institucional”&&<div className="alert-critical" style={{marginBottom:14}}><span style={{fontSize:24,flexShrink:0}}>⚠️</span><div><div style={{fontWeight:800,color:”#fb923c”,fontSize:13,marginBottom:4}}>DIAGNÓSTICO SEDUC: CRÍTICO</div><div style={{fontSize:11,color:”#fdba74”,lineHeight:1.7}}><strong>4 itens críticos:</strong> COMEP · FME · SME · Comissão novo PME.<br/><strong>DME:</strong> Alcides Leite · (88) 99902-1589</div></div></div>}
+<div className="card" style={{marginBottom:14}}>
+<div className=“card-header” style={{flexWrap:“wrap”,gap:12}}>
+<div style={{display:“flex”,alignItems:“center”,gap:12}}>
+<span style={{fontSize:28}}>{curSection.icon}</span>
+<div>
+<h2 style={{margin:0,fontSize:19,fontWeight:800,color:“var(–text-50)”}}>{curSection.title}</h2>
+<div style={{display:“flex”,gap:8,alignItems:“center”,marginTop:4}}>
+<span className=“metric-tag” style={{background:“rgba(59,130,246,.1)”,color:”#60a5fa”,border:“1px solid rgba(59,130,246,.2)”}}>{curSection.badge}</span>
+<span style={{fontSize:11,color:“var(–text-500)”}}>{curSection.metrics.length} indicadores</span>
+</div>
+</div>
+</div>
+<select className=“filter-select” value={filterStatus} onChange={e=>setFilterStatus(e.target.value)}>
+<option value="">Todos</option>
+{STATUS_OPTIONS.slice(1).map(o=><option key={o.value} value={o.value}>{o.label}</option>)}
+</select>
+</div>
+{curSection.intro&&<div className="card-body" style={{paddingTop:0}}><div className="section-intro">💡 {curSection.intro}</div></div>}
+</div>
+{/* SIDEBAR DE EIXOS */}
+<div style={{display:“flex”,flexWrap:“wrap”,gap:6,marginBottom:14}}>
+{SECTIONS.map(s=>{const sc=secCounts(s);const isA=activeSection===s.id;
+return<button key={s.id} onClick={()=>setActiveSection(s.id)} style={{padding:“6px 12px”,borderRadius:8,border:`1px solid ${isA?"rgba(16,185,129,.3)":"transparent"}`,background:isA?“rgba(16,185,129,.08)”:“rgba(255,255,255,.02)”,color:isA?“var(–emerald-l)”:“var(–text-500)”,cursor:“pointer”,fontSize:11,fontWeight:isA?700:500,display:“flex”,alignItems:“center”,gap:5,transition:“all .15s”}}>
+<span>{s.icon}</span>{s.title.split(” “)[0]}
+{sc[“nao-alcancado”]>0&&<span style={{width:6,height:6,borderRadius:99,background:”#ef4444”}}/>}
+</button>
+})}
+</div>
+{filtered.map((m,idx)=>{const d=data[m.id]||{value:””,status:””,notes:””};const scfg=gc(d.status);const pre=!!PREFILLED[m.id];const ho=hints.has(m.id);
+return(<div key={m.id} className=“metric-card fade-in” style={{background:“rgba(30,41,59,.4)”,borderColor:scfg.bd,animationDelay:`${clamp(idx*.025,0,.3)}s`}}>
+{pre&&<div className=“metric-tag” style={{position:“absolute”,top:10,right:10,background:“rgba(234,179,8,.1)”,color:”#fbbf24”,border:“1px solid rgba(234,179,8,.2)”}}>SEDUC</div>}
+<div style={{marginBottom:10}}>
+<div style={{display:“flex”,alignItems:“center”,gap:6,marginBottom:5,flexWrap:“wrap”}}>
+<span className=“metric-tag” style={{background:“rgba(255,255,255,.04)”,color:“var(–text-500)”,fontFamily:”‘JetBrains Mono’”}}>{String(idx+1).padStart(2,“0”)}</span>
+<span className=“metric-tag” style={{background:“rgba(16,185,129,.06)”,color:”#34d399”,border:“1px solid rgba(16,185,129,.15)”}}>META: {m.target}</span>
+<span style={{fontSize:9,color:“var(–text-500)”,fontWeight:600}}>📌 {m.source}</span>
+</div>
+<div style={{display:“flex”,alignItems:“flex-start”,justifyContent:“space-between”,gap:10}}>
+<div style={{flex:1}}>
+<div className="metric-label">{m.label}</div>
+{m.hint&&<button className=“metric-hint-btn” onClick={()=>toggleHint(m.id)}>{ho?“▾ Ocultar”:“▸ Dica”}</button>}
+{ho&&m.hint&&<div className="metric-hint">{m.hint}</div>}
+</div>
+<span className=“status-badge” style={{background:scfg.bg,color:scfg.c,border:`1px solid ${scfg.bd}`}}>{scfg.e} {scfg.l}</span>
+</div>
+</div>
+<div style={{display:“grid”,gridTemplateColumns:“1fr 1fr”,gap:10,marginBottom:8}}>
+<div><label style={{display:“block”,fontSize:10,fontWeight:700,color:“var(–text-500)”,marginBottom:4,textTransform:“uppercase”,letterSpacing:.7}}>Valor / Situação</label>
+<input className=“metric-input” placeholder=“Ex: 6,4 / 87% / Sim…” value={d.value} onChange={e=>update(m.id,“value”,e.target.value)} maxLength={500} disabled={isRO}/></div>
+<div><label style={{display:“block”,fontSize:10,fontWeight:700,color:“var(–text-500)”,marginBottom:4,textTransform:“uppercase”,letterSpacing:.7}}>Status</label>
+<select className=“metric-select” value={d.status} onChange={e=>update(m.id,“status”,e.target.value)} disabled={isRO}>{STATUS_OPTIONS.map(o=><option key={o.value} value={o.value}>{o.label}</option>)}</select></div>
+</div>
+<div><label style={{display:“block”,fontSize:10,fontWeight:700,color:“var(–text-500)”,marginBottom:4,textTransform:“uppercase”,letterSpacing:.7}}>Observações</label>
+<textarea className=“metric-input” placeholder=“Situação, fonte, data…” value={d.notes} onChange={e=>update(m.id,“notes”,e.target.value)} rows={2} maxLength={2000} disabled={isRO} style={{resize:“vertical”}}/></div>
+</div>)})}
+{filtered.length===0&&<div style={{textAlign:“center”,padding:“40px 20px”,color:“var(–text-500)”}}><div style={{fontSize:32,marginBottom:10}}>🔍</div><div style={{fontWeight:600,fontSize:13,marginBottom:10}}>Nenhum indicador com esse status.</div><button onClick={()=>setFilterStatus(””)} className=“nav-btn primary”>Limpar filtro</button></div>}
+<div style={{display:“flex”,justifyContent:“space-between”,marginTop:18,paddingTop:14,borderTop:“1px solid rgba(148,163,184,.06)”}}>
+{prev?<button onClick={()=>setActiveSection(prev.id)} className=“nav-btn secondary”>← {prev.title}</button>:<div/>}
+{next?<button onClick={()=>setActiveSection(next.id)} className=“nav-btn primary”>{next.title} →</button>
+:<button onClick={()=>{save();setActiveTab(“consolidado”)}} className=“nav-btn primary”>📊 Ver Consolidado</button>}
+</div>
+</div>
+);
+
+// ─── CONSOLIDADO ───
+const renderConsolidado=()=>(
+<div className=“fade-in” style={{maxWidth:1000,margin:“0 auto”}}>
+<div className="card" style={{marginBottom:18}}><div className="card-header"><div><h2 style={{margin:0,fontSize:20,fontWeight:900,color:“var(–text-50)”}}>📊 Relatório Consolidado</h2><p style={{margin:“4px 0 0”,fontSize:12,color:“var(–text-500)”}}>Pereiro/CE · COMEP · Lei nº 708/2015 · {total} indicadores</p></div></div></div>
+<div className="stats-grid" style={{marginBottom:18}}>
+{[{l:“Total”,v:total,c:”#60a5fa”,bg:“rgba(59,130,246,.08)”,bd:“rgba(59,130,246,.2)”},{l:“Alcançados”,v:counts.alcancado,c:”#34d399”,bg:“rgba(16,185,129,.08)”,bd:“rgba(16,185,129,.2)”},{l:“Parciais”,v:counts.parcial,c:”#fbbf24”,bg:“rgba(234,179,8,.08)”,bd:“rgba(234,179,8,.2)”},{l:“Não alcançados”,v:counts[“nao-alcancado”],c:”#f87171”,bg:“rgba(239,68,68,.08)”,bd:“rgba(239,68,68,.2)”},{l:“Pendentes”,v:counts[””],c:”#94a3b8”,bg:“rgba(148,163,184,.06)”,bd:“rgba(148,163,184,.15)”}].map((c,i)=>(
+<div key={i} className="stat-card" style={{background:c.bg,borderColor:c.bd}}><div><div className="val" style={{color:c.c}}>{c.v}</div><div className="lbl">{c.l}</div></div></div>
+))}
+</div>
+{SECTIONS.map(s=>{const sc=secCounts(s);return(
+<div key={s.id} className=“card” style={{marginBottom:14,overflow:“hidden”}}>
+<div style={{background:“rgba(0,0,0,.15)”,borderBottom:“1px solid rgba(148,163,184,.06)”,padding:“10px 16px”,display:“flex”,alignItems:“center”,gap:10}}>
+<span style={{fontSize:16}}>{s.icon}</span>
+<div style={{flex:1}}><span style={{fontWeight:800,color:“var(–text-100)”,fontSize:13}}>{s.title}</span><span className=“metric-tag” style={{marginLeft:8,background:“rgba(59,130,246,.08)”,color:”#60a5fa”,border:“1px solid rgba(59,130,246,.15)”}}>{s.badge}</span></div>
+<div style={{display:“flex”,gap:5}}>
+{sc.alcancado>0&&<span className=“metric-tag” style={{background:“rgba(16,185,129,.1)”,color:”#34d399”}}>{sc.alcancado}✅</span>}
+{sc[“nao-alcancado”]>0&&<span className=“metric-tag” style={{background:“rgba(239,68,68,.1)”,color:”#f87171”}}>{sc[“nao-alcancado”]}🔴</span>}
+{sc.pending>0&&<span className=“metric-tag” style={{background:“rgba(148,163,184,.06)”,color:”#94a3b8”}}>{sc.pending} pend.</span>}
+</div>
+</div>
+<div style={{overflowX:“auto”}}>
+<table className="data-table"><thead><tr>{[“Indicador”,“Meta”,“Valor”,“Status”,“Obs.”].map(h=><th key={h}>{h}</th>)}</tr></thead>
+<tbody>{s.metrics.map((m,i)=>{const d=data[m.id]||{value:””,status:””,notes:””};const scfg=gc(d.status);
+return<tr key={m.id}><td style={{color:“var(–text-200)”,fontWeight:500,maxWidth:220}}>{m.label}</td><td style={{color:”#34d399”,fontWeight:600,fontSize:10}}>{m.target}</td><td style={{color:d.value?“var(–text-200)”:“var(–text-600)”,fontStyle:d.value?“normal”:“italic”}}>{d.value||”—”}</td><td><span className=“status-badge” style={{background:scfg.bg,color:scfg.c,border:`1px solid ${scfg.bd}`}}>{scfg.e} {scfg.l}</span></td><td style={{color:“var(–text-500)”,maxWidth:180,fontSize:10}}>{d.notes||”—”}</td></tr>
+})}</tbody>
+</table>
+</div>
+</div>
+)})}
+<div className="card" style={{marginBottom:16}}>
+<div className="card-header"><span className="card-title">📌 Fontes de dados</span></div>
+<div className="card-body"><div className="sources-grid">
+{[[“IDEB”,“ideb.inep.gov.br”],[“QEdu”,“qedu.org.br/municipio/2310209”],[“Censo Escolar”,“gov.br/inep → microdados”],[“Painel INEP”,“paineis.inep.gov.br”],[“IBGE Cidades”,“cidades.ibge.gov.br/brasil/ce/pereiro”],[“SIOPE”,“fnde.gov.br/siope”],[“SPAECE/PAIC”,“seduc.ce.gov.br/paic”],[“TCM-CE”,“tcm.ce.gov.br”],[“Taxas Rendimento”,“gov.br/inep → indicadores”],[“Planilha SEDUC”,“Painel_Monitoramento — linha 116”]].map(([k,v],i)=>(
+<div key={i} className="source-item"><div className="title">{k}</div><div className="url">{v}</div></div>
+))}
+</div></div>
+</div>
+<div style={{textAlign:“center”,padding:“18px 0”,color:“var(–text-600)”,fontSize:11}}>COMEP — Conselho Municipal de Educação de Pereiro/CE · PME 2015–2024</div>
+</div>
+);
+
+// ─── CONFIG ───
+const renderConfig=()=>(
+<div className=“fade-in” style={{maxWidth:800,margin:“0 auto”}}>
+<div style={{marginBottom:20}}><h2 style={{fontSize:22,fontWeight:800,color:“var(–text-50)”}}>Configurações</h2><p style={{color:“var(–text-500)”,fontSize:13}}>Preferências do sistema</p></div>
+<div style={{display:“grid”,gridTemplateColumns:“1fr 1fr”,gap:16}}>
+<div className="card"><div className="card-header"><span className="card-title">Perfil</span></div><div className=“card-body” style={{display:“flex”,flexDirection:“column”,gap:12}}>
+{[[“Nome”,loggedUser.name],[“E-mail”,loggedUser.email],[“Perfil”,roleLabel[loggedUser.role]]].map(([l,v])=>(
+<div key={l}><label style={{fontSize:10,fontWeight:700,color:“var(–text-500)”,textTransform:“uppercase”,display:“block”,marginBottom:4}}>{l}</label><input className="metric-input" value={v} disabled/></div>
+))}
+</div></div>
+<div className="card"><div className="card-header"><span className="card-title">Sobre o Sistema</span></div><div className="card-body">
+<div style={{display:“flex”,alignItems:“center”,gap:14,marginBottom:14}}>
+<div style={{width:52,height:52,background:“linear-gradient(135deg,var(–emerald),var(–teal))”,borderRadius:14,display:“flex”,alignItems:“center”,justifyContent:“center”,fontSize:24}}>📊</div>
+<div><div style={{fontSize:16,fontWeight:800,color:“var(–text-100)”}}>PME Pereiro Monitor</div><div style={{fontSize:12,color:“var(–text-500)”}}>Versão 4.0.0</div></div>
+</div>
+<p style={{fontSize:12,color:“var(–text-400)”,lineHeight:1.6}}>Sistema de Monitoramento do Plano Municipal de Educação de Pereiro/CE. Desenvolvido para o COMEP.</p>
+<div style={{marginTop:14,paddingTop:12,borderTop:“1px solid rgba(148,163,184,.06)”,fontSize:11,color:“var(–text-600)”}}>© 2025 COMEP — Conselho Municipal de Educação de Pereiro/CE</div>
+</div></div>
+</div>
+</div>
+);
+
+const renderContent=()=>{switch(activeTab){case”dashboard”:return renderDashboard();case”form”:return renderForm();case”consolidado”:return renderConsolidado();case”config”:return renderConfig();default:return renderDashboard()}};
+
+return(
+<div className="app-wrap">
+<Toast msg={toast.msg} type={toast.type}/>
+{sidebarOpen&&<div className=“sidebar-overlay open” onClick={()=>setSidebarOpen(false)}/>}
+<aside className={`sidebar ${sidebarOpen?"open":""}`}>
+<div className="sidebar-header">
+<div className="sidebar-logo">🏛️</div>
+<div><div style={{color:“var(–text-100)”,fontWeight:700,fontSize:13}}>PME Pereiro</div><div style={{color:“var(–text-600)”,fontSize:10}}>Monitoramento</div></div>
+<button onClick={()=>setSidebarOpen(false)} style={{marginLeft:“auto”,background:“none”,border:“none”,color:“var(–text-500)”,cursor:“pointer”,fontSize:18,display:“none”}} className=“menu-toggle”>✕</button>
+</div>
+<nav className="sidebar-nav">
+<div className="sidebar-label">Menu</div>
+{MENU.map(item=>(
+<button key={item.id} onClick={()=>{setActiveTab(item.id);setSidebarOpen(false)}} className={`sidebar-item ${activeTab===item.id?"active":""}`}>
+<span className="icon">{item.icon}</span><span>{item.label}</span>
+{activeTab===item.id&&<span className="arrow">›</span>}
+</button>
+))}
+</nav>
+<div className="sidebar-user">
+<div className="sidebar-avatar">{loggedUser.name.charAt(0)}</div>
+<div className="sidebar-user-info">
+<div className="name">{loggedUser.name.split(”—”)[0].trim()}</div>
+<div className="role">{roleLabel[loggedUser.role]}</div>
+</div>
+<button onClick={()=>{setLoggedUser(null);setLoaded(false);setData(buildDefault())}} style={{background:“none”,border:“none”,color:“var(–text-500)”,cursor:“pointer”,fontSize:16}} title=“Sair”>🚪</button>
+</div>
+</aside>
+<div className="main-area">
+<header className="top-header">
+<div className="title">
+<button className=“menu-toggle” onClick={()=>setSidebarOpen(true)}>☰</button>
+{MENU.find(m=>m.id===activeTab)?.icon} {MENU.find(m=>m.id===activeTab)?.label}
+</div>
+<div style={{display:“flex”,alignItems:“center”,gap:12}}>
+<span className="date">{today}</span>
+{!isRO&&activeTab===“form”&&<button onClick={save} disabled={saving} className=“nav-btn save” style={{padding:“6px 14px”,fontSize:11}}>{saving?“Salvando…”:“💾 Salvar”}</button>}
+</div>
+</header>
+<div className="content-area" ref={mainRef}>{renderContent()}</div>
+</div>
+</div>
+);
+}
+
+ReactDOM.createRoot(document.getElementById(“app”)).render(<MainApp/>);
+</script>
+
 </body>
 </html>
