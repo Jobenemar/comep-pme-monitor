@@ -4,143 +4,169 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PME Pereiro Monitor — COMEP</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏛️</text></svg>">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg-950:#020617;--bg-900:#0f172a;--bg-800:#1e293b;--bg-700:#334155;
+  --bg-950:#020617;--bg-900:#0f172a;--bg-850:#131c33;--bg-800:#1e293b;--bg-750:#243044;--bg-700:#334155;
   --bg-600:#475569;--text-50:#f8fafc;--text-100:#f1f5f9;--text-200:#e2e8f0;
-  --text-300:#cbd5e1;--text-400:#94a3b8;--text-500:#64748b;--text-600:#475569;
-  --text-700:#334155;
-  --emerald:#10b981;--emerald-d:#059669;--emerald-l:#34d399;
-  --amber:#f59e0b;--red:#ef4444;--blue:#3b82f6;--teal:#14b8a6;
+  --text-300:#cbd5e1;--text-400:#94a3b8;--text-500:#64748b;--text-600:#475569;--text-700:#334155;
+  --emerald:#10b981;--emerald-d:#059669;--emerald-l:#34d399;--emerald-xl:#6ee7b7;
+  --amber:#f59e0b;--amber-l:#fbbf24;--red:#ef4444;--red-l:#f87171;
+  --blue:#3b82f6;--teal:#14b8a6;--violet:#8b5cf6;--rose:#f43f5e;--cyan:#06b6d4;
   --sidebar-w:260px;
+  --radius:14px;--radius-sm:10px;--radius-xs:8px;
 }
-html{font-size:14px}
-body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg-950);color:var(--text-200);min-height:100vh;overflow:hidden}
+html{font-size:14px;scroll-behavior:smooth}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg-950);color:var(--text-200);min-height:100vh;overflow:hidden}
 input,select,textarea,button{font-family:inherit}
-::-webkit-scrollbar{width:5px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:rgba(148,163,184,.2);border-radius:99px}
-::-webkit-scrollbar-thumb:hover{background:rgba(148,163,184,.4)}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(148,163,184,.18);border-radius:99px}::-webkit-scrollbar-thumb:hover{background:rgba(148,163,184,.35)}
+
+/* Animations */
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeInScale{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
 @keyframes slideIn{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:translateX(0)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
-@keyframes toastAnim{0%{opacity:0;transform:translateY(12px) scale(.96)}10%{opacity:1;transform:translateY(0) scale(1)}85%{opacity:1}100%{opacity:0;transform:translateY(-8px) scale(.96)}}
-@keyframes glow{0%,100%{box-shadow:0 0 20px rgba(16,185,129,.08)}50%{box-shadow:0 0 40px rgba(16,185,129,.18)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+@keyframes glow{0%,100%{box-shadow:0 0 20px rgba(16,185,129,.06)}50%{box-shadow:0 0 40px rgba(16,185,129,.15)}}
 @keyframes drift1{0%{transform:translate(0,0) scale(1)}50%{transform:translate(30px,-20px) scale(1.1)}100%{transform:translate(0,0) scale(1)}}
 @keyframes drift2{0%{transform:translate(0,0) scale(1)}50%{transform:translate(-20px,25px) scale(.95)}100%{transform:translate(0,0) scale(1)}}
+@keyframes toastSlide{0%{opacity:0;transform:translateY(12px) scale(.96)}10%{opacity:1;transform:translateY(0) scale(1)}85%{opacity:1}100%{opacity:0;transform:translateY(-8px) scale(.96)}}
 @keyframes barGrow{from{width:0}}
-@keyframes savedPulse{0%{box-shadow:0 0 0 0 rgba(16,185,129,.4)}70%{box-shadow:0 0 0 8px rgba(16,185,129,0)}100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}}
-.fade-in{animation:fadeIn .3s ease-out both}
+@keyframes countUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+.fade-in{animation:fadeIn .4s ease-out both}
+
+/* ══ LOGIN ══ */
 .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,#020617,#0f172a 40%,#0f2240 80%);position:relative;overflow:hidden}
 .login-orb{position:absolute;border-radius:50%;pointer-events:none}
 .login-orb-1{top:12%;left:8%;width:320px;height:320px;background:radial-gradient(circle,rgba(16,185,129,.07),transparent 70%);animation:drift1 16s ease-in-out infinite}
 .login-orb-2{bottom:8%;right:12%;width:280px;height:280px;background:radial-gradient(circle,rgba(59,130,246,.05),transparent 70%);animation:drift2 20s ease-in-out infinite}
-.login-grid{position:absolute;inset:0;background-image:radial-gradient(rgba(16,185,129,.02) 1px,transparent 1px);background-size:42px 42px}
-.login-card{width:420px;max-width:94vw;padding:40px 36px;background:rgba(15,23,42,.88);backdrop-filter:blur(20px);border-radius:20px;border:1px solid rgba(16,185,129,.12);box-shadow:0 20px 60px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.03);animation:fadeIn .5s ease-out,glow 5s ease-in-out infinite;position:relative;z-index:1}
+.login-grid{position:absolute;inset:0;background-image:radial-gradient(rgba(16,185,129,.015) 1px,transparent 1px);background-size:42px 42px}
+.login-card{width:440px;max-width:94vw;padding:40px 36px;background:rgba(15,23,42,.88);backdrop-filter:blur(20px);border-radius:20px;border:1px solid rgba(16,185,129,.12);box-shadow:0 20px 60px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.03);animation:fadeIn .5s ease-out,glow 5s ease-in-out infinite;position:relative;z-index:1}
 .login-logo{width:64px;height:64px;border-radius:16px;margin:0 auto 18px;background:linear-gradient(135deg,rgba(16,185,129,.15),rgba(20,184,166,.1));border:1px solid rgba(16,185,129,.2);display:flex;align-items:center;justify-content:center;font-size:30px}
-.login-input{width:100%;padding:12px 14px 12px 42px;font-size:14px;font-weight:500;background:rgba(255,255,255,.04);border:1.5px solid rgba(16,185,129,.12);border-radius:10px;color:var(--text-100);outline:none;transition:all .2s}
+.login-input{width:100%;padding:12px 14px 12px 42px;font-size:14px;font-weight:500;background:rgba(255,255,255,.04);border:1.5px solid rgba(16,185,129,.12);border-radius:var(--radius-sm);color:var(--text-100);outline:none;transition:all .25s}
 .login-input:focus{border-color:var(--emerald);box-shadow:0 0 0 3px rgba(16,185,129,.1);background:rgba(255,255,255,.06)}
 .login-input::placeholder{color:var(--text-600)}
 .login-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-600);font-size:15px;pointer-events:none}
-.login-btn{width:100%;padding:13px;font-size:14px;font-weight:700;background:linear-gradient(135deg,var(--emerald),var(--emerald-d));color:white;border:none;border-radius:10px;cursor:pointer;box-shadow:0 4px 16px rgba(16,185,129,.25);transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
-.login-btn:hover:not(:disabled){background:linear-gradient(135deg,var(--emerald-l),var(--emerald));transform:translateY(-1px)}
+.login-btn{width:100%;padding:13px;font-size:14px;font-weight:700;background:linear-gradient(135deg,var(--emerald),var(--emerald-d));color:white;border:none;border-radius:var(--radius-sm);cursor:pointer;box-shadow:0 4px 16px rgba(16,185,129,.25);transition:all .25s;display:flex;align-items:center;justify-content:center;gap:8px}
+.login-btn:hover:not(:disabled){background:linear-gradient(135deg,var(--emerald-l),var(--emerald));transform:translateY(-1px);box-shadow:0 6px 24px rgba(16,185,129,.35)}
 .login-btn:disabled{background:var(--bg-700);color:var(--text-500);cursor:not-allowed;box-shadow:none}
-.login-error{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:8px;padding:8px 12px;font-size:12px;color:#fca5a5;font-weight:500;animation:shake .4s ease-out;display:flex;align-items:center;gap:6px}
+.login-error{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:var(--radius-xs);padding:8px 12px;font-size:12px;color:#fca5a5;font-weight:500;animation:shake .4s ease-out;display:flex;align-items:center;gap:6px}
+
+/* ══ APP LAYOUT ══ */
 .app-wrap{display:flex;height:100vh;overflow:hidden}
-.sidebar{width:var(--sidebar-w);background:var(--bg-900);border-right:1px solid rgba(148,163,184,.06);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;animation:slideIn .2s ease-out}
-.sidebar-header{height:60px;display:flex;align-items:center;gap:12px;padding:0 18px;border-bottom:1px solid rgba(148,163,184,.06)}
-.sidebar-logo{width:40px;height:40px;background:linear-gradient(135deg,var(--emerald),var(--teal));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.sidebar{width:var(--sidebar-w);background:var(--bg-900);border-right:1px solid rgba(148,163,184,.06);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;animation:slideIn .25s ease-out}
+.sidebar-header{height:64px;display:flex;align-items:center;gap:12px;padding:0 18px;border-bottom:1px solid rgba(148,163,184,.06)}
+.sidebar-logo{width:42px;height:42px;background:linear-gradient(135deg,var(--emerald),var(--teal));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;box-shadow:0 4px 12px rgba(16,185,129,.2)}
 .sidebar-nav{padding:14px 12px;flex:1}
-.sidebar-label{font-size:10px;font-weight:700;letter-spacing:2px;color:var(--text-600);text-transform:uppercase;padding:0 8px;margin-bottom:8px}
-.sidebar-item{width:100%;display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;border:1px solid transparent;background:transparent;color:var(--text-500);cursor:pointer;font-size:13px;font-weight:500;text-align:left;transition:all .15s;margin-bottom:2px}
+.sidebar-item{width:100%;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-xs);border:1px solid transparent;background:transparent;color:var(--text-500);cursor:pointer;font-size:13px;font-weight:500;text-align:left;transition:all .2s;margin-bottom:2px}
 .sidebar-item:hover{background:rgba(255,255,255,.03);color:var(--text-300)}
 .sidebar-item.active{background:rgba(16,185,129,.08);color:var(--emerald-l);border-color:rgba(16,185,129,.2)}
 .sidebar-item .icon{font-size:16px;width:22px;text-align:center;flex-shrink:0}
-.sidebar-item .arrow{margin-left:auto;font-size:11px;opacity:.5}
+.sidebar-item .arrow{margin-left:auto;font-size:13px;opacity:.5;transition:transform .2s}
 .sidebar-user{padding:14px 16px;border-top:1px solid rgba(148,163,184,.06);display:flex;align-items:center;gap:10px}
-.sidebar-avatar{width:36px;height:36px;border-radius:50%;background:var(--bg-800);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--text-400);flex-shrink:0}
+.sidebar-avatar{width:36px;height:36px;border-radius:50%;background:var(--bg-800);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--text-400);flex-shrink:0;border:1px solid var(--bg-700)}
 .sidebar-user-info{flex:1;min-width:0}
 .sidebar-user-info .name{font-size:12px;font-weight:600;color:var(--text-200);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sidebar-user-info .role{font-size:10px;color:var(--emerald);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
 .sidebar-close{display:none;background:none;border:none;color:var(--text-500);cursor:pointer;font-size:18px;margin-left:auto;padding:4px}
 .main-area{flex:1;display:flex;flex-direction:column;min-width:0}
-.top-header{height:56px;background:rgba(15,23,42,.8);backdrop-filter:blur(12px);border-bottom:1px solid rgba(148,163,184,.06);display:flex;align-items:center;justify-content:space-between;padding:0 20px;flex-shrink:0}
-.top-header .title{font-size:15px;font-weight:700;color:var(--text-100);display:flex;align-items:center;gap:8px}
-.top-header .date{font-size:12px;color:var(--text-500)}
-.content-area{flex:1;overflow-y:auto;padding:20px}
-.menu-toggle{background:none;border:none;color:var(--text-400);cursor:pointer;font-size:18px;display:none;padding:4px}
+.top-header{height:56px;background:rgba(15,23,42,.85);backdrop-filter:blur(16px);border-bottom:1px solid rgba(148,163,184,.06);display:flex;align-items:center;justify-content:space-between;padding:0 24px;flex-shrink:0}
+.top-header .title{font-size:15px;font-weight:700;color:var(--text-100);display:flex;align-items:center;gap:10px}
+.top-header .date{font-size:12px;color:var(--text-500);font-weight:500}
+.content-area{flex:1;overflow-y:auto;padding:24px}
+.menu-toggle{background:none;border:none;color:var(--text-400);cursor:pointer;font-size:20px;display:none;padding:4px}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99;backdrop-filter:blur(2px)}
+.sidebar-overlay.open{display:block}
+
 @media(max-width:768px){
-  .sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);z-index:100;transform:translateX(-100%);transition:transform .3s}
+  .sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);z-index:100;transform:translateX(-100%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
   .sidebar.open{transform:translateX(0)}
-  .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99}
-  .sidebar-overlay.open{display:block}
   .menu-toggle{display:flex}
   .sidebar-close{display:block}
-  .config-grid,.report-grid{grid-template-columns:1fr !important}
-  .sources-grid{grid-template-columns:1fr !important}
   .stats-grid{grid-template-columns:repeat(2,1fr) !important}
+  .grid-2{grid-template-columns:1fr !important}
+  .content-area{padding:16px}
 }
-.card{background:rgba(30,41,59,.5);border:1px solid var(--bg-700);border-radius:12px;backdrop-filter:blur(8px);transition:box-shadow .2s}
-.card:hover{box-shadow:0 4px 20px rgba(0,0,0,.15)}
-.card-header{padding:16px 18px 10px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+
+/* ══ CARDS & UI ══ */
+.card{background:rgba(30,41,59,.5);border:1px solid var(--bg-700);border-radius:var(--radius);backdrop-filter:blur(8px);transition:all .25s}
+.card:hover{box-shadow:0 4px 24px rgba(0,0,0,.15);border-color:rgba(148,163,184,.12)}
+.card-header{padding:18px 22px 10px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
 .card-title{font-size:15px;font-weight:700;color:var(--text-100)}
-.card-body{padding:6px 18px 18px}
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px;margin-bottom:20px}
-.stat-card{border-radius:12px;padding:16px;border:1px solid;display:flex;align-items:center;justify-content:space-between}
-.stat-card .val{font-size:26px;font-weight:900;font-family:'JetBrains Mono',monospace}
-.stat-card .lbl{font-size:11px;font-weight:500;color:var(--text-400);margin-top:2px}
-.stat-card .ico{font-size:24px}
-.metric-card{border-radius:10px;padding:14px 16px;margin-bottom:10px;border:1.5px solid;transition:all .2s;position:relative;background:rgba(30,41,59,.4)}
-.metric-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.15)}
-.metric-tag{font-size:9px;font-weight:700;border-radius:4px;padding:2px 7px;display:inline-block}
-.metric-label{font-size:13px;font-weight:700;color:var(--text-100);line-height:1.5}
-.metric-hint-btn{background:none;border:none;font-size:10px;color:var(--blue);font-weight:500;cursor:pointer;padding:3px 0;display:flex;align-items:center;gap:3px}
-.metric-hint{margin-top:5px;font-size:10px;color:var(--text-500);font-style:italic;line-height:1.5;padding:5px 10px;background:rgba(0,0,0,.2);border-radius:6px;border-left:3px solid var(--bg-700);animation:fadeIn .15s ease-out}
-.metric-input{width:100%;border:1.5px solid var(--bg-700);border-radius:7px;padding:7px 10px;font-size:12px;color:var(--text-100);background:rgba(0,0,0,.2);outline:none;transition:all .15s}
-.metric-input:focus{border-color:var(--emerald);background:rgba(0,0,0,.3);box-shadow:0 0 0 3px rgba(16,185,129,.08)}
-.metric-input:disabled{opacity:.5;cursor:not-allowed}
-.metric-select{width:100%;border:1.5px solid var(--bg-700);border-radius:7px;padding:7px 10px;font-size:12px;color:var(--text-100);background:var(--bg-800);cursor:pointer;outline:none}
-.metric-select:disabled{opacity:.5;cursor:not-allowed}
-.metric-select option{background:var(--bg-800);color:var(--text-200)}
-.status-badge{border-radius:6px;padding:3px 9px;font-size:10px;font-weight:700;white-space:nowrap;display:inline-flex;align-items:center;gap:4px}
-.progress-bar{height:8px;border-radius:99px;overflow:hidden;display:flex}
-.progress-bar.sm{height:4px}
-.progress-seg{height:100%;transition:width .5s cubic-bezier(.4,0,.2,1)}
+.card-body{padding:6px 22px 22px}
+
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:22px}
+.stat-card{border-radius:var(--radius);padding:20px;border:1px solid;position:relative;overflow:hidden;transition:all .25s}
+.stat-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;opacity:.5}
+.stat-card .val{font-size:30px;font-weight:900;font-family:'JetBrains Mono',monospace;animation:countUp .5s ease-out}
+.stat-card .lbl{font-size:11px;font-weight:600;color:var(--text-400);margin-top:4px;display:flex;align-items:center;gap:6px}
+.stat-card .ico{font-size:22px;position:absolute;top:18px;right:18px;opacity:.6}
+
+.badge{border-radius:6px;padding:3px 10px;font-size:10px;font-weight:700;white-space:nowrap;display:inline-flex;align-items:center;gap:4px}
+.progress-bar{height:8px;border-radius:99px;overflow:hidden;background:rgba(255,255,255,.06)}
+.progress-fill{height:100%;border-radius:99px;transition:width .8s cubic-bezier(.4,0,.2,1);animation:barGrow .8s ease-out}
+
 .toast-container{position:fixed;bottom:24px;right:24px;z-index:9999}
-.toast{padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;box-shadow:0 8px 32px rgba(0,0,0,.3);animation:toastAnim 2.5s ease-in-out forwards;display:flex;align-items:center;gap:8px;color:white}
-.toast.success{background:var(--emerald-d)}
-.toast.error{background:var(--red)}
-.nav-btn{border:none;border-radius:9px;padding:9px 18px;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
-.nav-btn:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.2)}
-.nav-btn.primary{background:linear-gradient(135deg,var(--emerald),var(--emerald-d));color:white}
-.nav-btn.secondary{background:var(--bg-800);border:1.5px solid var(--bg-700);color:var(--text-300)}
-.nav-btn.save{background:linear-gradient(135deg,#f59e0b,#d97706);color:#1c1917}
-.nav-btn.report{background:linear-gradient(135deg,var(--blue),#2563eb);color:white}
-.data-table{width:100%;border-collapse:collapse;font-size:11px}
-.data-table thead th{padding:8px 12px;text-align:left;font-size:9px;font-weight:700;color:var(--text-500);text-transform:uppercase;letter-spacing:.7px;background:rgba(0,0,0,.15)}
-.data-table tbody tr{border-top:1px solid rgba(148,163,184,.06);transition:background .15s}
-.data-table tbody tr:hover{background:rgba(16,185,129,.03)}
-.data-table tbody td{padding:8px 12px}
-.filter-select{font-size:11px;border:1.5px solid var(--bg-700);border-radius:8px;padding:6px 10px;color:var(--text-300);background:var(--bg-800);cursor:pointer;font-weight:500}
-.alert-critical{background:linear-gradient(135deg,rgba(249,115,22,.08),rgba(234,179,8,.05));border:1.5px solid rgba(249,115,22,.3);border-radius:12px;padding:14px 18px;display:flex;gap:14px;align-items:flex-start}
-.alert-readonly{background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.2);border-radius:10px;padding:10px 16px;font-size:11px;color:var(--blue);font-weight:500;display:flex;align-items:center;gap:8px}
-.sources-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;font-size:10px}
-.source-item{background:rgba(0,0,0,.2);border-radius:6px;padding:6px 10px;border:1px solid var(--bg-700)}
-.source-item .stitle{font-weight:700;color:var(--text-200);margin-bottom:2px}
-.source-item .url{color:var(--text-500);word-break:break-all;line-height:1.4}
-.section-intro{margin-top:10px;background:rgba(16,185,129,.04);border:1px solid rgba(16,185,129,.12);border-radius:8px;padding:8px 12px;font-size:11px;color:var(--emerald-l);line-height:1.6}
-.loading-screen{min-height:100vh;background:var(--bg-950);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px}
+.toast{padding:12px 22px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;box-shadow:0 8px 32px rgba(0,0,0,.4);animation:toastSlide 2.5s ease-in-out forwards;display:flex;align-items:center;gap:8px;color:white;backdrop-filter:blur(8px)}
+.toast.success{background:rgba(5,150,105,.9)}
+.toast.error{background:rgba(220,38,38,.9)}
+
+.btn{border:none;border-radius:var(--radius-xs);padding:9px 18px;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.2)}
+.btn.primary{background:linear-gradient(135deg,var(--emerald),var(--emerald-d));color:white}
+.btn.secondary{background:var(--bg-800);border:1.5px solid var(--bg-700);color:var(--text-300)}
+.btn.report{background:linear-gradient(135deg,var(--blue),#2563eb);color:white}
+
+.filter-select{font-size:11px;border:1.5px solid var(--bg-700);border-radius:var(--radius-xs);padding:7px 28px 7px 12px;color:var(--text-300);background:var(--bg-800);cursor:pointer;font-weight:500;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;transition:border-color .2s}
+.filter-select:focus{border-color:var(--emerald)}
+.search-input{background:rgba(255,255,255,.04);border:1.5px solid var(--bg-700);border-radius:var(--radius-xs);padding:7px 12px 7px 34px;font-size:12px;color:var(--text-100);outline:none;transition:border .2s;width:200px}
+.search-input:focus{border-color:var(--emerald);background:rgba(255,255,255,.06)}
 .spinner{width:36px;height:36px;border:3px solid rgba(16,185,129,.15);border-top-color:var(--emerald);border-radius:50%;animation:spin .8s linear infinite}
-.eixo-chip{padding:6px 12px;border-radius:8px;border:1px solid transparent;cursor:pointer;font-size:11px;font-weight:500;display:inline-flex;align-items:center;gap:5px;transition:all .15s;background:rgba(255,255,255,.02);color:var(--text-500)}
-.eixo-chip:hover{background:rgba(255,255,255,.04);color:var(--text-300)}
-.eixo-chip.active{background:rgba(16,185,129,.08);color:var(--emerald-l);border-color:rgba(16,185,129,.3);font-weight:700}
-.report-card{background:rgba(30,41,59,.5);border:1px solid var(--bg-700);border-radius:12px;padding:20px;transition:all .2s;cursor:pointer}
-.report-card:hover{border-color:rgba(16,185,129,.3);box-shadow:0 4px 20px rgba(0,0,0,.15)}
-.saved-indicator{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:var(--emerald-l);animation:savedPulse 1s ease-out}
+
+/* ══ META LIST ITEMS ══ */
+.meta-item{background:rgba(15,23,42,.4);border:1px solid var(--bg-700);border-radius:var(--radius);padding:18px 22px;transition:all .25s;cursor:pointer;position:relative;overflow:hidden}
+.meta-item:hover{border-color:rgba(16,185,129,.25);box-shadow:0 4px 24px rgba(0,0,0,.15);transform:translateY(-1px);background:rgba(15,23,42,.6)}
+.meta-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:0 2px 2px 0}
+
+/* ══ MODAL ══ */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .15s ease-out}
+.modal{background:var(--bg-800);border:1px solid var(--bg-700);border-radius:18px;width:900px;max-width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,.5);animation:fadeInScale .25s ease-out}
+.modal-header{padding:22px 26px;border-bottom:1px solid rgba(148,163,184,.06);display:flex;align-items:flex-start;justify-content:space-between;gap:16px;position:sticky;top:0;background:var(--bg-800);z-index:1;border-radius:18px 18px 0 0}
+.modal-body{padding:22px 26px}
+.modal-close{background:rgba(255,255,255,.04);border:1px solid var(--bg-700);color:var(--text-400);cursor:pointer;font-size:18px;padding:6px 10px;border-radius:var(--radius-xs);transition:all .2s;line-height:1}
+.modal-close:hover{background:rgba(255,255,255,.08);color:var(--text-200);border-color:rgba(148,163,184,.2)}
+
+.ind-card{background:rgba(15,23,42,.5);border:1px solid var(--bg-700);border-radius:var(--radius-sm);padding:18px;margin-bottom:12px;transition:all .25s}
+.ind-card:hover{border-color:rgba(16,185,129,.2);box-shadow:0 2px 12px rgba(0,0,0,.1)}
+.ind-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:12px 0}
+.ind-grid .item{text-align:center}
+.ind-grid .item .label{font-size:9px;font-weight:700;color:var(--text-600);text-transform:uppercase;letter-spacing:.5px}
+.ind-grid .item .value{font-size:17px;font-weight:800;font-family:'JetBrains Mono',monospace;margin-top:3px}
+.ind-input{width:80px;background:rgba(0,0,0,.25);border:1.5px solid var(--bg-700);border-radius:6px;padding:6px 8px;font-size:13px;color:var(--text-100);outline:none;text-align:center;font-family:'JetBrains Mono',monospace;transition:all .2s}
+.ind-input:focus{border-color:var(--emerald);box-shadow:0 0 0 3px rgba(16,185,129,.1)}
+
+.tab-bar{display:flex;gap:2px;background:var(--bg-900);border:1px solid var(--bg-700);border-radius:var(--radius-sm);padding:3px;margin-bottom:18px}
+.tab-btn{flex:1;padding:9px 14px;border:none;border-radius:var(--radius-xs);background:transparent;color:var(--text-500);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px}
+.tab-btn.active{background:var(--bg-700);color:var(--text-100);box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.tab-btn:hover:not(.active){color:var(--text-300);background:rgba(255,255,255,.02)}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+
+.status-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.3px}
+.status-concluida{background:rgba(16,185,129,.12);color:#34d399;border:1px solid rgba(16,185,129,.2)}
+.status-andamento{background:rgba(234,179,8,.1);color:#fbbf24;border:1px solid rgba(234,179,8,.2)}
+.status-atrasada{background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.2)}
+.status-nao-iniciada{background:rgba(148,163,184,.06);color:#94a3b8;border:1px solid rgba(148,163,184,.15)}
+
+.strat-item{font-size:12px;color:var(--text-400);padding:8px 0;border-bottom:1px solid rgba(148,163,184,.04);line-height:1.7}
+.alert-info{background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.2);border-radius:var(--radius-sm);padding:12px 16px;font-size:12px;color:var(--blue);font-weight:500;display:flex;align-items:center;gap:8px}
 </style>
 </head>
 <body>
@@ -151,6 +177,7 @@ input,select,textarea,button{font-family:inherit}
 <script type="text/babel">
 const {useState,useEffect,useCallback,useRef,useMemo}=React;
 
+/* ═══ AUTH ═══ */
 const hashPass=s=>{let h=0;for(let i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h|=0}return h.toString(36)};
 const USERS=[
   {user:"admin",hash:hashPass("Comep@2025"),name:"Administrador COMEP",email:"admin@pereiro.ce.gov.br",role:"admin"},
@@ -159,69 +186,230 @@ const USERS=[
   {user:"secretaria",hash:hashPass("Smed2025!"),name:"Secretaria Municipal",email:"smed@pereiro.ce.gov.br",role:"editor"},
   {user:"consulta",hash:hashPass("Consulta@1"),name:"Acesso Consulta",email:"consulta@pereiro.ce.gov.br",role:"viewer"},
 ];
-const MAX_ATTEMPTS=5,LOCKOUT_MS=300000,SESSION_KEY="pme-session",STORAGE_KEY="pme-pereiro-v4";
+const MAX_ATTEMPTS=5,LOCKOUT_MS=300000;
 const sanitize=s=>typeof s!=="string"?"":s.replace(/[<>]/g,"").slice(0,2000);
-const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
-const safeJSON=(s,fb)=>{try{const p=JSON.parse(s);return p&&typeof p==="object"?p:fb}catch{return fb}};
 
-const PREFILLED={"inst-1":{value:"Lei nº 0708/2015",status:"alcancado",notes:"PME aprovado em 02/06/2015. Fonte: planilha SEDUC."},"inst-2":{value:"Lei nº 946/2025",status:"alcancado",notes:"Lei de prorrogação aprovada em 2025."},"inst-3":{value:"SIM",status:"alcancado",notes:"Município declarou possuir relatórios."},"inst-4":{value:"NÃO — Comissão provisória ativa",status:"nao-alcancado",notes:"COMEP não formalmente constituído."},"inst-5":{value:"NÃO",status:"nao-alcancado",notes:"FME não constituído."},"inst-6":{value:"SIM",status:"alcancado",notes:"Município possui PCCR."},"inst-7":{value:"Lei nº 629/2009",status:"alcancado",notes:"Lei do PCCR."},"inst-8":{value:"NÃO",status:"nao-alcancado",notes:"SME não instituído."},"inst-9":{value:"NÃO",status:"nao-alcancado",notes:"Comissão do novo PME não criada."},"inst-10":{value:"CRÍTICO",status:"nao-alcancado",notes:"Diagnóstico geral SEDUC: CRÍTICO."}};
-
-const SECTIONS=[
-{id:"institucional",title:"Governança Institucional",icon:"🏛️",badge:"Planilha SEDUC",intro:"⚠️ DIAGNÓSTICO SEDUC: CRÍTICO · DME: Alcides Leite · 88 99902-1589.",metrics:[{id:"inst-1",label:"Lei do PME",target:"Lei nº 708/2015",source:"Planilha SEDUC col. J",hint:"✅ Lei nº 0708/2015."},{id:"inst-2",label:"Lei de prorrogação",target:"Aprovada pós-2024",source:"Planilha SEDUC col. K",hint:"✅ Lei nº 946/2025."},{id:"inst-3",label:"Relatórios de monitoramento",target:"Sim",source:"Planilha SEDUC col. L",hint:"✅ Declarado SIM."},{id:"inst-4",label:"COMEP formalmente ativo",target:"Sim",source:"Planilha SEDUC col. M",hint:"🔴 CRÍTICO: NÃO."},{id:"inst-5",label:"Fórum Municipal de Educação",target:"Sim",source:"Planilha SEDUC col. O",hint:"🔴 CRÍTICO: NÃO."},{id:"inst-6",label:"PCCR existe",target:"Sim",source:"Planilha SEDUC col. Q",hint:"✅ Confirmado."},{id:"inst-7",label:"Lei do PCCR",target:"Lei aprovada",source:"Planilha SEDUC col. R",hint:"✅ Lei nº 629/2009."},{id:"inst-8",label:"Sistema Municipal de Ensino",target:"Sim",source:"Planilha SEDUC col. S",hint:"🔴 CRÍTICO: NÃO."},{id:"inst-9",label:"Comissão do novo PME",target:"Sim + decreto",source:"Planilha SEDUC col. U",hint:"🔴 CRÍTICO: NÃO."},{id:"inst-10",label:"Diagnóstico geral SEDUC",target:"Adequado",source:"Planilha SEDUC col. W",hint:"⚠️ CRÍTICO."}]},
-{id:"ed-infantil",title:"Educação Infantil",icon:"🧒",badge:"Meta 1",intro:"Censo Escolar INEP e IBGE.",metrics:[{id:"ei-1",label:"Atendimento creche (0–3)",target:"≥ 50%",source:"Censo / IBGE",hint:""},{id:"ei-2",label:"Atendimento pré-escola (4–5)",target:"100%",source:"Censo Escolar",hint:""},{id:"ei-3",label:"Matrículas creche",target:"Crescente",source:"Censo 2023",hint:""},{id:"ei-4",label:"Matrículas pré-escola",target:"Crescente",source:"Censo 2023",hint:""},{id:"ei-5",label:"CEI/creche tipo B sede",target:"1 unidade",source:"PAR/FNDE",hint:""},{id:"ei-6",label:"Avaliação ed. infantil",target:"Bianual",source:"SME/COMEP",hint:""}]},
-{id:"ef",title:"Ensino Fundamental",icon:"📚",badge:"Meta 2",intro:"Acesso, fluxo e cobertura.",metrics:[{id:"ef-1",label:"Taxa líquida EF (6–14)",target:"100%",source:"Censo 2023",hint:""},{id:"ef-2",label:"Aprovação — Anos Iniciais",target:"Alta",source:"Taxas Rendimento",hint:"CE ~97%."},{id:"ef-3",label:"Aprovação — Anos Finais",target:"Alta",source:"Taxas Rendimento",hint:""},{id:"ef-4",label:"Abandono — Anos Iniciais",target:"≤ 1%",source:"Taxas Rendimento",hint:""},{id:"ef-5",label:"Abandono — Anos Finais",target:"≤ 3%",source:"Taxas Rendimento",hint:""},{id:"ef-6",label:"Distorção idade-série AI",target:"< 10%",source:"Indicadores INEP",hint:""},{id:"ef-7",label:"Distorção idade-série AF",target:"< 20%",source:"Indicadores INEP",hint:""},{id:"ef-8",label:"Conclusão EF idade certa",target:"≥ 95%",source:"PNAD/IBGE",hint:""},{id:"ef-9",label:"Matrículas EF total",target:"Estável",source:"Censo 2023",hint:""},{id:"ef-10",label:"Escolas EF ativas",target:"Estável",source:"Censo 2023",hint:""}]},
-{id:"ed-especial",title:"Educação Especial / AEE",icon:"♿",badge:"Meta 4",intro:"1,8 mi matrículas em 2023.",metrics:[{id:"ee-1",label:"PcD em classes comuns",target:"100%",source:"Censo 2023",hint:""},{id:"ee-2",label:"Matrículas ed. especial",target:"Crescente",source:"Censo 2023",hint:""},{id:"ee-3",label:"Salas recursos multifuncionais",target:"≥ 1/escola",source:"SMED",hint:""},{id:"ee-4",label:"Professores AEE",target:"Todos",source:"SMED/RH",hint:""},{id:"ee-5",label:"Educação bilíngue/LIBRAS",target:"Garantida",source:"SMED",hint:""}]},
-{id:"alfabetizacao",title:"Alfabetização",icon:"✏️",badge:"Meta 5",intro:"SPAECE-Alfa e SAEB. PAIC desde 2007.",metrics:[{id:"af-1",label:"Alfabetizadas até 2º ano",target:"≥ 90%",source:"SPAECE/SAEB",hint:""},{id:"af-2",label:"Alfabetizadas até 3º ano",target:"100%",source:"SAEB/SPAECE",hint:""},{id:"af-3",label:"Nível adequado leitura 2º ano",target:"≥ 85%",source:"SPAECE-Alfa",hint:""},{id:"af-4",label:"Avaliação municipal alfab.",target:"Bianual",source:"SMED/COMEP",hint:""},{id:"af-5",label:"Alfabetizadores c/ formação",target:"100%",source:"SMED/RH",hint:""}]},
-{id:"tempo-integral",title:"Tempo Integral",icon:"⏰",badge:"Meta 6",intro:"",metrics:[{id:"ti-1",label:"Escolas com tempo integral",target:"≥ 50%",source:"Censo 2023",hint:""},{id:"ti-2",label:"Alunos em tempo integral",target:"≥ 25%",source:"Censo 2023",hint:""},{id:"ti-3",label:"Carga horária (integral)",target:"≥ 7h/dia",source:"SMED",hint:""},{id:"ti-4",label:"Escolas rurais c/ integral",target:"Conforme demanda",source:"SMED",hint:""}]},
-{id:"ideb",title:"Qualidade — IDEB/SAEB",icon:"📊",badge:"Meta 7",intro:"IDEB 2023. CE: melhor rede pública. Cod. 2310209.",metrics:[{id:"ideb-1",label:"IDEB 2023 — Anos Iniciais",target:"≥ 6,3",source:"INEP/IDEB",hint:"CE: 6,5."},{id:"ideb-2",label:"IDEB 2023 — Anos Finais",target:"≥ 5,2",source:"INEP/IDEB",hint:"CE: 5,4."},{id:"ideb-3",label:"IDEB 2019 — Anos Iniciais",target:"6,1",source:"INEP/IDEB",hint:""},{id:"ideb-4",label:"IDEB 2019 — Anos Finais",target:"5,0",source:"INEP/IDEB",hint:""},{id:"ideb-5",label:"SAEB — Língua Portuguesa",target:"Crescente",source:"INEP/SAEB",hint:""},{id:"ideb-6",label:"SAEB — Matemática",target:"Crescente",source:"INEP/SAEB",hint:""},{id:"ideb-7",label:"Participação SAEB",target:"≥ 80%",source:"INEP/SAEB",hint:""},{id:"ideb-8",label:"Nível suficiente 5º ano",target:"≥ 40%",source:"SAEB",hint:""},{id:"ideb-9",label:"Nível desejável 5º ano",target:"≥ 20%",source:"SAEB",hint:""},{id:"ideb-10",label:"Escolas abaixo da média",target:"Zero",source:"INEP/IDEB",hint:""}]},
-{id:"infraestrutura",title:"Infraestrutura Escolar",icon:"🏗️",badge:"Transversal",intro:"",metrics:[{id:"inf-1",label:"Acesso à internet",target:"100%",source:"Censo 2023",hint:""},{id:"inf-2",label:"Banda larga",target:"100%",source:"Censo 2023",hint:""},{id:"inf-3",label:"Computadores/alunos",target:"Triplicar",source:"Censo 2023",hint:""},{id:"inf-4",label:"Lab. informática",target:"100% (EF II)",source:"Censo 2023",hint:""},{id:"inf-5",label:"Biblioteca/sala leitura",target:"100%",source:"Censo 2023",hint:""},{id:"inf-6",label:"Quadra poliesportiva",target:"Progressivo",source:"Censo 2023",hint:""},{id:"inf-7",label:"Acessibilidade PcD",target:"100%",source:"Censo 2023",hint:""},{id:"inf-8",label:"Água tratada",target:"100%",source:"Censo 2023",hint:""},{id:"inf-9",label:"Esgoto adequado",target:"100%",source:"Censo 2023",hint:""},{id:"inf-10",label:"Sede SMED reformada",target:"Até 2017",source:"Patrimônio",hint:""}]},
-{id:"formacao",title:"Formação Docente",icon:"👩‍🏫",badge:"Metas 15–18",intro:"",metrics:[{id:"fd-1",label:"Licenciatura na área",target:"100%",source:"INEP 2023",hint:""},{id:"fd-2",label:"Ensino superior",target:"100%",source:"INEP 2023",hint:""},{id:"fd-3",label:"Pós-graduação (Meta 16)",target:"≥ 50%",source:"SMED/RH",hint:""},{id:"fd-4",label:"Regularidade docente (IED)",target:"Alta",source:"INEP 2023",hint:""},{id:"fd-5",label:"Formação continuada",target:"100%",source:"SMED",hint:""},{id:"fd-6",label:"PCCR reestruturado",target:"Até 2017",source:"Legislação",hint:""},{id:"fd-7",label:"Magistério efetivos",target:"≥ 90%",source:"RH Municipal",hint:""},{id:"fd-8",label:"Não-docentes efetivos",target:"≥ 80%",source:"RH Municipal",hint:""},{id:"fd-9",label:"Piso salarial (Meta 17)",target:"Sim",source:"Folha/TCM",hint:""},{id:"fd-10",label:"Fórum de valorização",target:"Até 1º ano",source:"SME/Legislação",hint:""}]},
-{id:"eja",title:"EJA e Alfab. Adultos",icon:"📖",badge:"Metas 8–10",intro:"",metrics:[{id:"eja-1",label:"Analfabetismo 15+",target:"< 20%",source:"IBGE 2022",hint:""},{id:"eja-2",label:"Analfabetismo funcional",target:"Redução 50%",source:"PNAD",hint:""},{id:"eja-3",label:"Escolaridade 18–29",target:"≥ 12 anos",source:"IBGE/PNAD",hint:""},{id:"eja-4",label:"Matrículas EJA",target:"Mantidas",source:"Censo 2023",hint:""},{id:"eja-5",label:"EJA + ed. profissional",target:"≥ 10%",source:"Censo 2023",hint:""},{id:"eja-6",label:"Igualdade escolar racial",target:"Igualada",source:"PNAD/IBGE",hint:""}]},
-{id:"superior",title:"Ed. Superior e Profissional",icon:"🎓",badge:"Metas 11–14",intro:"",metrics:[{id:"sup-1",label:"Transporte universitário",target:"Ativo",source:"Prefeitura",hint:""},{id:"sup-2",label:"Residência universitária",target:"Ativa",source:"Prefeitura",hint:""},{id:"sup-3",label:"Ed. profissional técnica",target:"Crescente",source:"Censo 2023",hint:""},{id:"sup-4",label:"Apoio ENEM",target:"Garantido",source:"SMED",hint:""}]},
-{id:"gestao",title:"Gestão Democrática",icon:"🤝",badge:"Meta 19",intro:"",metrics:[{id:"gd-1",label:"Lei gestão democrática",target:"Até 2017",source:"Câmara",hint:""},{id:"gd-2",label:"COMEP composição plena",target:"Sim",source:"COMEP",hint:""},{id:"gd-3",label:"Conselhos escolares",target:"100%",source:"SMED/Censo",hint:""},{id:"gd-4",label:"Reuniões dos conselhos",target:"≥ 4/ano",source:"SMED",hint:""},{id:"gd-5",label:"FME ativo",target:"Sim",source:"Planilha SEDUC",hint:""},{id:"gd-6",label:"Conferências Educação",target:"≥ 2",source:"COMEP",hint:""},{id:"gd-7",label:"Grêmios estudantis",target:"Fomentados",source:"SMED",hint:""},{id:"gd-8",label:"PPP atualizado",target:"Sim",source:"SMED/escolas",hint:""}]},
-{id:"financiamento",title:"Financiamento",icon:"💰",badge:"Meta 20",intro:"",metrics:[{id:"fin-1",label:"% receita MDE",target:"≥ 25%",source:"LOA/TCM/SIOPE",hint:""},{id:"fin-2",label:"Gasto aluno/ano (CAQ)",target:"≥ CAQ",source:"SIOPE/MEC",hint:""},{id:"fin-3",label:"Portal transparência",target:"Criado",source:"Prefeitura",hint:""},{id:"fin-4",label:"Audiências públicas",target:"Periódicas",source:"SME/COMEP",hint:""},{id:"fin-5",label:"FUNDEB aplicado",target:"100%",source:"SIOPE/TCM",hint:""}]}
+/* ═══ METAS DATA — PME Pereiro Lei 708/2015 ═══ */
+const METAS_PME = [
+  {id:"1",numero:"Meta 1",titulo:"Universalização do acesso à educação infantil",
+   descricao:"Garantir o acesso de todas as crianças de 0 a 5 anos à educação infantil em creches e pré-escolas.",
+   eixo:"Acesso e Permanência",prioridade:"Alta",responsavel:"Secretaria de Educação",prazo:"30/12/2026",
+   pneRef:"Objetivo 1 — Metas 1.a, 1.b, 1.c",
+   estrategias:["Parcerias para construção de CEIs tipo B na sede","Levantamento bianual de demanda com secretarias de ação social e saúde","Formação continuada dos profissionais da educação infantil","Ampliação da infraestrutura e acessibilidade","Oferta gradual de educação infantil em tempo integral"],
+   indicadores:[
+     {id:"i1-1",desc:"Taxa de atendimento de crianças de 0-3 anos",vi:45,va:68,vm:85,un:"%",fonte:"Censo Escolar INEP 2023",obs:"Aumento significativo com a inauguração de 3 novas creches"},
+     {id:"i1-2",desc:"Taxa de atendimento de crianças de 4-5 anos",vi:78,va:92,vm:95,un:"%",fonte:"Censo Escolar INEP 2023",obs:"Próximo da meta estabelecida"}
+   ]},
+  {id:"2",numero:"Meta 2",titulo:"Alfabetização na idade certa",
+   descricao:"Garantir que todos os alunos estejam alfabetizados até o final do 3º ano do ensino fundamental.",
+   eixo:"Qualidade da Educação",prioridade:"Alta",responsavel:"Coordenação Pedagógica",prazo:"30/12/2025",
+   pneRef:"Objetivo 3 — Metas 3.a, 3.b, 3.c",
+   estrategias:["Fortalecimento dos processos pedagógicos de alfabetização via PAIC","Avaliações periódicas (SPAECE-Alfa, SAEB)","Formação continuada dos alfabetizadores","Tecnologias educacionais para alfabetização"],
+   indicadores:[
+     {id:"i2-1",desc:"Taxa de alfabetização no 3º ano",vi:62,va:78,vm:90,un:"%",fonte:"SPAECE-Alfa 2023",obs:"Crescimento contínuo, mas precisa acelerar"},
+     {id:"i2-2",desc:"Proficiência média SPAECE-Alfa",vi:140,va:185,vm:200,un:"pts",fonte:"SPAECE 2023",obs:"Em progresso consistente"}
+   ]},
+  {id:"3",numero:"Meta 3",titulo:"Redução da distorção idade-série",
+   descricao:"Reduzir em 50% a taxa de distorção idade-série no ensino fundamental.",
+   eixo:"Acesso e Permanência",prioridade:"Média",responsavel:"Secretaria de Educação",prazo:"30/12/2025",
+   pneRef:"Objetivo 4 — Metas 4.b, 4.c",
+   estrategias:["Programas de correção de fluxo","Acompanhamento individualizado dos alunos","Busca ativa de crianças fora da escola","Flexibilização pedagógica para escolas do campo"],
+   indicadores:[
+     {id:"i3-1",desc:"Taxa de distorção idade-série (AI)",vi:15,va:8,vm:7.5,un:"%",fonte:"INEP 2023",obs:"Redução significativa nos anos iniciais"},
+     {id:"i3-2",desc:"Taxa de distorção idade-série (AF)",vi:28,va:16,vm:14,un:"%",fonte:"INEP 2023",obs:"Em progresso, mas requer atenção"}
+   ]},
+  {id:"4",numero:"Meta 4",titulo:"Formação continuada dos professores",
+   descricao:"Garantir formação continuada para 100% dos professores da rede municipal.",
+   eixo:"Formação e Valorização",prioridade:"Alta",responsavel:"Coordenação de Formação",prazo:"30/12/2026",
+   pneRef:"Objetivo 17 — Metas 17.a, 17.f",
+   estrategias:["Planejamento estratégico de formação continuada","Parcerias com IES","Formação em serviço com foco em práticas pedagógicas","Incentivo à pós-graduação"],
+   indicadores:[
+     {id:"i4-1",desc:"Professores com formação continuada anual",vi:40,va:88,vm:100,un:"%",fonte:"SMED/RH",obs:"Bom progresso, mas necessário alcançar 100%"},
+     {id:"i4-2",desc:"Professores com pós-graduação",vi:15,va:45,vm:70,un:"%",fonte:"SMED/RH",obs:"Crescimento consistente"}
+   ]},
+  {id:"5",numero:"Meta 5",titulo:"Universalização do ensino fundamental",
+   descricao:"Universalizar o ensino fundamental de 9 anos para toda a população de 6 a 14 anos.",
+   eixo:"Acesso e Permanência",prioridade:"Alta",responsavel:"Secretaria de Educação",prazo:"30/12/2026",
+   pneRef:"Objetivo 4 — Metas 4.a, 4.b",
+   estrategias:["Busca ativa de crianças fora da escola","Acompanhamento da frequência escolar","Transporte escolar para zona rural","Programas de permanência"],
+   indicadores:[
+     {id:"i5-1",desc:"Taxa líquida de matrícula (6-14 anos)",vi:95,va:99.2,vm:100,un:"%",fonte:"Censo Escolar INEP 2023",obs:"Próximo da universalização"},
+     {id:"i5-2",desc:"IDEB Anos Iniciais",vi:5.7,va:8.1,vm:6.3,un:"pts",fonte:"IDEB 2021",obs:"Meta amplamente superada"},
+     {id:"i5-3",desc:"IDEB Anos Finais",vi:4.6,va:5.6,vm:5.2,un:"pts",fonte:"IDEB 2021",obs:"Meta atingida"}
+   ]},
+  {id:"6",numero:"Meta 6",titulo:"Educação em tempo integral",
+   descricao:"Oferecer educação em tempo integral em no mínimo 50% das escolas públicas.",
+   eixo:"Infraestrutura",prioridade:"Média",responsavel:"Secretaria de Educação",prazo:"30/12/2026",
+   pneRef:"Objetivo 6 — Meta 6.a",
+   estrategias:["Implantação gradual do tempo integral","Ampliação da infraestrutura","Atividades pedagógicas com ≥ 7h/dia","Atendimento prioritário a comunidades vulneráveis"],
+   indicadores:[
+     {id:"i6-1",desc:"Escolas com oferta de tempo integral",vi:0,va:81,vm:50,un:"%",fonte:"Censo INEP 2024",obs:"Meta superada. 13 de 16 escolas ofertam"},
+     {id:"i6-2",desc:"Alunos em tempo integral",vi:0,va:31,vm:25,un:"%",fonte:"Censo INEP 2024",obs:"Meta superada"}
+   ]},
+  {id:"7",numero:"Meta 7",titulo:"Qualidade da educação básica — IDEB",
+   descricao:"Fomentar a qualidade da educação básica, atingindo as metas do IDEB.",
+   eixo:"Qualidade da Educação",prioridade:"Alta",responsavel:"SMED / INEP",prazo:"30/12/2026",
+   pneRef:"Objetivo 5 — Metas 5.a, 5.b, 5.d",
+   estrategias:["Diretrizes pedagógicas por pacto interfederativo","Instrumentos de avaliação sistêmica","Políticas de inclusão e diversidade","Garantir acesso a bibliotecas e laboratórios"],
+   indicadores:[
+     {id:"i7-1",desc:"IDEB Anos Iniciais",vi:5.7,va:8.1,vm:6.3,un:"pts",fonte:"IDEB 2021",obs:"Referência no Ceará"},
+     {id:"i7-2",desc:"IDEB Anos Finais",vi:4.6,va:5.6,vm:5.2,un:"pts",fonte:"IDEB 2021",obs:"Meta atingida"},
+     {id:"i7-3",desc:"Proficiência média SAEB — Matemática",vi:195,va:228,vm:245,un:"pts",fonte:"SAEB 2023",obs:"Em progresso"}
+   ]},
+  {id:"8",numero:"Meta 8",titulo:"Educação especial / inclusiva",
+   descricao:"Universalizar o acesso à educação básica e ao AEE para alunos com deficiência.",
+   eixo:"Acesso e Permanência",prioridade:"Alta",responsavel:"SMED / NAEE",prazo:"30/12/2026",
+   pneRef:"Objetivo 10 — Metas 10.a, 10.b",
+   estrategias:["Matrícula preferencial na rede regular","Oferta de AEE no NAEE","Formação em educação especial","Adequação arquitetônica"],
+   indicadores:[
+     {id:"i8-1",desc:"PcD matriculados em classes comuns",vi:80,va:100,vm:100,un:"%",fonte:"Censo INEP 2023",obs:"Meta atingida"},
+     {id:"i8-2",desc:"Salas de recursos multifuncionais",vi:2,va:4,vm:8,un:"un",fonte:"SMED",obs:"Necessária ampliação"}
+   ]},
+  {id:"9",numero:"Meta 9",titulo:"Educação de jovens e adultos (EJA)",
+   descricao:"Elevar a taxa de alfabetização da população de 15+ anos e ampliar oferta de EJA.",
+   eixo:"EJA e Diversidade",prioridade:"Média",responsavel:"SMED / EJA",prazo:"30/12/2026",
+   pneRef:"Objetivo 11 — Metas 11.a, 11.d, 11.e",
+   estrategias:["Oferta gratuita de EJA","Diagnóstico de demanda","Busca ativa","Programas de transporte e saúde"],
+   indicadores:[
+     {id:"i9-1",desc:"Taxa de alfabetização 15+",vi:78,va:91,vm:97,un:"%",fonte:"IBGE PNAD 2022",obs:"Bom progresso, meta atualizada pelo novo PNE"},
+     {id:"i9-2",desc:"Matrículas na EJA",vi:120,va:285,vm:400,un:"alunos",fonte:"SMED",obs:"Crescimento expressivo"}
+   ]},
+  {id:"10",numero:"Meta 10",titulo:"Ensino médio — apoio à universalização",
+   descricao:"Apoiar a universalização do ensino médio e elevar a taxa líquida de matrículas.",
+   eixo:"Acesso e Permanência",prioridade:"Alta",responsavel:"SEDUC-CE / SMED",prazo:"30/12/2026",
+   pneRef:"Objetivo 4 — Meta 4.d",
+   estrategias:["Busca ativa de jovens 15-17 fora da escola","Programas de correção de fluxo","Articulação com educação profissional","Oferta noturna"],
+   indicadores:[
+     {id:"i10-1",desc:"Taxa líquida de matrícula EM",vi:60,va:77,vm:90,un:"%",fonte:"Censo INEP 2023",obs:"Crescimento, mas abaixo da meta"}
+   ]},
+  {id:"11",numero:"Meta 11",titulo:"Educação profissional técnica",
+   descricao:"Ampliar matrículas da educação profissional técnica de nível médio.",
+   eixo:"Ed. Profissional e Superior",prioridade:"Média",responsavel:"SMED / SEDUC-CE",prazo:"30/12/2026",
+   pneRef:"Objetivo 12 — Metas 12.a, 12.c",
+   estrategias:["Expansão da oferta de cursos técnicos","Apoio ao estágio profissional","Parcerias com setor produtivo"],
+   indicadores:[
+     {id:"i11-1",desc:"Matrículas em educação profissional",vi:30,va:48,vm:90,un:"alunos",fonte:"SMED",obs:"Aumento, mas meta distante"}
+   ]},
+  {id:"12",numero:"Meta 12",titulo:"Financiamento da educação",
+   descricao:"Ampliar o investimento público em educação municipal conforme legislação.",
+   eixo:"Gestão e Financiamento",prioridade:"Alta",responsavel:"Finanças / TCM",prazo:"30/12/2026",
+   pneRef:"Objetivo 19 — Metas 19.a, 19.b",
+   estrategias:["Acompanhamento da arrecadação","Destinar MDE conforme art. 212 CF","Portais de transparência","Audiências públicas"],
+   indicadores:[
+     {id:"i12-1",desc:"% receita investida em MDE",vi:25,va:27.4,vm:25,un:"%",fonte:"LOA/SIOPE 2023",obs:"Acima do mínimo constitucional"},
+     {id:"i12-2",desc:"FUNDEB aplicado corretamente",vi:0,va:100,vm:100,un:"%",fonte:"TCM/SIOPE",obs:"Meta atingida"}
+   ]}
 ];
 
-const STATUS_OPTIONS=[{value:"",label:"— Não avaliado —"},{value:"alcancado",label:"✅ Alcançado"},{value:"parcial",label:"🟡 Parcialmente alcançado"},{value:"nao-alcancado",label:"🔴 Não alcançado"},{value:"nao-se-aplica",label:"⚪ Não se aplica"}];
-const VALID_S=new Set(STATUS_OPTIONS.map(o=>o.value));
-const SC={"alcancado":{l:"Alcançado",e:"✅",bg:"rgba(16,185,129,.1)",c:"#34d399",bd:"rgba(16,185,129,.25)"},"parcial":{l:"Parcial",e:"🟡",bg:"rgba(234,179,8,.1)",c:"#fbbf24",bd:"rgba(234,179,8,.25)"},"nao-alcancado":{l:"Não alcançado",e:"🔴",bg:"rgba(239,68,68,.1)",c:"#f87171",bd:"rgba(239,68,68,.25)"},"nao-se-aplica":{l:"N/A",e:"⚪",bg:"rgba(148,163,184,.06)",c:"#94a3b8",bd:"rgba(148,163,184,.15)"},"":{l:"Não avaliado",e:"⬜",bg:"rgba(148,163,184,.04)",c:"#64748b",bd:"rgba(148,163,184,.1)"}};
-const gc=s=>SC[s]||SC[""];
-const ALL_IDS=new Set();
-const buildDefault=()=>{const d={};SECTIONS.forEach(s=>s.metrics.forEach(m=>{ALL_IDS.add(m.id);const p=PREFILLED[m.id];d[m.id]=p?{value:String(p.value||""),status:VALID_S.has(p.status)?p.status:"",notes:String(p.notes||"")}:{value:"",status:"",notes:""}}));return d};
-const validateLoaded=raw=>{if(!raw||typeof raw!=="object"||Array.isArray(raw))return null;const cl={};let ok=false;for(const[k,v]of Object.entries(raw)){if(!ALL_IDS.has(k)||!v||typeof v!=="object")continue;cl[k]={value:sanitize(String(v.value||"")),status:VALID_S.has(v.status)?v.status:"",notes:sanitize(String(v.notes||""))};ok=true}return ok?cl:null};
-const MENU=[{id:"dashboard",label:"Dashboard",icon:"📊"},{id:"form",label:"Formulário",icon:"📋"},{id:"relatorios",label:"Relatórios",icon:"📄"},{id:"consolidado",label:"Consolidado",icon:"📑"},{id:"config",label:"Configurações",icon:"⚙️"}];
+const EIXOS=["Todos os Eixos","Acesso e Permanência","Qualidade da Educação","EJA e Diversidade","Ed. Profissional e Superior","Formação e Valorização","Gestão e Financiamento","Infraestrutura"];
+const STATUSES=["Todos os Status","Em Andamento","Concluída","Atrasada","Não Iniciada"];
+const STORAGE_KEY="pme-pereiro-v6";
+const MENU=[{id:"dashboard",label:"Dashboard",icon:"📊"},{id:"metas",label:"Metas",icon:"🎯"},{id:"indicadores",label:"Indicadores",icon:"📈"},{id:"relatorios",label:"Relatórios",icon:"📄"},{id:"config",label:"Configurações",icon:"⚙️"}];
 const roleLabel={admin:"Administrador",editor:"Editor",viewer:"Somente leitura"};
 
-/* ═══ REPORT GENERATOR ═══ */
-function generateReport(title,sections,data,userName){
-  const d=new Date().toLocaleDateString("pt-BR",{day:"2-digit",month:"long",year:"numeric"});
-  let rows="";
-  sections.forEach(s=>{
-    rows+=`<tr style="background:#f0fdf4"><td colspan="5" style="padding:10px 12px;font-weight:800;font-size:13px;color:#166534">${s.icon} ${s.title} — ${s.badge}</td></tr>`;
-    s.metrics.forEach(m=>{
-      const v=data[m.id]||{value:"",status:"",notes:""};
-      const st=gc(v.status);
-      rows+=`<tr><td style="padding:6px 10px;font-weight:500">${m.label}</td><td style="padding:6px 10px;color:#166534;font-weight:600;font-size:10px">${m.target}</td><td style="padding:6px 10px">${v.value||"—"}</td><td style="padding:6px 10px;font-weight:700">${st.e} ${st.l}</td><td style="padding:6px 10px;font-size:10px;color:#64748b">${v.notes||"—"}</td></tr>`;
-    });
-  });
-  const html=`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>${title}</title>
-<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Inter,Arial,sans-serif;font-size:12px;color:#1e293b;padding:30px}
-h1{font-size:18px;margin-bottom:4px}h2{font-size:13px;color:#64748b;margin-bottom:16px;font-weight:400}
-table{width:100%;border-collapse:collapse;margin-top:12px}th{background:#0f172a;color:white;padding:8px 10px;text-align:left;font-size:9px;text-transform:uppercase;letter-spacing:.5px}
-td{border-bottom:1px solid #e2e8f0}tr:hover{background:#f8fafc}.header{border-bottom:2px solid #10b981;padding-bottom:12px;margin-bottom:16px}
-.footer{margin-top:24px;padding-top:12px;border-top:1px solid #e2e8f0;font-size:10px;color:#94a3b8;text-align:center}
-@media print{body{padding:15px}}</style></head><body>
-<div class="header"><h1>🏛️ ${title}</h1><h2>COMEP — Conselho Municipal de Educação de Pereiro/CE · Lei nº 708/2015</h2>
-<p style="font-size:11px;color:#64748b">Gerado em ${d} por ${userName}</p></div>
-<table><thead><tr><th>Indicador</th><th>Meta</th><th>Valor Atual</th><th>Status</th><th>Observações</th></tr></thead><tbody>${rows}</tbody></table>
-<div class="footer">COMEP — Pereiro/CE · PME 2015–2024 · Documento gerado automaticamente pelo sistema PME Monitor v4.2</div>
-</body></html>`;
-  const w=window.open("","_blank","width=900,height=700");
-  if(w){w.document.write(html);w.document.close();setTimeout(()=>w.print(),500)}
-}
+/* ═══ UTILS ═══ */
+const calcProg=(vi,va,vm)=>{if(vm===vi)return va>=vm?100:0;const p=((va-vi)/(vm-vi))*100;return Math.min(Math.max(p,0),100)};
+const getStatus=p=>p>=100?"concluida":p>=30?"andamento":p>0?"atrasada":"nao-iniciada";
+const statusLabel={"concluida":"Concluída","andamento":"Em Andamento","atrasada":"Atrasada","nao-iniciada":"Não Iniciada"};
+const statusColor={"concluida":"#34d399","andamento":"#fbbf24","atrasada":"#f87171","nao-iniciada":"#94a3b8"};
+const prioColor={Alta:"#f87171",Média:"#fbbf24",Baixa:"#60a5fa"};
 
 function Toast({msg,type}){if(!msg)return null;return<div className="toast-container"><div className={`toast ${type}`}><span>{type==="error"?"⚠️":"✓"}</span>{msg}</div></div>}
 
+/* ═══ SVG BAR CHART ═══ */
+function BarChart({metaStats}){
+  const eixos=EIXOS.slice(1);
+  const chartData=eixos.map(eixo=>{
+    const ms=metaStats.filter(m=>m.eixo===eixo);
+    return{name:eixo.replace("Ed. Profissional e Superior","Ed. Prof.").replace("Acesso e Permanência","Acesso").replace("Qualidade da Educação","Qualidade").replace("EJA e Diversidade","EJA").replace("Formação e Valorização","Formação").replace("Gestão e Financiamento","Financiam."),
+      concluida:ms.filter(m=>m.status==="concluida").length,
+      andamento:ms.filter(m=>m.status==="andamento").length,
+      atrasada:ms.filter(m=>m.status==="atrasada").length,
+      naoIniciada:ms.filter(m=>m.status==="nao-iniciada").length,
+      total:ms.length};
+  }).filter(d=>d.total>0);
+  const maxVal=Math.max(...chartData.map(d=>d.total),4);
+  const w=100/chartData.length;
+  const[hover,setHover]=useState(null);
+
+  return(<div style={{position:"relative"}}>
+    <svg viewBox="0 0 460 220" style={{width:"100%",height:"auto"}}>
+      {[0,1,2,3,4].map(i=>{const y=30+i*40;return<g key={i}><line x1="50" y1={y} x2="440" y2={y} stroke="rgba(148,163,184,.08)" strokeWidth=".5"/><text x="44" y={y+4} textAnchor="end" fill="#64748b" fontSize="9" fontFamily="JetBrains Mono">{maxVal-Math.round(maxVal/4*i)}</text></g>})}
+      {chartData.map((d,i)=>{
+        const bw=40;const gap=(380-bw*chartData.length)/(chartData.length+1);
+        const x=55+gap+(bw+gap)*i;
+        const colors=[["#10b981",d.concluida],["#f59e0b",d.andamento],["#ef4444",d.atrasada],["#64748b",d.naoIniciada]];
+        let cy=190;
+        return<g key={i} onMouseEnter={()=>setHover(i)} onMouseLeave={()=>setHover(null)} style={{cursor:"pointer"}}>
+          {colors.map(([c,v],ci)=>{if(v===0)return null;const h=(v/maxVal)*160;const ry=cy-h;cy=ry;
+            return<rect key={ci} x={x} y={ry} width={bw} height={h} fill={c} rx="3" opacity={hover===i?.9:.7} style={{transition:"all .3s"}}/>})}
+          <text x={x+bw/2} y={206} textAnchor="middle" fill="#94a3b8" fontSize="8" fontFamily="Plus Jakarta Sans">{d.name}</text>
+        </g>})}
+    </svg>
+    {hover!==null&&<div style={{position:"absolute",top:10,right:10,background:"rgba(15,23,42,.95)",border:"1px solid var(--bg-700)",borderRadius:8,padding:"10px 14px",fontSize:11,lineHeight:1.8,pointerEvents:"none",zIndex:2,minWidth:160}}>
+      <div style={{fontWeight:700,color:"var(--text-100)",marginBottom:4}}>{chartData[hover]?.name}</div>
+      {chartData[hover]?.concluida>0&&<div style={{color:"#34d399"}}>Concluídas: {chartData[hover].concluida}</div>}
+      {chartData[hover]?.andamento>0&&<div style={{color:"#fbbf24"}}>Em Andamento: {chartData[hover].andamento}</div>}
+      {chartData[hover]?.atrasada>0&&<div style={{color:"#f87171"}}>Atrasadas: {chartData[hover].atrasada}</div>}
+      {chartData[hover]?.naoIniciada>0&&<div style={{color:"#94a3b8"}}>Não Iniciadas: {chartData[hover].naoIniciada}</div>}
+    </div>}
+    <div style={{display:"flex",justifyContent:"center",gap:16,marginTop:4}}>
+      {[["#10b981","Concluídas"],["#f59e0b","Em Andamento"],["#ef4444","Atrasadas"],["#64748b","Não Iniciadas"]].map(([c,l])=>
+        <div key={l} style={{display:"flex",alignItems:"center",gap:5,fontSize:10,color:"var(--text-500)"}}><span style={{width:8,height:8,borderRadius:2,background:c,display:"inline-block"}}/>{l}</div>)}
+    </div>
+  </div>);
+}
+
+/* ═══ SVG LINE CHART ═══ */
+function LineChart({metaStats,data}){
+  const indicators=[
+    {id:"i1-1",label:"Atend. creche (0-3)",color:"#10b981"},
+    {id:"i1-2",label:"Atend. pré-escola",color:"#f59e0b"},
+    {id:"i2-1",label:"Alfabetização 3º an...",color:"#3b82f6"},
+    {id:"i5-2",label:"IDEB Anos Iniciais",color:"#8b5cf6"},
+    {id:"i4-1",label:"Formação cont. prof.",color:"#06b6d4"},
+  ];
+  const points=indicators.map(ind=>{
+    const meta=METAS_PME.flatMap(m=>m.indicadores).find(i=>i.id===ind.id);
+    if(!meta)return null;
+    const va=data[ind.id]?.va!==undefined?data[ind.id].va:meta.va;
+    const prog=calcProg(meta.vi,va,meta.vm);
+    return{...ind,vi:meta.vi,va,vm:meta.vm,prog};
+  }).filter(Boolean);
+  const[hover,setHover]=useState(null);
+
+  return(<div style={{position:"relative"}}>
+    <svg viewBox="0 0 460 220" style={{width:"100%",height:"auto"}}>
+      {[0,25,50,75,100].map((v,i)=>{const y=190-v*1.6;return<g key={i}><line x1="40" y1={y} x2="440" y2={y} stroke="rgba(148,163,184,.08)" strokeWidth=".5"/><text x="34" y={y+3} textAnchor="end" fill="#64748b" fontSize="9" fontFamily="JetBrains Mono">{v}</text></g>})}
+      {points.map((p,i)=>{
+        const x=70+i*85;const yVi=190-((p.vi/Math.max(p.vm,100))*100)*1.6;const yVa=190-((p.va/Math.max(p.vm,100))*100)*1.6;const yVm=190-100*1.6;
+        return<g key={i}>
+          <line x1={x} y1={yVi} x2={x} y2={yVa} stroke={p.color} strokeWidth="2" opacity=".3" strokeDasharray="4,3"/>
+          <circle cx={x} cy={yVi} r="4" fill="var(--bg-800)" stroke="#64748b" strokeWidth="1.5"/>
+          <circle cx={x} cy={yVa} r="5" fill={p.color} stroke="var(--bg-800)" strokeWidth="2" onMouseEnter={()=>setHover(i)} onMouseLeave={()=>setHover(null)} style={{cursor:"pointer"}}/>
+          <circle cx={x} cy={yVm} r="3" fill="none" stroke={p.color} strokeWidth="1" strokeDasharray="2,2" opacity=".5"/>
+        </g>})}
+      {points.length>1&&<>
+        <polyline points={points.map((p,i)=>`${70+i*85},${190-((p.vi/Math.max(p.vm,100))*100)*1.6}`).join(" ")} fill="none" stroke="#64748b" strokeWidth="1.5" strokeDasharray="5,4" opacity=".4"/>
+        <polyline points={points.map((p,i)=>`${70+i*85},${190-((p.va/Math.max(p.vm,100))*100)*1.6}`).join(" ")} fill="none" stroke="var(--emerald)" strokeWidth="2" opacity=".7"/>
+        <polyline points={points.map((p,i)=>`${70+i*85},${190-100*1.6}`).join(" ")} fill="none" stroke="#f59e0b" strokeWidth="1" strokeDasharray="3,3" opacity=".4"/>
+      </>}
+    </svg>
+    {hover!==null&&<div style={{position:"absolute",top:10,right:10,background:"rgba(15,23,42,.95)",border:"1px solid var(--bg-700)",borderRadius:8,padding:"10px 14px",fontSize:11,lineHeight:1.8,pointerEvents:"none",zIndex:2}}>
+      <div style={{fontWeight:700,color:"var(--text-100)",marginBottom:2}}>{points[hover]?.label}</div>
+      <div>Valor Inicial: <span style={{color:"#94a3b8",fontWeight:600}}>{points[hover]?.vi}</span></div>
+      <div>Valor Atual: <span style={{color:points[hover]?.color,fontWeight:700}}>{points[hover]?.va}</span></div>
+      <div>Meta: <span style={{color:"#fbbf24",fontWeight:600}}>{points[hover]?.vm}</span></div>
+      <div>Progresso: <span style={{fontWeight:700,color:points[hover]?.prog>=100?"#34d399":"#fbbf24"}}>{points[hover]?.prog.toFixed(1)}%</span></div>
+    </div>}
+    <div style={{display:"flex",justifyContent:"center",gap:14,marginTop:4}}>
+      {[["#64748b","— Valor Inicial"],["var(--emerald)","— Valor Atual"],["#f59e0b","··· Meta"]].map(([c,l])=>
+        <div key={l} style={{display:"flex",alignItems:"center",gap:5,fontSize:10,color:"var(--text-500)"}}><span style={{width:14,height:2,background:c,display:"inline-block",borderRadius:1}}/>{l}</div>)}
+    </div>
+  </div>);
+}
+
+/* ═══ LOGIN SCREEN ═══ */
 function LoginScreen({onLogin}){
   const[user,setUser]=useState("");const[pass,setPass]=useState("");const[error,setError]=useState("");const[show,setShow]=useState(false);
   const[attempts,setAttempts]=useState(0);const[lockUntil,setLockUntil]=useState(0);const[loading,setLoading]=useState(false);const[now,setNow]=useState(Date.now());
@@ -229,238 +417,341 @@ function LoginScreen({onLogin}){
   useEffect(()=>{ref.current?.focus()},[]);
   useEffect(()=>{const t=setInterval(()=>setNow(Date.now()),1000);return()=>clearInterval(t)},[]);
   const locked=now<lockUntil;const lockSec=locked?Math.ceil((lockUntil-now)/1000):0;
-  useEffect(()=>{if(!locked&&attempts>=MAX_ATTEMPTS){setAttempts(0);setError("")}},[locked,attempts]);
   const submit=()=>{if(locked||loading)return;const u=user.trim().toLowerCase(),p=pass.trim();if(!u||!p){setError("Preencha usuário e senha.");return}setLoading(true);
-    setTimeout(()=>{const f=USERS.find(x=>x.user===u&&x.hash===hashPass(p));if(f){setError("");try{sessionStorage.setItem(SESSION_KEY,JSON.stringify({user:f.user,ts:Date.now()}))}catch{}onLogin(f)}else{const n=attempts+1;setAttempts(n);if(n>=MAX_ATTEMPTS){setLockUntil(Date.now()+LOCKOUT_MS);setError("Bloqueado por 5 min.")}else setError(`Credenciais inválidas. ${n}/${MAX_ATTEMPTS}`)}setLoading(false)},600)};
+    setTimeout(()=>{const f=USERS.find(x=>x.user===u&&x.hash===hashPass(p));if(f){setError("");onLogin(f)}else{const n=attempts+1;setAttempts(n);if(n>=MAX_ATTEMPTS){setLockUntil(Date.now()+LOCKOUT_MS);setError("Bloqueado por 5 min.")}else setError(`Credenciais inválidas. ${n}/${MAX_ATTEMPTS}`)}setLoading(false)},500)};
   return(
     <div className="login-wrap"><div className="login-orb login-orb-1"/><div className="login-orb login-orb-2"/><div className="login-grid"/>
-      <div className="login-card"><div style={{textAlign:"center",marginBottom:28}}><div className="login-logo">🏛️</div><div style={{fontSize:9,letterSpacing:4,textTransform:"uppercase",color:"var(--emerald)",fontWeight:700,marginBottom:6}}>COMEP · Pereiro/CE</div><h1 style={{fontSize:24,fontWeight:800,color:"var(--text-50)"}}>PME Pereiro Monitor</h1><p style={{margin:"6px 0 0",fontSize:12,color:"var(--text-500)"}}>Sistema de Monitoramento · PME 2015–2024</p></div>
+      <div className="login-card"><div style={{textAlign:"center",marginBottom:28}}><div className="login-logo">🎓</div><div style={{fontSize:9,letterSpacing:4,textTransform:"uppercase",color:"var(--emerald)",fontWeight:700,marginBottom:6}}>COMEP · Pereiro/CE</div><h1 style={{fontSize:22,fontWeight:800,color:"var(--text-50)"}}>PME Pereiro Monitor</h1><p style={{margin:"6px 0 0",fontSize:12,color:"var(--text-500)"}}>Monitoramento e Avaliação · Lei nº 708/2015</p><p style={{margin:"4px 0 0",fontSize:10,color:"var(--text-600)"}}>Diagnóstico para o novo PME 2025–2035 · PNE Lei de 25/03/2026</p></div>
         <div style={{display:"flex",flexDirection:"column",gap:14}}>
           <div><label style={{display:"block",fontSize:10,fontWeight:700,color:"var(--text-500)",marginBottom:6,textTransform:"uppercase",letterSpacing:1.5}}>Usuário</label><div style={{position:"relative"}}><span className="login-icon">👤</span><input ref={ref} type="text" className="login-input" value={user} onChange={e=>setUser(e.target.value.slice(0,30))} onKeyDown={e=>e.key==="Enter"&&submit()} disabled={locked||loading} placeholder="Digite seu usuário" autoComplete="username"/></div></div>
           <div><label style={{display:"block",fontSize:10,fontWeight:700,color:"var(--text-500)",marginBottom:6,textTransform:"uppercase",letterSpacing:1.5}}>Senha</label><div style={{position:"relative"}}><span className="login-icon">🔒</span><input type={show?"text":"password"} className="login-input" value={pass} onChange={e=>setPass(e.target.value.slice(0,50))} onKeyDown={e=>e.key==="Enter"&&submit()} disabled={locked||loading} placeholder="Digite sua senha" autoComplete="current-password"/><button type="button" onClick={()=>setShow(s=>!s)} tabIndex={-1} style={{position:"absolute",right:10,top:"50%",transform:"translateY(-50%)",background:"none",border:"none",color:"var(--text-600)",cursor:"pointer",fontSize:16}}>{show?"🙈":"👁️"}</button></div></div>
           {error&&<div className="login-error"><span>🔒</span>{locked?`Bloqueado (${lockSec}s)`:error}</div>}
           <button type="button" onClick={submit} disabled={locked||loading} className="login-btn" style={{marginTop:4}}>{loading?<><div className="spinner" style={{width:16,height:16,borderWidth:2}}/>Autenticando...</>:locked?`Bloqueado (${lockSec}s)`:"Entrar"}</button>
         </div>
-        <div style={{textAlign:"center",marginTop:20,paddingTop:14,borderTop:"1px solid rgba(16,185,129,.08)"}}><p style={{fontSize:10,color:"var(--text-600)",lineHeight:1.6}}>Conselho Municipal de Educação de Pereiro<br/><span style={{color:"var(--text-700)"}}>Lei nº 708/2015 · v4.2</span></p></div>
+        <div style={{textAlign:"center",marginTop:20,paddingTop:14,borderTop:"1px solid rgba(16,185,129,.08)"}}><p style={{fontSize:10,color:"var(--text-600)",lineHeight:1.6}}>Conselho Municipal de Educação de Pereiro<br/><span style={{color:"var(--text-700)"}}>PME 2015–2024 · Avaliação & Diagnóstico · v6.0</span></p></div>
       </div></div>);
 }
 
-function MainApp(){
-  const[loggedUser,setLoggedUser]=useState(()=>{try{const s=sessionStorage.getItem(SESSION_KEY);if(s){const p=safeJSON(s,null);if(p?.user){const f=USERS.find(u=>u.user===p.user);if(f&&Date.now()-p.ts<86400000)return f}}return null}catch{return null}});
-  const[activeTab,setActiveTab]=useState("dashboard");
-  const[activeSection,setActiveSection]=useState("institucional");
-  const[data,setData]=useState(buildDefault);
-  const[saving,setSaving]=useState(false);const[savedAt,setSavedAt]=useState("");
-  const[toastMsg,setToastMsg]=useState("");const[toastType,setToastType]=useState("");
-  const[sidebarOpen,setSidebarOpen]=useState(false);
-  const[filterStatus,setFilterStatus]=useState("");
-  const[loaded,setLoaded]=useState(false);
-  const[hints,setHints]=useState(new Set());
-  const saveRef=useRef(false);const mainRef=useRef(null);const toastTimer=useRef(null);
+/* ═══ META DETAIL MODAL ═══ */
+function MetaModal({meta,data,onUpdate,onClose,readOnly}){
+  const[tab,setTab]=useState("detalhes");
+  const inds=meta.indicadores.map(ind=>{const d=data[ind.id]||{};return{...ind,va:d.va!==undefined?d.va:ind.va,obs:d.obs||ind.obs}});
+  const avgProg=inds.length>0?inds.reduce((s,i)=>s+calcProg(i.vi,i.va,i.vm),0)/inds.length:0;
+  const status=getStatus(avgProg);
+  return(
+    <div className="modal-overlay" onClick={e=>e.target===e.currentTarget&&onClose()}>
+      <div className="modal">
+        <div className="modal-header">
+          <div>
+            <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8,flexWrap:"wrap"}}>
+              <span style={{fontSize:14,fontWeight:800,color:"var(--emerald)",fontFamily:"'JetBrains Mono'"}}>{meta.numero}</span>
+              <span className={`status-badge status-${status}`}>{statusLabel[status]}</span>
+              <span className="badge" style={{background:`${prioColor[meta.prioridade]}15`,color:prioColor[meta.prioridade],border:`1px solid ${prioColor[meta.prioridade]}30`}}>{meta.prioridade}</span>
+            </div>
+            <h2 style={{fontSize:18,fontWeight:800,color:"var(--text-50)",lineHeight:1.4}}>{meta.titulo}</h2>
+          </div>
+          <div style={{display:"flex",alignItems:"center",gap:8}}>
+            {!readOnly&&<button className="btn primary" style={{padding:"6px 12px",fontSize:11}} onClick={()=>{onClose()}}>✏️ Editar</button>}
+            <button className="modal-close" onClick={onClose}>✕</button>
+          </div>
+        </div>
+        <div className="modal-body">
+          <div className="tab-bar">
+            <button className={`tab-btn ${tab==="detalhes"?"active":""}`} onClick={()=>setTab("detalhes")}>📋 Detalhes</button>
+            <button className={`tab-btn ${tab==="indicadores"?"active":""}`} onClick={()=>setTab("indicadores")}>📈 Indicadores ({inds.length})</button>
+          </div>
 
-  useEffect(()=>{if(!loggedUser)return;try{const raw=localStorage.getItem(STORAGE_KEY);if(raw){const parsed=safeJSON(raw,null);const validated=parsed?validateLoaded(parsed):null;if(validated)setData(prev=>({...prev,...validated}))}}catch{}setLoaded(true)},[loggedUser]);
+          {tab==="detalhes"&&<div className="fade-in">
+            <div style={{marginBottom:18}}>
+              <div style={{fontSize:11,fontWeight:700,color:"var(--text-600)",textTransform:"uppercase",letterSpacing:.7,marginBottom:6}}>Descrição</div>
+              <p style={{fontSize:13,color:"var(--text-300)",lineHeight:1.7}}>{meta.descricao}</p>
+            </div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:14,marginBottom:18}}>
+              {[["Eixo",meta.eixo,"◎"],["Prazo",meta.prazo,"📅"],["Responsável",meta.responsavel,"👤"]].map(([l,v,i])=>(
+                <div key={l} style={{background:"rgba(0,0,0,.15)",borderRadius:10,padding:"12px 14px",border:"1px solid rgba(51,65,85,.8)"}}>
+                  <div style={{fontSize:10,fontWeight:700,color:"var(--text-600)",textTransform:"uppercase",letterSpacing:.7,marginBottom:4}}>{i} {l}</div>
+                  <div style={{fontSize:13,fontWeight:600,color:"var(--text-200)"}}>{v}</div>
+                </div>))}
+            </div>
+            {meta.pneRef&&<div style={{background:"rgba(59,130,246,.05)",border:"1px solid rgba(59,130,246,.15)",borderRadius:10,padding:"12px 16px",marginBottom:18}}>
+              <div style={{fontSize:10,fontWeight:700,color:"var(--blue)",textTransform:"uppercase",letterSpacing:.7,marginBottom:4}}>📘 Referência no Novo PNE (Lei de 25/03/2026)</div>
+              <div style={{fontSize:12,color:"var(--text-300)"}}>{meta.pneRef}</div>
+            </div>}
+            <div style={{marginBottom:14}}>
+              <div style={{fontSize:11,fontWeight:700,color:"var(--text-600)",textTransform:"uppercase",letterSpacing:.7,marginBottom:6}}>Estratégias</div>
+              {meta.estrategias.map((s,i)=><div key={i} className="strat-item"><span style={{color:"var(--emerald)",fontWeight:700,marginRight:8}}>{meta.numero.replace("Meta ","")}.{i+1}</span>{s}</div>)}
+            </div>
+          </div>}
+
+          {tab==="indicadores"&&<div className="fade-in">
+            {readOnly&&<div className="alert-info" style={{marginBottom:14}}>🔒 Modo somente leitura.</div>}
+            <div style={{marginBottom:14}}><button className="btn primary" style={{padding:"8px 16px",fontSize:12}}>＋ Adicionar Indicador</button></div>
+            {inds.map(ind=>{const prog=calcProg(ind.vi,ind.va,ind.vm);const st=getStatus(prog);return(
+              <div key={ind.id} className="ind-card">
+                <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:10,marginBottom:10}}>
+                  <div style={{fontSize:14,fontWeight:700,color:"var(--text-100)",lineHeight:1.4}}>{ind.desc}</div>
+                  {!readOnly&&<button style={{background:"none",border:"none",color:"var(--text-600)",cursor:"pointer",fontSize:16,flexShrink:0,padding:2}} title="Remover">🗑️</button>}
+                </div>
+                <div className="ind-grid">
+                  <div className="item"><div className="label">Inicial</div><div className="value" style={{color:"var(--text-400)"}}>{ind.vi} {ind.un}</div></div>
+                  <div className="item"><div className="label">Atual</div><div className="value" style={{color:"var(--emerald-l)"}}>{ind.va} {ind.un}</div></div>
+                  <div className="item"><div className="label">Meta</div><div className="value" style={{color:"var(--amber-l)"}}>{ind.vm} {ind.un}</div></div>
+                  <div className="item"><div className="label">Progresso</div><div className="value" style={{color:statusColor[st]}}>{prog.toFixed(1)}%</div></div>
+                </div>
+                <div className="progress-bar" style={{margin:"10px 0",height:10}}><div className="progress-fill" style={{width:`${prog}%`,background:prog>=100?"#16a34a":prog>=60?"#d97706":"#dc2626"}}/></div>
+                {!readOnly&&<div style={{display:"flex",alignItems:"center",gap:10,marginTop:10}}>
+                  <label style={{fontSize:10,fontWeight:700,color:"var(--text-500)"}}>Atualizar valor:</label>
+                  <input type="number" step="any" className="ind-input" value={ind.va} onChange={e=>onUpdate(ind.id,"va",parseFloat(e.target.value)||0)}/>
+                  <span style={{fontSize:11,color:"var(--text-500)"}}>{ind.un}</span>
+                </div>}
+                <div style={{marginTop:10,fontSize:10,color:"var(--text-500)",fontStyle:"italic"}}>Obs: {ind.obs||"—"}</div>
+                {!readOnly&&<textarea style={{width:"100%",marginTop:6,background:"rgba(0,0,0,.2)",border:"1.5px solid var(--bg-700)",borderRadius:6,padding:"6px 8px",fontSize:11,color:"var(--text-300)",outline:"none",resize:"vertical",minHeight:36,fontFamily:"inherit"}} value={ind.obs} onChange={e=>onUpdate(ind.id,"obs",sanitize(e.target.value))} placeholder="Observações..."/>}
+              </div>)})}
+          </div>}
+        </div>
+      </div>
+    </div>);
+}
+
+/* ═══ REPORT GENERATOR ═══ */
+function generateReport(metas,data,userName){
+  const d=new Date().toLocaleDateString("pt-BR",{day:"2-digit",month:"long",year:"numeric"});
+  let rows="";
+  metas.forEach(m=>{
+    const inds=m.indicadores.map(i=>({...i,va:data[i.id]?.va!==undefined?data[i.id].va:i.va,obs:data[i.id]?.obs||i.obs}));
+    const avg=inds.length>0?inds.reduce((s,i)=>s+calcProg(i.vi,i.va,i.vm),0)/inds.length:0;
+    const st=getStatus(avg);
+    rows+=`<tr style="background:#f0fdf4"><td colspan="6" style="padding:10px 12px;font-weight:800;font-size:13px;color:#166534">${m.numero}: ${m.titulo} — ${statusLabel[st]} (${avg.toFixed(0)}%)</td></tr>`;
+    inds.forEach(i=>{const p=calcProg(i.vi,i.va,i.vm);
+      rows+=`<tr><td style="padding:6px 10px;font-weight:500">${i.desc}</td><td style="padding:6px 10px;text-align:center">${i.vi} ${i.un}</td><td style="padding:6px 10px;text-align:center;color:#166534;font-weight:700">${i.va} ${i.un}</td><td style="padding:6px 10px;text-align:center;color:#b45309;font-weight:600">${i.vm} ${i.un}</td><td style="padding:6px 10px;text-align:center;font-weight:700">${p.toFixed(0)}%</td><td style="padding:6px 10px;font-size:10px;color:#64748b">${i.obs||"—"}</td></tr>`});
+  });
+  const html=`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Relatório PME Pereiro</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Plus Jakarta Sans',Arial,sans-serif;font-size:12px;color:#1e293b;padding:30px}
+h1{font-size:18px;margin-bottom:4px}h2{font-size:13px;color:#64748b;margin-bottom:16px;font-weight:400}
+table{width:100%;border-collapse:collapse;margin-top:12px}th{background:#0f172a;color:white;padding:8px 10px;text-align:left;font-size:9px;text-transform:uppercase;letter-spacing:.5px}
+td{border-bottom:1px solid #e2e8f0}tr:hover{background:#f8fafc}.header{border-bottom:2px solid #10b981;padding-bottom:12px;margin-bottom:16px}
+.footer{margin-top:24px;padding-top:12px;border-top:1px solid #e2e8f0;font-size:10px;color:#94a3b8;text-align:center}
+@media print{body{padding:15px}}</style></head><body>
+<div class="header"><h1>🎓 Relatório de Monitoramento — PME 2015–2024</h1><h2>COMEP — Pereiro/CE · Lei nº 708/2015 · Avaliação e Diagnóstico para o PME 2025–2035</h2>
+<p style="font-size:11px;color:#64748b">Gerado em ${d} por ${userName} · Ref.: Novo PNE (Lei de 25/03/2026)</p></div>
+<table><thead><tr><th>Indicador</th><th>Linha Base</th><th>Valor Atual</th><th>Meta PME</th><th>Progresso</th><th>Observações</th></tr></thead><tbody>${rows}</tbody></table>
+<div class="footer">COMEP — Pereiro/CE · PME 2015–2024 · Diagnóstico para PME 2025–2035 · v6.0</div></body></html>`;
+  const w=window.open("","_blank","width=960,height=700");if(w){w.document.write(html);w.document.close();setTimeout(()=>w.print(),500)}
+}
+
+/* ═══ MAIN APP ═══ */
+function MainApp(){
+  const[loggedUser,setLoggedUser]=useState(null);
+  const[activeTab,setActiveTab]=useState("dashboard");
+  const[data,setData]=useState({});
+  const[sidebarOpen,setSidebarOpen]=useState(false);
+  const[selectedMeta,setSelectedMeta]=useState(null);
+  const[filterEixo,setFilterEixo]=useState("Todos os Eixos");
+  const[filterStatus,setFilterStatus]=useState("Todos os Status");
+  const[search,setSearch]=useState("");
+  const[toastMsg,setToastMsg]=useState("");const[toastType,setToastType]=useState("");
+  const mainRef=useRef(null);const toastTimer=useRef(null);
+
+  useEffect(()=>{try{const raw=localStorage.getItem(STORAGE_KEY);if(raw){const p=JSON.parse(raw);if(p&&typeof p==="object")setData(p)}}catch{}},[]);
 
   const showToast=useCallback((msg,type="success")=>{if(toastTimer.current)clearTimeout(toastTimer.current);setToastMsg(msg);setToastType(type);toastTimer.current=setTimeout(()=>{setToastMsg("");setToastType("")},2600)},[]);
-
-  const save=useCallback(()=>{if(saveRef.current)return;saveRef.current=true;setSaving(true);
-    try{const s=JSON.stringify(data);if(s.length>4500000){showToast("Dados muito grandes","error");return}
-      localStorage.setItem(STORAGE_KEY,s);lastSavedRef.current=s;
-      const now=new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
-      setSavedAt(now);showToast("Dados salvos com sucesso")}
-    catch{showToast("Erro ao salvar","error")}
-    finally{setSaving(false);saveRef.current=false}},[data,showToast]);
-
-  const dataRef=useRef(data);dataRef.current=data;
-  const lastSavedRef=useRef(JSON.stringify(data));
-  useEffect(()=>{if(!loggedUser||loggedUser.role==="viewer")return;const t=setInterval(()=>{const cur=JSON.stringify(dataRef.current);if(cur!==lastSavedRef.current){try{localStorage.setItem(STORAGE_KEY,cur);lastSavedRef.current=cur}catch{}}},30000);return()=>clearInterval(t)},[loggedUser]);
-
+  const save=useCallback(()=>{try{localStorage.setItem(STORAGE_KEY,JSON.stringify(data));showToast("Dados salvos com sucesso")}catch{showToast("Erro ao salvar","error")}},[data,showToast]);
+  const updateInd=useCallback((indId,field,value)=>{setData(prev=>({...prev,[indId]:{...prev[indId],[field]:value}}))},[]);
   const isRO=loggedUser?.role==="viewer";
-  const update=useCallback((id,f,v)=>{if(isRO||!ALL_IDS.has(id))return;if(f==="status"&&!VALID_S.has(v))return;setData(p=>({...p,[id]:{...p[id],[f]:f==="status"?v:sanitize(v)}}))},[isRO]);
-  const toggleHint=useCallback(id=>{setHints(p=>{const n=new Set(p);n.has(id)?n.delete(id):n.add(id);return n})},[]);
 
-  const allMetrics=useMemo(()=>SECTIONS.flatMap(s=>s.metrics),[]);
-  const total=allMetrics.length;
-  const counts=useMemo(()=>{const c={alcancado:0,parcial:0,"nao-alcancado":0,"nao-se-aplica":0,"":0};allMetrics.forEach(m=>{const st=data[m.id]?.status||"";c[st]!==undefined?c[st]++:c[""]++});return c},[data,allMetrics]);
-  const evaluated=total-counts[""];const pct=total>0?Math.round(evaluated/total*100):0;
-  const curSection=useMemo(()=>SECTIONS.find(s=>s.id===activeSection)||SECTIONS[0],[activeSection]);
-  const filtered=useMemo(()=>filterStatus?curSection.metrics.filter(m=>(data[m.id]?.status||"")===filterStatus):curSection.metrics,[curSection,filterStatus,data]);
-  const sIdx=SECTIONS.findIndex(s=>s.id===activeSection);const prev=SECTIONS[sIdx-1]||null,next=SECTIONS[sIdx+1]||null;
-  const secCounts=useCallback(sec=>{const c={alcancado:0,parcial:0,"nao-alcancado":0,pending:0};sec.metrics.forEach(m=>{const st=data[m.id]?.status||"";if(st==="alcancado")c.alcancado++;else if(st==="parcial")c.parcial++;else if(st==="nao-alcancado")c["nao-alcancado"]++;else c.pending++});return c},[data]);
-  const changeSection=useCallback(id=>{setActiveSection(id);setFilterStatus("")},[]);
-  useEffect(()=>{if(mainRef.current)mainRef.current.scrollTop=0},[activeSection,activeTab]);
+  const allInds=useMemo(()=>METAS_PME.flatMap(m=>m.indicadores.map(i=>({...i,va:data[i.id]?.va!==undefined?data[i.id].va:i.va,metaNum:m.numero}))),[data]);
+  const metaStats=useMemo(()=>METAS_PME.map(m=>{
+    const inds=m.indicadores.map(i=>({...i,va:data[i.id]?.va!==undefined?data[i.id].va:i.va}));
+    const avg=inds.length>0?inds.reduce((s,i)=>s+calcProg(i.vi,i.va,i.vm),0)/inds.length:0;
+    return{...m,avgProg:avg,status:getStatus(avg)}}),[data]);
 
-  if(!loggedUser)return<LoginScreen onLogin={u=>{try{sessionStorage.setItem(SESSION_KEY,JSON.stringify({user:u.user,ts:Date.now()}))}catch{}setLoggedUser(u)}}/>;
-  if(!loaded)return<div className="loading-screen"><div className="spinner"/><div style={{color:"var(--text-500)",fontSize:12}}>Carregando...</div></div>;
+  const counts=useMemo(()=>{const c={concluida:0,andamento:0,atrasada:0,"nao-iniciada":0};metaStats.forEach(m=>c[m.status]++);return c},[metaStats]);
+  const totalProg=useMemo(()=>metaStats.length>0?metaStats.reduce((s,m)=>s+m.avgProg,0)/metaStats.length:0,[metaStats]);
+
+  const filtered=useMemo(()=>{let r=metaStats;
+    if(filterEixo!=="Todos os Eixos")r=r.filter(m=>m.eixo===filterEixo);
+    if(filterStatus!=="Todos os Status"){const map={"Em Andamento":"andamento","Concluída":"concluida","Atrasada":"atrasada","Não Iniciada":"nao-iniciada"};r=r.filter(m=>m.status===map[filterStatus])}
+    if(search)r=r.filter(m=>(m.titulo+m.descricao+m.numero).toLowerCase().includes(search.toLowerCase()));return r},[metaStats,filterEixo,filterStatus,search]);
+
+  useEffect(()=>{if(mainRef.current)mainRef.current.scrollTop=0},[activeTab]);
+
+  if(!loggedUser)return<LoginScreen onLogin={setLoggedUser}/>;
 
   const today=new Date().toLocaleDateString("pt-BR",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
-  const doLogout=()=>{try{sessionStorage.removeItem(SESSION_KEY)}catch{}setLoggedUser(null);setLoaded(false);setData(buildDefault())};
+  const doLogout=()=>{setLoggedUser(null);setData({})};
 
   /* ═══ DASHBOARD ═══ */
   const renderDashboard=()=>(
-    <div className="fade-in" style={{maxWidth:1000,margin:"0 auto"}}>
-      <div style={{marginBottom:20}}><h2 style={{fontSize:22,fontWeight:800,color:"var(--text-50)"}}>Dashboard</h2><p style={{color:"var(--text-500)",fontSize:13}}>Visão geral do Plano Municipal de Educação</p></div>
+    <div className="fade-in" style={{maxWidth:1200,margin:"0 auto"}}>
+      <div style={{marginBottom:22}}><h2 style={{fontSize:22,fontWeight:800,color:"var(--text-50)"}}>Dashboard</h2><p style={{color:"var(--text-500)",fontSize:13}}>Visão geral do Plano Municipal de Educação</p></div>
       <div className="stats-grid">
-        {[{l:"Total",v:total,c:"#60a5fa",bg:"rgba(59,130,246,.08)",bd:"rgba(59,130,246,.2)",i:"🎯"},{l:"Alcançados",v:counts.alcancado,c:"#34d399",bg:"rgba(16,185,129,.08)",bd:"rgba(16,185,129,.2)",i:"✅"},{l:"Parciais",v:counts.parcial,c:"#fbbf24",bg:"rgba(234,179,8,.08)",bd:"rgba(234,179,8,.2)",i:"🟡"},{l:"Não alcançados",v:counts["nao-alcancado"],c:"#f87171",bg:"rgba(239,68,68,.08)",bd:"rgba(239,68,68,.2)",i:"🔴"},{l:"Pendentes",v:counts[""],c:"#94a3b8",bg:"rgba(148,163,184,.06)",bd:"rgba(148,163,184,.15)",i:"⬜"},{l:"Progresso",v:pct+"%",c:"#2dd4bf",bg:"rgba(20,184,166,.08)",bd:"rgba(20,184,166,.2)",i:"📈"}].map((c,i)=>(
-          <div key={i} className="stat-card" style={{background:c.bg,borderColor:c.bd}}><div><div className="val" style={{color:c.c}}>{c.v}</div><div className="lbl">{c.l}</div></div><div className="ico">{c.i}</div></div>))}
+        {[{l:"Total de Metas",v:METAS_PME.length,c:"#60a5fa",bg:"rgba(59,130,246,.06)",bd:"rgba(59,130,246,.15)",bc:"#3b82f6",i:"🎯"},
+          {l:"Concluídas",v:counts.concluida,c:"#34d399",bg:"rgba(16,185,129,.06)",bd:"rgba(16,185,129,.15)",bc:"#10b981",i:"✅"},
+          {l:"Em Andamento",v:counts.andamento,c:"#fbbf24",bg:"rgba(234,179,8,.06)",bd:"rgba(234,179,8,.15)",bc:"#f59e0b",i:"🕐"},
+          {l:"Atrasadas",v:counts.atrasada,c:"#f87171",bg:"rgba(239,68,68,.06)",bd:"rgba(239,68,68,.15)",bc:"#ef4444",i:"⚠️"},
+          {l:"Não Iniciadas",v:counts["nao-iniciada"],c:"#94a3b8",bg:"rgba(148,163,184,.04)",bd:"rgba(148,163,184,.1)",bc:"#64748b",i:"⊖"},
+          {l:"Progresso Geral",v:totalProg.toFixed(0)+"%",c:"#2dd4bf",bg:"rgba(20,184,166,.06)",bd:"rgba(20,184,166,.15)",bc:"#14b8a6",i:"📈"}
+        ].map((c,i)=>(
+          <div key={i} className="stat-card" style={{background:c.bg,borderColor:c.bd}}>
+            <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between"}}>
+              <div><div className="lbl">{c.l}</div><div className="val" style={{color:c.c,marginTop:4}}>{c.v}</div></div>
+              <div className="ico">{c.i}</div>
+            </div>
+            <div style={{position:"absolute",bottom:0,left:0,right:0,height:2,background:c.bc,opacity:.3}}/>
+          </div>))}
       </div>
-      <div className="card" style={{marginBottom:16}}><div className="card-header"><span className="card-title">Progresso por Eixo</span></div><div className="card-body">
-        {SECTIONS.map((s,si)=>{const sc=secCounts(s);const done=sc.alcancado+sc.parcial+sc["nao-alcancado"];return(
-          <div key={s.id} style={{display:"flex",alignItems:"center",gap:12,padding:"8px 0",borderBottom:si<SECTIONS.length-1?"1px solid rgba(148,163,184,.06)":"none"}}>
-            <span style={{fontSize:16,width:24,textAlign:"center"}}>{s.icon}</span>
-            <div style={{flex:1,minWidth:0}}><div style={{display:"flex",justifyContent:"space-between",marginBottom:4}}><span style={{fontSize:12,fontWeight:600,color:"var(--text-200)",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{s.title}</span><span style={{fontSize:11,color:"var(--text-500)",fontFamily:"'JetBrains Mono'",flexShrink:0,marginLeft:8}}>{done}/{s.metrics.length}</span></div>
-              <div className="progress-bar sm" style={{background:"rgba(255,255,255,.05)"}}>
-                {sc.alcancado>0&&<div className="progress-seg" style={{width:`${sc.alcancado/s.metrics.length*100}%`,background:"#16a34a"}}/>}
-                {sc.parcial>0&&<div className="progress-seg" style={{width:`${sc.parcial/s.metrics.length*100}%`,background:"#d97706"}}/>}
-                {sc["nao-alcancado"]>0&&<div className="progress-seg" style={{width:`${sc["nao-alcancado"]/s.metrics.length*100}%`,background:"#dc2626"}}/>}
-              </div></div></div>)})}</div></div>
-      <div className="card"><div className="card-header"><span className="card-title">Progresso Geral</span><span style={{fontSize:12,color:"var(--text-500)",fontFamily:"'JetBrains Mono'"}}>{evaluated}/{total} ({pct}%)</span></div><div className="card-body">
-        <div className="progress-bar" style={{background:"rgba(255,255,255,.05)",height:12,borderRadius:99,marginBottom:10}}>
-          {[["alcancado","#16a34a"],["parcial","#d97706"],["nao-alcancado","#dc2626"],["nao-se-aplica","#6b7280"]].map(([k,c])=><div key={k} className="progress-seg" style={{width:`${(counts[k]||0)/total*100}%`,background:c}}/>)}
+      <div className="grid-2" style={{marginBottom:18}}>
+        <div className="card"><div className="card-header"><span className="card-title">Metas por Eixo e Status</span></div><div className="card-body"><BarChart metaStats={metaStats}/></div></div>
+        <div className="card"><div className="card-header"><span className="card-title">Evolução dos Indicadores Principais</span></div><div className="card-body"><LineChart metaStats={metaStats} data={data}/></div></div>
+      </div>
+      <div className="card"><div className="card-header"><span className="card-title">Progresso por Meta</span></div><div className="card-body">
+        <div style={{display:"grid",gap:6}}>
+        {metaStats.map((m,i)=>(
+          <div key={m.id} style={{display:"flex",alignItems:"center",gap:12,padding:"8px 0",borderBottom:i<metaStats.length-1?"1px solid rgba(148,163,184,.06)":"none",cursor:"pointer",transition:"background .15s",borderRadius:6}} onClick={()=>setSelectedMeta(m)}>
+            <span style={{fontSize:11,fontWeight:800,color:"var(--emerald)",fontFamily:"'JetBrains Mono'",width:52,flexShrink:0}}>{m.numero.replace("Meta ","M")}</span>
+            <div style={{flex:1,minWidth:0}}>
+              <div style={{fontSize:12,fontWeight:600,color:"var(--text-200)",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{m.titulo}</div>
+              <div className="progress-bar" style={{height:5,marginTop:5}}><div className="progress-fill" style={{width:`${m.avgProg}%`,background:m.avgProg>=100?"#16a34a":m.avgProg>=60?"#d97706":"#dc2626"}}/></div>
+            </div>
+            <span className={`status-badge status-${m.status}`} style={{flexShrink:0,fontSize:9}}>{statusLabel[m.status]}</span>
+            <span style={{fontSize:12,fontWeight:700,fontFamily:"'JetBrains Mono'",color:statusColor[m.status],flexShrink:0,width:40,textAlign:"right"}}>{m.avgProg.toFixed(0)}%</span>
+            <span style={{color:"var(--text-600)",fontSize:14,flexShrink:0}}>›</span>
+          </div>))}
         </div>
-        <div style={{display:"flex",gap:16,flexWrap:"wrap"}}>{[["alcancado","#16a34a"],["parcial","#d97706"],["nao-alcancado","#dc2626"],["nao-se-aplica","#6b7280"]].map(([k,c])=><div key={k} style={{display:"flex",alignItems:"center",gap:5,fontSize:11,color:"var(--text-500)"}}><span style={{width:10,height:10,borderRadius:99,background:c,display:"inline-block"}}/>{gc(k).l}: {counts[k]||0}</div>)}</div>
       </div></div>
     </div>);
 
-  /* ═══ FORM ═══ */
-  const renderForm=()=>(
-    <div className="fade-in" style={{maxWidth:900,margin:"0 auto"}}>
-      {isRO&&<div className="alert-readonly" style={{marginBottom:14}}>🔒 Modo somente leitura. Você pode visualizar mas não editar.</div>}
-      {activeSection==="institucional"&&<div className="alert-critical" style={{marginBottom:14}}><span style={{fontSize:24,flexShrink:0}}>⚠️</span><div><div style={{fontWeight:800,color:"#fb923c",fontSize:13,marginBottom:4}}>DIAGNÓSTICO SEDUC: CRÍTICO</div><div style={{fontSize:11,color:"#fdba74",lineHeight:1.7}}><strong>4 itens críticos:</strong> COMEP · FME · SME · Comissão novo PME.<br/><strong>DME:</strong> Alcides Leite · (88) 99902-1589</div></div></div>}
-      <div className="card" style={{marginBottom:14}}><div className="card-header" style={{gap:12}}><div style={{display:"flex",alignItems:"center",gap:12}}><span style={{fontSize:28}}>{curSection.icon}</span><div><h2 style={{margin:0,fontSize:19,fontWeight:800,color:"var(--text-50)"}}>{curSection.title}</h2><div style={{display:"flex",gap:8,alignItems:"center",marginTop:4}}><span className="metric-tag" style={{background:"rgba(59,130,246,.1)",color:"#60a5fa",border:"1px solid rgba(59,130,246,.2)"}}>{curSection.badge}</span><span style={{fontSize:11,color:"var(--text-500)"}}>{curSection.metrics.length} indicadores</span></div></div></div>
-        <select className="filter-select" value={filterStatus} onChange={e=>setFilterStatus(e.target.value)}><option value="">Todos</option>{STATUS_OPTIONS.slice(1).map(o=><option key={o.value} value={o.value}>{o.label}</option>)}</select></div>
-        {curSection.intro&&<div className="card-body" style={{paddingTop:0}}><div className="section-intro">💡 {curSection.intro}</div></div>}</div>
-      <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:14}}>
-        {SECTIONS.map(s=>{const sc=secCounts(s);const isA=activeSection===s.id;return<button key={s.id} type="button" onClick={()=>changeSection(s.id)} className={`eixo-chip ${isA?"active":""}`}><span>{s.icon}</span>{s.title.split(" ")[0]}{sc["nao-alcancado"]>0&&<span style={{width:6,height:6,borderRadius:99,background:"#ef4444",flexShrink:0}}/>}</button>})}</div>
-      {filtered.map((m,idx)=>{const d=data[m.id]||{value:"",status:"",notes:""};const scfg=gc(d.status);const pre=!!PREFILLED[m.id];const ho=hints.has(m.id);
-        return(<div key={m.id} className="metric-card fade-in" style={{borderColor:scfg.bd,animationDelay:`${clamp(idx*.025,0,.3)}s`}}>
-          {pre&&<div className="metric-tag" style={{position:"absolute",top:10,right:10,background:"rgba(234,179,8,.1)",color:"#fbbf24",border:"1px solid rgba(234,179,8,.2)"}}>SEDUC</div>}
-          <div style={{marginBottom:10}}>
-            <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:5,flexWrap:"wrap"}}><span className="metric-tag" style={{background:"rgba(255,255,255,.04)",color:"var(--text-500)",fontFamily:"'JetBrains Mono'"}}>{String(idx+1).padStart(2,"0")}</span><span className="metric-tag" style={{background:"rgba(16,185,129,.06)",color:"#34d399",border:"1px solid rgba(16,185,129,.15)"}}>META: {m.target}</span><span style={{fontSize:9,color:"var(--text-500)",fontWeight:600}}>📌 {m.source}</span></div>
-            <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:10}}><div style={{flex:1}}>
-              <div className="metric-label">{m.label}</div>
-              {m.hint&&<button type="button" className="metric-hint-btn" onClick={()=>toggleHint(m.id)}>{ho?"▾ Ocultar":"▸ Dica"}</button>}
-              {ho&&m.hint&&<div className="metric-hint">{m.hint}</div>}</div>
-              <span className="status-badge" style={{background:scfg.bg,color:scfg.c,border:`1px solid ${scfg.bd}`,flexShrink:0}}>{scfg.e} {scfg.l}</span></div></div>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:8}}>
-            <div><label style={{display:"block",fontSize:10,fontWeight:700,color:"var(--text-500)",marginBottom:4,textTransform:"uppercase",letterSpacing:.7}}>Valor / Situação</label><input className="metric-input" placeholder="Ex: 6,4 / 87% / Sim..." value={d.value} onChange={e=>update(m.id,"value",e.target.value)} maxLength={500} disabled={isRO} readOnly={isRO}/></div>
-            <div><label style={{display:"block",fontSize:10,fontWeight:700,color:"var(--text-500)",marginBottom:4,textTransform:"uppercase",letterSpacing:.7}}>Status</label><select className="metric-select" value={d.status} onChange={e=>update(m.id,"status",e.target.value)} disabled={isRO}>{STATUS_OPTIONS.map(o=><option key={o.value} value={o.value}>{o.label}</option>)}</select></div></div>
-          <div><label style={{display:"block",fontSize:10,fontWeight:700,color:"var(--text-500)",marginBottom:4,textTransform:"uppercase",letterSpacing:.7}}>Observações</label><textarea className="metric-input" placeholder="Situação, fonte, data..." value={d.notes} onChange={e=>update(m.id,"notes",e.target.value)} rows={2} maxLength={2000} disabled={isRO} readOnly={isRO} style={{resize:"vertical"}}/></div>
-        </div>)})}
-      {filtered.length===0&&<div style={{textAlign:"center",padding:"40px 20px",color:"var(--text-500)"}}><div style={{fontSize:32,marginBottom:10}}>🔍</div><div style={{fontWeight:600,fontSize:13,marginBottom:10}}>Nenhum indicador com esse status.</div><button type="button" onClick={()=>setFilterStatus("")} className="nav-btn primary">Limpar filtro</button></div>}
-      <div style={{display:"flex",justifyContent:"space-between",marginTop:18,paddingTop:14,borderTop:"1px solid rgba(148,163,184,.06)"}}>
-        {prev?<button type="button" onClick={()=>changeSection(prev.id)} className="nav-btn secondary">← {prev.title}</button>:<div/>}
-        {next?<button type="button" onClick={()=>changeSection(next.id)} className="nav-btn primary">{next.title} →</button>
-          :<button type="button" onClick={()=>{save();setActiveTab("consolidado")}} className="nav-btn primary">📊 Ver Consolidado</button>}</div>
+  /* ═══ METAS LIST ═══ */
+  const renderMetas=()=>(
+    <div className="fade-in" style={{maxWidth:1200,margin:"0 auto"}}>
+      <div style={{marginBottom:18}}><h2 style={{fontSize:22,fontWeight:800,color:"var(--text-50)"}}>Metas do PME</h2><p style={{color:"var(--text-500)",fontSize:13}}>Gerencie todas as metas do Plano Municipal de Educação</p></div>
+      <div className="card" style={{marginBottom:18}}><div className="card-header">
+        <div style={{display:"flex",alignItems:"center",gap:8}}><span style={{fontSize:14}}>◎</span><span className="card-title">Metas do PME</span></div>
+        <div style={{display:"flex",gap:8,flexWrap:"wrap",alignItems:"center"}}>
+          <div style={{position:"relative"}}><span style={{position:"absolute",left:10,top:"50%",transform:"translateY(-50%)",fontSize:13,color:"var(--text-500)"}}>🔍</span><input className="search-input" placeholder="Buscar metas..." value={search} onChange={e=>setSearch(e.target.value)}/></div>
+          <div style={{display:"flex",alignItems:"center",gap:6}}><span style={{fontSize:12,color:"var(--text-500)"}}>🏷️</span><select className="filter-select" value={filterEixo} onChange={e=>setFilterEixo(e.target.value)}>{EIXOS.map(e=><option key={e}>{e}</option>)}</select></div>
+          <select className="filter-select" value={filterStatus} onChange={e=>setFilterStatus(e.target.value)}>{STATUSES.map(s=><option key={s}>{s}</option>)}</select>
+        </div>
+      </div><div className="card-body">
+        {filtered.length===0&&<div style={{textAlign:"center",padding:40,color:"var(--text-500)"}}><div style={{fontSize:32,marginBottom:10}}>🔍</div><div style={{fontWeight:600}}>Nenhuma meta encontrada.</div></div>}
+        <div style={{display:"grid",gap:10}}>
+          {filtered.map((m,idx)=>(
+            <div key={m.id} className="meta-item fade-in" style={{animationDelay:`${Math.min(idx*.03,.3)}s`,"--bar-color":statusColor[m.status]}} onClick={()=>setSelectedMeta(METAS_PME.find(x=>x.id===m.id))}>
+              <div style={{position:"absolute",left:0,top:0,bottom:0,width:3,borderRadius:"0 2px 2px 0",background:statusColor[m.status]}}/>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:14,flexWrap:"wrap"}}>
+                <div style={{flex:1,minWidth:200}}>
+                  <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:4}}>
+                    <span style={{fontSize:12,fontWeight:800,color:"var(--emerald)",fontFamily:"'JetBrains Mono'"}}>{m.numero}</span>
+                    <span className="badge" style={{background:`${prioColor[m.prioridade]}15`,color:prioColor[m.prioridade],border:`1px solid ${prioColor[m.prioridade]}25`,fontSize:9}}>{m.prioridade}</span>
+                  </div>
+                  <div style={{fontSize:14,fontWeight:700,color:"var(--text-100)",marginBottom:3}}>{m.titulo}</div>
+                  <div style={{fontSize:11,color:"var(--text-500)",lineHeight:1.5,display:"-webkit-box",WebkitLineClamp:1,WebkitBoxOrient:"vertical",overflow:"hidden"}}>{m.descricao}</div>
+                </div>
+                <div style={{display:"flex",alignItems:"center",gap:16,flexShrink:0}}>
+                  <div style={{textAlign:"center"}}><div style={{fontSize:9,color:"var(--text-600)",fontWeight:600,marginBottom:2}}>📅</div><div style={{fontSize:11,color:"var(--text-400)"}}>{m.prazo}</div></div>
+                  <div style={{textAlign:"center",maxWidth:120}}><div style={{fontSize:9,color:"var(--text-600)",fontWeight:600,marginBottom:2}}>👤</div><div style={{fontSize:10,color:"var(--text-400)",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{m.responsavel}</div></div>
+                  <span className={`status-badge status-${m.status}`}>{statusLabel[m.status]}</span>
+                  <div style={{display:"flex",alignItems:"center",gap:6}}>
+                    <div className="progress-bar" style={{width:60,height:5}}><div className="progress-fill" style={{width:`${m.avgProg}%`,background:statusColor[m.status]}}/></div>
+                    <span style={{fontSize:12,fontWeight:700,fontFamily:"'JetBrains Mono'",color:statusColor[m.status],minWidth:32,textAlign:"right"}}>{m.avgProg.toFixed(0)}%</span>
+                  </div>
+                  <span style={{color:"var(--text-600)",fontSize:16}}>›</span>
+                </div>
+              </div>
+            </div>))}
+        </div>
+      </div></div>
     </div>);
 
-  /* ═══ RELATÓRIOS ═══ */
+  /* ═══ INDICADORES ═══ */
+  const renderIndicadores=()=>(
+    <div className="fade-in" style={{maxWidth:1200,margin:"0 auto"}}>
+      <div style={{marginBottom:18}}><h2 style={{fontSize:22,fontWeight:800,color:"var(--text-50)"}}>Indicadores</h2><p style={{color:"var(--text-500)",fontSize:13}}>{allInds.length} indicadores · Metodologia INEP/MEC</p></div>
+      {isRO&&<div className="alert-info" style={{marginBottom:14}}>🔒 Modo somente leitura.</div>}
+      <div className="card" style={{overflow:"hidden"}}><div style={{overflowX:"auto"}}>
+        <table style={{width:"100%",borderCollapse:"collapse",fontSize:11}}>
+          <thead><tr style={{background:"rgba(0,0,0,.15)"}}>
+            {["Meta","Indicador","Base","Atual","Meta PME","Progresso","Status","Fonte"].map(h=><th key={h} style={{padding:"10px 12px",textAlign:"left",fontSize:9,fontWeight:700,color:"var(--text-500)",textTransform:"uppercase",letterSpacing:.7,borderBottom:"1px solid var(--bg-700)"}}>{h}</th>)}
+          </tr></thead>
+          <tbody>{METAS_PME.flatMap(m=>m.indicadores.map(ind=>{const va=data[ind.id]?.va!==undefined?data[ind.id].va:ind.va;const p=calcProg(ind.vi,va,ind.vm);const st=getStatus(p);
+            return<tr key={ind.id} style={{borderTop:"1px solid rgba(148,163,184,.04)",transition:"background .15s",cursor:"pointer"}} onClick={()=>setSelectedMeta(m)} onMouseOver={e=>e.currentTarget.style.background="rgba(255,255,255,.02)"} onMouseOut={e=>e.currentTarget.style.background="transparent"}>
+              <td style={{padding:"8px 12px",fontWeight:700,color:"var(--emerald)",fontSize:10,whiteSpace:"nowrap"}}>{m.numero.replace("Meta ","M")}</td>
+              <td style={{padding:"8px 12px",color:"var(--text-200)",fontWeight:500,maxWidth:240}}>{ind.desc}</td>
+              <td style={{padding:"8px 12px",color:"var(--text-400)",fontFamily:"'JetBrains Mono'",fontSize:10}}>{ind.vi} {ind.un}</td>
+              <td style={{padding:"8px 12px",color:"var(--emerald-l)",fontWeight:700,fontFamily:"'JetBrains Mono'",fontSize:10}}>{va} {ind.un}</td>
+              <td style={{padding:"8px 12px",color:"var(--amber-l)",fontWeight:600,fontFamily:"'JetBrains Mono'",fontSize:10}}>{ind.vm} {ind.un}</td>
+              <td style={{padding:"8px 12px"}}><div className="progress-bar" style={{width:60,height:4,display:"inline-block",verticalAlign:"middle",marginRight:6}}><div className="progress-fill" style={{width:`${p}%`,background:statusColor[st]}}/></div><span style={{fontSize:10,fontWeight:700,fontFamily:"'JetBrains Mono'",color:statusColor[st]}}>{p.toFixed(0)}%</span></td>
+              <td style={{padding:"8px 12px"}}><span className={`status-badge status-${st}`} style={{fontSize:9}}>{statusLabel[st]}</span></td>
+              <td style={{padding:"8px 12px",color:"var(--text-500)",fontSize:9,maxWidth:120}}>{ind.fonte}</td>
+            </tr>}))}</tbody>
+        </table>
+      </div></div>
+    </div>);
+
+  /* ═══ RELATORIOS ═══ */
   const renderRelatorios=()=>(
     <div className="fade-in" style={{maxWidth:1000,margin:"0 auto"}}>
-      <div style={{marginBottom:20}}><h2 style={{fontSize:22,fontWeight:800,color:"var(--text-50)"}}>📄 Relatórios</h2><p style={{color:"var(--text-500)",fontSize:13}}>Gere relatórios do PME para impressão ou PDF</p></div>
-      {/* Relatório Geral */}
-      <div className="card" style={{marginBottom:16}}>
-        <div className="card-header"><span className="card-title">Relatório Geral Completo</span></div>
-        <div className="card-body">
-          <p style={{fontSize:12,color:"var(--text-400)",marginBottom:12,lineHeight:1.6}}>Gera um relatório com todos os {total} indicadores dos {SECTIONS.length} eixos temáticos, incluindo valores atuais, status de cumprimento e observações registradas.</p>
-          <div style={{display:"flex",gap:10,alignItems:"center",flexWrap:"wrap"}}>
-            <button type="button" className="nav-btn report" onClick={()=>generateReport("Relatório Geral — PME 2015–2024 · Pereiro/CE",SECTIONS,data,loggedUser.name)}>📄 Gerar Relatório Geral</button>
-            <span style={{fontSize:11,color:"var(--text-500)"}}>{evaluated} de {total} indicadores avaliados ({pct}%)</span>
-          </div>
+      <div style={{marginBottom:20}}><h2 style={{fontSize:22,fontWeight:800,color:"var(--text-50)"}}>Relatórios</h2><p style={{color:"var(--text-500)",fontSize:13}}>Gere relatórios para impressão ou PDF</p></div>
+      <div className="card" style={{marginBottom:16}}><div className="card-header"><span className="card-title">📄 Relatório Geral Completo</span></div><div className="card-body">
+        <p style={{fontSize:12,color:"var(--text-400)",marginBottom:14,lineHeight:1.6}}>Relatório com todas as {METAS_PME.length} metas, {allInds.length} indicadores, valores atuais e diagnóstico para o novo PME 2025–2035.</p>
+        <button className="btn report" onClick={()=>generateReport(METAS_PME,data,loggedUser.name)}>📄 Gerar Relatório Geral</button>
+      </div></div>
+      <div className="card"><div className="card-header"><span className="card-title">📊 Relatórios por Eixo</span></div><div className="card-body">
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
+          {EIXOS.slice(1).map(eixo=>{const ms=METAS_PME.filter(m=>m.eixo===eixo);if(ms.length===0)return null;const avg=ms.length>0?metaStats.filter(m=>m.eixo===eixo).reduce((s,m)=>s+m.avgProg,0)/ms.length:0;
+            return<div key={eixo} style={{background:"rgba(0,0,0,.15)",borderRadius:12,padding:16,border:"1px solid var(--bg-700)",cursor:"pointer",transition:"all .2s"}} onClick={()=>generateReport(ms,data,loggedUser.name)} onMouseOver={e=>e.currentTarget.style.borderColor="rgba(16,185,129,.25)"} onMouseOut={e=>e.currentTarget.style.borderColor="var(--bg-700)"}>
+              <div style={{fontWeight:700,color:"var(--text-100)",fontSize:13,marginBottom:4}}>{eixo}</div>
+              <div style={{fontSize:10,color:"var(--text-500)",marginBottom:10}}>{ms.length} metas · {ms.flatMap(m=>m.indicadores).length} indicadores</div>
+              <div className="progress-bar" style={{height:5,marginBottom:8}}><div className="progress-fill" style={{width:`${avg}%`,background:avg>=80?"#16a34a":avg>=50?"#d97706":"#dc2626"}}/></div>
+              <span style={{fontSize:10,color:"var(--blue)",fontWeight:600}}>📄 Gerar Relatório →</span>
+            </div>})}
         </div>
-      </div>
-      {/* Relatórios por Eixo */}
-      <div className="card" style={{marginBottom:16}}>
-        <div className="card-header"><span className="card-title">Relatórios por Eixo Temático</span></div>
-        <div className="card-body">
-          <p style={{fontSize:12,color:"var(--text-400)",marginBottom:14,lineHeight:1.6}}>Selecione um eixo para gerar relatório específico com seus indicadores.</p>
-          <div className="report-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-            {SECTIONS.map(s=>{const sc=secCounts(s);const done=sc.alcancado+sc.parcial+sc["nao-alcancado"];const total_s=s.metrics.length;const pct_s=total_s>0?Math.round(done/total_s*100):0;
-              return(
-                <div key={s.id} className="report-card" onClick={()=>generateReport(`Relatório: ${s.title} — PME Pereiro/CE`,[s],data,loggedUser.name)}>
-                  <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:10}}>
-                    <span style={{fontSize:22}}>{s.icon}</span>
-                    <div style={{flex:1,minWidth:0}}>
-                      <div style={{fontWeight:700,color:"var(--text-100)",fontSize:13}}>{s.title}</div>
-                      <div style={{fontSize:10,color:"var(--text-500)"}}>{s.badge} · {total_s} indicadores</div>
-                    </div>
-                  </div>
-                  <div className="progress-bar sm" style={{background:"rgba(255,255,255,.05)",marginBottom:8}}>
-                    {sc.alcancado>0&&<div className="progress-seg" style={{width:`${sc.alcancado/total_s*100}%`,background:"#16a34a"}}/>}
-                    {sc.parcial>0&&<div className="progress-seg" style={{width:`${sc.parcial/total_s*100}%`,background:"#d97706"}}/>}
-                    {sc["nao-alcancado"]>0&&<div className="progress-seg" style={{width:`${sc["nao-alcancado"]/total_s*100}%`,background:"#dc2626"}}/>}
-                  </div>
-                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                    <div style={{display:"flex",gap:6}}>
-                      {sc.alcancado>0&&<span className="metric-tag" style={{background:"rgba(16,185,129,.1)",color:"#34d399"}}>{sc.alcancado}✅</span>}
-                      {sc["nao-alcancado"]>0&&<span className="metric-tag" style={{background:"rgba(239,68,68,.1)",color:"#f87171"}}>{sc["nao-alcancado"]}🔴</span>}
-                      {sc.pending>0&&<span className="metric-tag" style={{background:"rgba(148,163,184,.06)",color:"#94a3b8"}}>{sc.pending}⬜</span>}
-                    </div>
-                    <span style={{fontSize:10,color:"var(--blue)",fontWeight:600}}>📄 Gerar →</span>
-                  </div>
-                </div>)})}
-          </div>
-        </div>
-      </div>
-    </div>);
-
-  /* ═══ CONSOLIDADO ═══ */
-  const renderConsolidado=()=>(
-    <div className="fade-in" style={{maxWidth:1000,margin:"0 auto"}}>
-      <div className="card" style={{marginBottom:18}}><div className="card-header"><div><h2 style={{margin:0,fontSize:20,fontWeight:900,color:"var(--text-50)"}}>📊 Consolidado</h2><p style={{margin:"4px 0 0",fontSize:12,color:"var(--text-500)"}}>Pereiro/CE · COMEP · Lei nº 708/2015 · {total} indicadores</p></div><button type="button" className="nav-btn report" onClick={()=>generateReport("Relatório Geral — PME 2015–2024 · Pereiro/CE",SECTIONS,data,loggedUser.name)}>📄 Imprimir</button></div></div>
-      <div className="stats-grid" style={{marginBottom:18}}>
-        {[{l:"Total",v:total,c:"#60a5fa",bg:"rgba(59,130,246,.08)",bd:"rgba(59,130,246,.2)"},{l:"Alcançados",v:counts.alcancado,c:"#34d399",bg:"rgba(16,185,129,.08)",bd:"rgba(16,185,129,.2)"},{l:"Parciais",v:counts.parcial,c:"#fbbf24",bg:"rgba(234,179,8,.08)",bd:"rgba(234,179,8,.2)"},{l:"Não alcançados",v:counts["nao-alcancado"],c:"#f87171",bg:"rgba(239,68,68,.08)",bd:"rgba(239,68,68,.2)"},{l:"Pendentes",v:counts[""],c:"#94a3b8",bg:"rgba(148,163,184,.06)",bd:"rgba(148,163,184,.15)"}].map((c,i)=>(
-          <div key={i} className="stat-card" style={{background:c.bg,borderColor:c.bd}}><div><div className="val" style={{color:c.c}}>{c.v}</div><div className="lbl">{c.l}</div></div></div>))}
-      </div>
-      {SECTIONS.map(s=>{const sc=secCounts(s);return(
-        <div key={s.id} className="card" style={{marginBottom:14,overflow:"hidden"}}>
-          <div style={{background:"rgba(0,0,0,.15)",borderBottom:"1px solid rgba(148,163,184,.06)",padding:"10px 16px",display:"flex",alignItems:"center",gap:10}}><span style={{fontSize:16}}>{s.icon}</span><div style={{flex:1}}><span style={{fontWeight:800,color:"var(--text-100)",fontSize:13}}>{s.title}</span><span className="metric-tag" style={{marginLeft:8,background:"rgba(59,130,246,.08)",color:"#60a5fa",border:"1px solid rgba(59,130,246,.15)"}}>{s.badge}</span></div>
-            <div style={{display:"flex",gap:5}}>
-              {sc.alcancado>0&&<span className="metric-tag" style={{background:"rgba(16,185,129,.1)",color:"#34d399"}}>{sc.alcancado}✅</span>}
-              {sc["nao-alcancado"]>0&&<span className="metric-tag" style={{background:"rgba(239,68,68,.1)",color:"#f87171"}}>{sc["nao-alcancado"]}🔴</span>}
-              {sc.pending>0&&<span className="metric-tag" style={{background:"rgba(148,163,184,.06)",color:"#94a3b8"}}>{sc.pending}⬜</span>}
-            </div></div>
-          <div style={{overflowX:"auto"}}><table className="data-table"><thead><tr>{["Indicador","Meta","Valor","Status","Obs."].map(h=><th key={h}>{h}</th>)}</tr></thead>
-            <tbody>{s.metrics.map(m=>{const d=data[m.id]||{value:"",status:"",notes:""};const scfg=gc(d.status);return<tr key={m.id}><td style={{color:"var(--text-200)",fontWeight:500,maxWidth:220}}>{m.label}</td><td style={{color:"#34d399",fontWeight:600,fontSize:10}}>{m.target}</td><td style={{color:d.value?"var(--text-200)":"var(--text-600)",fontStyle:d.value?"normal":"italic"}}>{d.value||"—"}</td><td><span className="status-badge" style={{background:scfg.bg,color:scfg.c,border:`1px solid ${scfg.bd}`}}>{scfg.e} {scfg.l}</span></td><td style={{color:"var(--text-500)",maxWidth:180,fontSize:10}}>{d.notes||"—"}</td></tr>})}</tbody></table></div></div>)})}
-      <div style={{textAlign:"center",padding:"18px 0",color:"var(--text-600)",fontSize:11}}>COMEP — Pereiro/CE · PME 2015–2024</div>
+      </div></div>
     </div>);
 
   /* ═══ CONFIG ═══ */
   const renderConfig=()=>(
     <div className="fade-in" style={{maxWidth:800,margin:"0 auto"}}>
       <div style={{marginBottom:20}}><h2 style={{fontSize:22,fontWeight:800,color:"var(--text-50)"}}>Configurações</h2></div>
-      <div className="config-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}}>
-        <div className="card"><div className="card-header"><span className="card-title">Perfil</span></div><div className="card-body" style={{display:"flex",flexDirection:"column",gap:12}}>
-          {[["Nome",loggedUser.name],["E-mail",loggedUser.email],["Perfil",roleLabel[loggedUser.role]||loggedUser.role]].map(([l,v])=>(<div key={l}><label style={{fontSize:10,fontWeight:700,color:"var(--text-500)",textTransform:"uppercase",display:"block",marginBottom:4}}>{l}</label><input className="metric-input" value={v} disabled readOnly/></div>))}</div></div>
-        <div className="card"><div className="card-header"><span className="card-title">Sobre</span></div><div className="card-body">
-          <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:14}}><div style={{width:52,height:52,background:"linear-gradient(135deg,var(--emerald),var(--teal))",borderRadius:14,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24}}>📊</div><div><div style={{fontSize:16,fontWeight:800,color:"var(--text-100)"}}>PME Pereiro Monitor</div><div style={{fontSize:12,color:"var(--text-500)"}}>Versão 4.2.0</div></div></div>
-          <p style={{fontSize:12,color:"var(--text-400)",lineHeight:1.6}}>Sistema de Monitoramento do PME de Pereiro/CE. COMEP.</p>
-          <div style={{marginTop:14,paddingTop:12,borderTop:"1px solid rgba(148,163,184,.06)",fontSize:11,color:"var(--text-600)"}}>© 2025 COMEP — Pereiro/CE</div></div></div>
-      </div></div>);
+      <div className="grid-2">
+        <div className="card"><div className="card-header"><span className="card-title">👤 Perfil</span></div><div className="card-body" style={{display:"flex",flexDirection:"column",gap:12}}>
+          {[["Nome",loggedUser.name],["E-mail",loggedUser.email],["Perfil",roleLabel[loggedUser.role]||loggedUser.role]].map(([l,v])=>(
+            <div key={l}><label style={{fontSize:10,fontWeight:700,color:"var(--text-500)",textTransform:"uppercase",display:"block",marginBottom:4}}>{l}</label><div style={{background:"rgba(0,0,0,.2)",border:"1px solid var(--bg-700)",borderRadius:8,padding:"10px 12px",fontSize:12,color:"var(--text-300)"}}>{v}</div></div>))}</div></div>
+        <div className="card"><div className="card-header"><span className="card-title">ℹ️ Sobre o Sistema</span></div><div className="card-body">
+          <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:16}}><div style={{width:52,height:52,background:"linear-gradient(135deg,var(--emerald),var(--teal))",borderRadius:14,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,boxShadow:"0 4px 12px rgba(16,185,129,.2)"}}>🎓</div><div><div style={{fontSize:16,fontWeight:800,color:"var(--text-100)"}}>PME Pereiro Monitor</div><div style={{fontSize:12,color:"var(--text-500)"}}>Versão 6.0 · Metodologia INEP/MEC</div></div></div>
+          <p style={{fontSize:12,color:"var(--text-400)",lineHeight:1.7,marginBottom:12}}>Sistema de Monitoramento e Avaliação do Plano Municipal de Educação de Pereiro/CE. Avaliação do PME 2015–2024 (Lei nº 708/2015) e diagnóstico para elaboração do novo PME 2025–2035, em conformidade com o novo Plano Nacional de Educação aprovado pelo Senado em 25/03/2026.</p>
+          <div style={{background:"rgba(59,130,246,.05)",border:"1px solid rgba(59,130,246,.15)",borderRadius:8,padding:"10px 14px",fontSize:11,color:"var(--text-400)",lineHeight:1.6}}>
+            <strong style={{color:"var(--blue)"}}>📘 Novo PNE:</strong> Aprovado em 25/03/2026 · 19 Objetivos · Vigência de 10 anos · Prazo para PME municipal: 15 meses (Art. 34)
+          </div>
+          <div style={{marginTop:14,paddingTop:12,borderTop:"1px solid rgba(148,163,184,.06)",fontSize:11,color:"var(--text-600)"}}>© 2025-2026 COMEP — Pereiro/CE · DME: Alcides Leite da Silva Neto</div>
+        </div></div>
+      </div>
+    </div>);
 
-  const renderContent=()=>{switch(activeTab){case"dashboard":return renderDashboard();case"form":return renderForm();case"relatorios":return renderRelatorios();case"consolidado":return renderConsolidado();case"config":return renderConfig();default:return renderDashboard()}};
+  const renderContent=()=>{switch(activeTab){case"dashboard":return renderDashboard();case"metas":return renderMetas();case"indicadores":return renderIndicadores();case"relatorios":return renderRelatorios();case"config":return renderConfig();default:return renderDashboard()}};
 
   return(
     <div className="app-wrap">
       <Toast msg={toastMsg} type={toastType}/>
       {sidebarOpen&&<div className="sidebar-overlay open" onClick={()=>setSidebarOpen(false)}/>}
       <aside className={`sidebar ${sidebarOpen?"open":""}`}>
-        <div className="sidebar-header"><div className="sidebar-logo">🏛️</div><div><div style={{color:"var(--text-100)",fontWeight:700,fontSize:13}}>PME Pereiro</div><div style={{color:"var(--text-600)",fontSize:10}}>Monitoramento</div></div><button type="button" onClick={()=>setSidebarOpen(false)} className="sidebar-close">✕</button></div>
-        <nav className="sidebar-nav"><div className="sidebar-label">Menu</div>
+        <div className="sidebar-header"><div className="sidebar-logo">🎓</div><div><div style={{color:"var(--text-100)",fontWeight:700,fontSize:14}}>PME Pereiro</div><div style={{color:"var(--text-600)",fontSize:10,marginTop:1}}>Monitoramento</div></div><button type="button" onClick={()=>setSidebarOpen(false)} className="sidebar-close">✕</button></div>
+        <nav className="sidebar-nav">
           {MENU.map(item=>(<button key={item.id} type="button" onClick={()=>{setActiveTab(item.id);setSidebarOpen(false)}} className={`sidebar-item ${activeTab===item.id?"active":""}`}><span className="icon">{item.icon}</span><span>{item.label}</span>{activeTab===item.id&&<span className="arrow">›</span>}</button>))}
         </nav>
         <div className="sidebar-user"><div className="sidebar-avatar">{(loggedUser.name||"?").charAt(0)}</div><div className="sidebar-user-info"><div className="name">{(loggedUser.name||"").split("—")[0].trim()}</div><div className="role">{roleLabel[loggedUser.role]||loggedUser.role}</div></div><button type="button" onClick={doLogout} style={{background:"none",border:"none",color:"var(--text-500)",cursor:"pointer",fontSize:16}} title="Sair">🚪</button></div>
       </aside>
       <div className="main-area">
         <header className="top-header">
-          <div className="title"><button type="button" className="menu-toggle" onClick={()=>setSidebarOpen(true)}>☰</button>{(MENU.find(m=>m.id===activeTab)||MENU[0]).icon} {(MENU.find(m=>m.id===activeTab)||MENU[0]).label}</div>
-          <div style={{display:"flex",alignItems:"center",gap:12}}>
-            {savedAt&&<span className="saved-indicator" key={savedAt}>✓ Salvo às {savedAt}</span>}
+          <div className="title"><button type="button" className="menu-toggle" onClick={()=>setSidebarOpen(true)}>☰</button><span style={{display:"flex",alignItems:"center",gap:6}}>{(MENU.find(m=>m.id===activeTab)||MENU[0]).icon} {(MENU.find(m=>m.id===activeTab)||MENU[0]).label}</span></div>
+          <div style={{display:"flex",alignItems:"center",gap:14}}>
             <span className="date">{today}</span>
-            {!isRO&&activeTab==="form"&&<button type="button" onClick={save} disabled={saving} className="nav-btn save" style={{padding:"6px 14px",fontSize:11}}>{saving?"Salvando...":"💾 Salvar"}</button>}
+            {!isRO&&<button type="button" onClick={save} className="btn primary" style={{padding:"6px 16px",fontSize:11}}>💾 Salvar</button>}
           </div>
         </header>
         <div className="content-area" ref={mainRef}>{renderContent()}</div>
       </div>
+      {selectedMeta&&<MetaModal meta={selectedMeta} data={data} onUpdate={updateInd} onClose={()=>setSelectedMeta(null)} readOnly={isRO}/>}
     </div>);
 }
 
