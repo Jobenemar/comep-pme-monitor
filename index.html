@@ -38,7 +38,19 @@ input,select,textarea,button{font-family:inherit}
 @keyframes barGrow{from{width:0}}
 @keyframes countUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes cardSlideUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes checkPop{0%{transform:scale(0);opacity:0}60%{transform:scale(1.3)}100%{transform:scale(1);opacity:1}}
 .fade-in{animation:fadeIn .4s ease-out both}
+.card-enter{animation:cardSlideUp .35s ease-out both}
+.save-ok{animation:checkPop .35s ease-out;display:inline-flex;align-items:center;gap:4px}
+.form-group{margin-bottom:14px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-label{font-size:10px;font-weight:700;color:var(--text-500);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:5px}
+.form-input{width:100%;padding:10px 12px;font-size:13px;background:rgba(255,255,255,.04);border:1.5px solid var(--bg-700);border-radius:var(--radius-xs);color:var(--text-100);outline:none;transition:border .2s;font-family:inherit}
+.form-input:focus{border-color:var(--emerald);background:rgba(255,255,255,.06)}
+.confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .15s ease-out}
+.confirm-box{background:var(--bg-800);border:1px solid var(--bg-700);border-radius:16px;padding:28px 32px;max-width:420px;width:100%;box-shadow:0 24px 80px rgba(0,0,0,.5);animation:fadeInScale .2s ease-out}
+.pwd-row{display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.15);border:1px solid var(--bg-700);border-radius:10px;padding:10px 14px;margin-bottom:8px;flex-wrap:wrap}
 
 /* ══ LOGIN ══ */
 .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,#020617,#0f172a 40%,#0f2240 80%);position:relative;overflow:hidden}
@@ -131,7 +143,7 @@ input,select,textarea,button{font-family:inherit}
 
 /* ══ META LIST ITEMS ══ */
 .meta-item{background:rgba(15,23,42,.4);border:1px solid var(--bg-700);border-radius:var(--radius);padding:18px 22px;transition:all .25s;cursor:pointer;position:relative;overflow:hidden}
-.meta-item:hover{border-color:rgba(16,185,129,.25);box-shadow:0 4px 24px rgba(0,0,0,.15);transform:translateY(-1px);background:rgba(15,23,42,.6)}
+.meta-item:hover{border-color:rgba(16,185,129,.25);box-shadow:0 4px 24px rgba(0,0,0,.15),-5px 0 18px rgba(16,185,129,.1);transform:translateY(-1px);background:rgba(15,23,42,.6)}
 .meta-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:0 2px 2px 0}
 
 /* ══ MODAL ══ */
@@ -179,131 +191,259 @@ const {useState,useEffect,useCallback,useRef,useMemo}=React;
 
 /* ═══ AUTH ═══ */
 const hashPass=s=>{let h=0;for(let i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h|=0}return h.toString(36)};
+const LOCAL_USERS_KEY="pme-pereiro-v8-users";
 const USERS=[
   {user:"admin",hash:hashPass("Comep@2025"),name:"Administrador COMEP",email:"admin@pereiro.ce.gov.br",role:"admin"},
-  {user:"jobenemar",hash:hashPass("Pme#2025"),name:"Jobenemar — Coordenação",email:"jobenemar@comep.pereiro.ce.gov.br",role:"admin"},
-  {user:"alcides",hash:hashPass("Dme@Pereiro"),name:"Alcides Leite — DME",email:"alcides@pereiro.ce.gov.br",role:"editor"},
+  {user:"jobenemar",hash:hashPass("Pme#2025"),name:"Jobenemar — Coordenação",email:"jobenemar@pereiro.ce.gov.br",role:"admin"},
+  {user:"alcides",hash:hashPass("Dme@Pereiro"),name:"Alcides Leite — Secretário Municipal",email:"alcides@pereiro.ce.gov.br",role:"editor"},
   {user:"secretaria",hash:hashPass("Smed2025!"),name:"Secretaria Municipal",email:"smed@pereiro.ce.gov.br",role:"editor"},
   {user:"consulta",hash:hashPass("Consulta@1"),name:"Acesso Consulta",email:"consulta@pereiro.ce.gov.br",role:"viewer"},
 ];
 const MAX_ATTEMPTS=5,LOCKOUT_MS=300000;
 const sanitize=s=>typeof s!=="string"?"":s.replace(/[<>]/g,"").slice(0,2000);
 
-/* ═══ METAS DATA — PME Pereiro Lei 708/2015 ═══ */
+/* ═══ METAS DATA — PME Pereiro Lei 708/2015 · 20 Metas · IDEB 2023 · Novo PNE 2026 ═══ */
 const METAS_PME = [
+  /* ── META 1 · EDUCAÇÃO INFANTIL ── */
   {id:"1",numero:"Meta 1",titulo:"Universalização do acesso à educação infantil",
-   descricao:"Garantir o acesso de todas as crianças de 0 a 5 anos à educação infantil em creches e pré-escolas.",
-   eixo:"Acesso e Permanência",prioridade:"Alta",responsavel:"Secretaria de Educação",prazo:"30/12/2026",
-   pneRef:"Objetivo 1 — Metas 1.a, 1.b, 1.c",
-   estrategias:["Parcerias para construção de CEIs tipo B na sede","Levantamento bianual de demanda com secretarias de ação social e saúde","Formação continuada dos profissionais da educação infantil","Ampliação da infraestrutura e acessibilidade","Oferta gradual de educação infantil em tempo integral"],
+   descricao:"Universalizar a educação infantil na pré-escola para crianças de 4 a 5 anos e ampliar a oferta de educação infantil em creches para crianças de até 3 anos.",
+   eixo:"Acesso e Permanência",prioridade:"Alta",responsavel:"Secretaria de Educação",prazo:"30/12/2024",
+   pneRef:"Objetivo 1 — Metas 1.a, 1.b, 1.c (Novo PNE 2026)",
+   estrategias:["Construção de CEIs tipo B na sede","Levantamento bianual de demanda com SMAS e saúde","Formação continuada dos profissionais da educação infantil","Ampliação de infraestrutura e acessibilidade","Oferta gradual de educação infantil em tempo integral"],
    indicadores:[
-     {id:"i1-1",desc:"Taxa de atendimento de crianças de 0-3 anos",vi:45,va:68,vm:85,un:"%",fonte:"Censo Escolar INEP 2023",obs:"Aumento significativo com a inauguração de 3 novas creches"},
-     {id:"i1-2",desc:"Taxa de atendimento de crianças de 4-5 anos",vi:78,va:92,vm:95,un:"%",fonte:"Censo Escolar INEP 2023",obs:"Próximo da meta estabelecida"}
+     {id:"i1-2",desc:"1.1 — % crianças 4-5 anos na pré-escola",vi:78,va:92,vm:100,un:"%",fonte:"Censo Escolar INEP 2023",obs:"Meta de universalização — busca ativa em andamento. Prazo 2016 (meta original); novo PME 2025–2035 reforça"},
+     {id:"i1-1",desc:"1.2 — % crianças 0-3 anos em creches",vi:45,va:68,vm:50,un:"%",fonte:"Censo Escolar INEP 2023",obs:"Meta ≥50% superada. Inauguração de 3 novas creches elevou atendimento para 68%"},
+     {id:"i1-3",desc:"1.3 — Diferença de frequência infantil (0-3 anos) por renda",vi:32,va:18,vm:10,un:"p.p.",fonte:"IBGE PNAD 2023",obs:"Desigualdade de acesso entre faixas de renda em redução — meta <10 p.p. até 2024"}
    ]},
-  {id:"2",numero:"Meta 2",titulo:"Alfabetização na idade certa",
-   descricao:"Garantir que todos os alunos estejam alfabetizados até o final do 3º ano do ensino fundamental.",
-   eixo:"Qualidade da Educação",prioridade:"Alta",responsavel:"Coordenação Pedagógica",prazo:"30/12/2025",
-   pneRef:"Objetivo 3 — Metas 3.a, 3.b, 3.c",
-   estrategias:["Fortalecimento dos processos pedagógicos de alfabetização via PAIC","Avaliações periódicas (SPAECE-Alfa, SAEB)","Formação continuada dos alfabetizadores","Tecnologias educacionais para alfabetização"],
+
+  /* ── META 2 · ENSINO FUNDAMENTAL ── */
+  {id:"2",numero:"Meta 2",titulo:"Universalização do Ensino Fundamental",
+   descricao:"Universalizar o ensino fundamental de 9 anos para toda a população de 6 a 14 anos e garantir que 95% concluam essa etapa na idade recomendada.",
+   eixo:"Acesso e Permanência",prioridade:"Alta",responsavel:"Secretaria de Educação",prazo:"30/12/2024",
+   pneRef:"Objetivo 4 — Metas 4.a, 4.b (Novo PNE 2026)",
+   estrategias:["Busca ativa de crianças fora da escola","Acompanhamento da frequência","Transporte escolar para zona rural","Programas de permanência","Correção de fluxo escolar"],
    indicadores:[
-     {id:"i2-1",desc:"Taxa de alfabetização no 3º ano",vi:62,va:78,vm:90,un:"%",fonte:"SPAECE-Alfa 2023",obs:"Crescimento contínuo, mas precisa acelerar"},
-     {id:"i2-2",desc:"Proficiência média SPAECE-Alfa",vi:140,va:185,vm:200,un:"pts",fonte:"SPAECE 2023",obs:"Em progresso consistente"}
+     {id:"i5-1",desc:"2.1 — % alunos de 6-14 anos matriculados no EF 9 anos",vi:95,va:99.2,vm:100,un:"%",fonte:"Censo Escolar INEP 2023",obs:"Próximo da universalização — busca ativa residual em andamento"},
+     {id:"i2-3",desc:"2.2 — % alunos que concluem o EF na idade certa",vi:68,va:82,vm:95,un:"%",fonte:"INEP/Fluxo Escolar 2023",obs:"Crescimento consistente — meta de 95% até 2024 requer aceleração"},
+     {id:"i3-1",desc:"Distorção idade-série Anos Iniciais — suplementar",vi:15,va:8,vm:7.5,un:"%",fonte:"INEP 2023",obs:"Redução significativa — suplementar à Meta 2"},
+     {id:"i3-2",desc:"Distorção idade-série Anos Finais — suplementar",vi:28,va:16,vm:14,un:"%",fonte:"INEP 2023",obs:"Em progresso — requer atenção nos anos finais"}
    ]},
-  {id:"3",numero:"Meta 3",titulo:"Redução da distorção idade-série",
-   descricao:"Reduzir em 50% a taxa de distorção idade-série no ensino fundamental.",
-   eixo:"Acesso e Permanência",prioridade:"Média",responsavel:"Secretaria de Educação",prazo:"30/12/2025",
-   pneRef:"Objetivo 4 — Metas 4.b, 4.c",
-   estrategias:["Programas de correção de fluxo","Acompanhamento individualizado dos alunos","Busca ativa de crianças fora da escola","Flexibilização pedagógica para escolas do campo"],
-   indicadores:[
-     {id:"i3-1",desc:"Taxa de distorção idade-série (AI)",vi:15,va:8,vm:7.5,un:"%",fonte:"INEP 2023",obs:"Redução significativa nos anos iniciais"},
-     {id:"i3-2",desc:"Taxa de distorção idade-série (AF)",vi:28,va:16,vm:14,un:"%",fonte:"INEP 2023",obs:"Em progresso, mas requer atenção"}
-   ]},
-  {id:"4",numero:"Meta 4",titulo:"Formação continuada dos professores",
-   descricao:"Garantir formação continuada para 100% dos professores da rede municipal.",
-   eixo:"Formação e Valorização",prioridade:"Alta",responsavel:"Coordenação de Formação",prazo:"30/12/2026",
-   pneRef:"Objetivo 17 — Metas 17.a, 17.f",
-   estrategias:["Planejamento estratégico de formação continuada","Parcerias com IES","Formação em serviço com foco em práticas pedagógicas","Incentivo à pós-graduação"],
-   indicadores:[
-     {id:"i4-1",desc:"Professores com formação continuada anual",vi:40,va:88,vm:100,un:"%",fonte:"SMED/RH",obs:"Bom progresso, mas necessário alcançar 100%"},
-     {id:"i4-2",desc:"Professores com pós-graduação",vi:15,va:45,vm:70,un:"%",fonte:"SMED/RH",obs:"Crescimento consistente"}
-   ]},
-  {id:"5",numero:"Meta 5",titulo:"Universalização do ensino fundamental",
-   descricao:"Universalizar o ensino fundamental de 9 anos para toda a população de 6 a 14 anos.",
-   eixo:"Acesso e Permanência",prioridade:"Alta",responsavel:"Secretaria de Educação",prazo:"30/12/2026",
-   pneRef:"Objetivo 4 — Metas 4.a, 4.b",
-   estrategias:["Busca ativa de crianças fora da escola","Acompanhamento da frequência escolar","Transporte escolar para zona rural","Programas de permanência"],
-   indicadores:[
-     {id:"i5-1",desc:"Taxa líquida de matrícula (6-14 anos)",vi:95,va:99.2,vm:100,un:"%",fonte:"Censo Escolar INEP 2023",obs:"Próximo da universalização"},
-     {id:"i5-2",desc:"IDEB Anos Iniciais",vi:5.7,va:8.1,vm:6.3,un:"pts",fonte:"IDEB 2021",obs:"Meta amplamente superada"},
-     {id:"i5-3",desc:"IDEB Anos Finais",vi:4.6,va:5.6,vm:5.2,un:"pts",fonte:"IDEB 2021",obs:"Meta atingida"}
-   ]},
-  {id:"6",numero:"Meta 6",titulo:"Educação em tempo integral",
-   descricao:"Oferecer educação em tempo integral em no mínimo 50% das escolas públicas.",
-   eixo:"Infraestrutura",prioridade:"Média",responsavel:"Secretaria de Educação",prazo:"30/12/2026",
-   pneRef:"Objetivo 6 — Meta 6.a",
-   estrategias:["Implantação gradual do tempo integral","Ampliação da infraestrutura","Atividades pedagógicas com ≥ 7h/dia","Atendimento prioritário a comunidades vulneráveis"],
-   indicadores:[
-     {id:"i6-1",desc:"Escolas com oferta de tempo integral",vi:0,va:81,vm:50,un:"%",fonte:"Censo INEP 2024",obs:"Meta superada. 13 de 16 escolas ofertam"},
-     {id:"i6-2",desc:"Alunos em tempo integral",vi:0,va:31,vm:25,un:"%",fonte:"Censo INEP 2024",obs:"Meta superada"}
-   ]},
-  {id:"7",numero:"Meta 7",titulo:"Qualidade da educação básica — IDEB",
-   descricao:"Fomentar a qualidade da educação básica, atingindo as metas do IDEB.",
-   eixo:"Qualidade da Educação",prioridade:"Alta",responsavel:"SMED / INEP",prazo:"30/12/2026",
-   pneRef:"Objetivo 5 — Metas 5.a, 5.b, 5.d",
-   estrategias:["Diretrizes pedagógicas por pacto interfederativo","Instrumentos de avaliação sistêmica","Políticas de inclusão e diversidade","Garantir acesso a bibliotecas e laboratórios"],
-   indicadores:[
-     {id:"i7-1",desc:"IDEB Anos Iniciais",vi:5.7,va:8.1,vm:6.3,un:"pts",fonte:"IDEB 2021",obs:"Referência no Ceará"},
-     {id:"i7-2",desc:"IDEB Anos Finais",vi:4.6,va:5.6,vm:5.2,un:"pts",fonte:"IDEB 2021",obs:"Meta atingida"},
-     {id:"i7-3",desc:"Proficiência média SAEB — Matemática",vi:195,va:228,vm:245,un:"pts",fonte:"SAEB 2023",obs:"Em progresso"}
-   ]},
-  {id:"8",numero:"Meta 8",titulo:"Educação especial / inclusiva",
-   descricao:"Universalizar o acesso à educação básica e ao AEE para alunos com deficiência.",
-   eixo:"Acesso e Permanência",prioridade:"Alta",responsavel:"SMED / NAEE",prazo:"30/12/2026",
-   pneRef:"Objetivo 10 — Metas 10.a, 10.b",
-   estrategias:["Matrícula preferencial na rede regular","Oferta de AEE no NAEE","Formação em educação especial","Adequação arquitetônica"],
-   indicadores:[
-     {id:"i8-1",desc:"PcD matriculados em classes comuns",vi:80,va:100,vm:100,un:"%",fonte:"Censo INEP 2023",obs:"Meta atingida"},
-     {id:"i8-2",desc:"Salas de recursos multifuncionais",vi:2,va:4,vm:8,un:"un",fonte:"SMED",obs:"Necessária ampliação"}
-   ]},
-  {id:"9",numero:"Meta 9",titulo:"Educação de jovens e adultos (EJA)",
-   descricao:"Elevar a taxa de alfabetização da população de 15+ anos e ampliar oferta de EJA.",
-   eixo:"EJA e Diversidade",prioridade:"Média",responsavel:"SMED / EJA",prazo:"30/12/2026",
-   pneRef:"Objetivo 11 — Metas 11.a, 11.d, 11.e",
-   estrategias:["Oferta gratuita de EJA","Diagnóstico de demanda","Busca ativa","Programas de transporte e saúde"],
-   indicadores:[
-     {id:"i9-1",desc:"Taxa de alfabetização 15+",vi:78,va:91,vm:97,un:"%",fonte:"IBGE PNAD 2022",obs:"Bom progresso, meta atualizada pelo novo PNE"},
-     {id:"i9-2",desc:"Matrículas na EJA",vi:120,va:285,vm:400,un:"alunos",fonte:"SMED",obs:"Crescimento expressivo"}
-   ]},
-  {id:"10",numero:"Meta 10",titulo:"Ensino médio — apoio à universalização",
-   descricao:"Apoiar a universalização do ensino médio e elevar a taxa líquida de matrículas.",
+
+  /* ── META 3 · ENSINO MÉDIO ── */
+  {id:"3",numero:"Meta 3",titulo:"Universalização do Ensino Médio",
+   descricao:"Universalizar o atendimento escolar para toda a população de 15 a 17 anos e elevar a taxa líquida de matrículas no ensino médio para 85%.",
    eixo:"Acesso e Permanência",prioridade:"Alta",responsavel:"SEDUC-CE / SMED",prazo:"30/12/2026",
-   pneRef:"Objetivo 4 — Meta 4.d",
+   pneRef:"Objetivo 4 — Meta 4.d (Novo PNE 2026)",
    estrategias:["Busca ativa de jovens 15-17 fora da escola","Programas de correção de fluxo","Articulação com educação profissional","Oferta noturna"],
    indicadores:[
-     {id:"i10-1",desc:"Taxa líquida de matrícula EM",vi:60,va:77,vm:90,un:"%",fonte:"Censo INEP 2023",obs:"Crescimento, mas abaixo da meta"}
+     {id:"i10-2",desc:"3.1 — Atendimento escolar da população de 15-17 anos",vi:72,va:88,vm:100,un:"%",fonte:"Censo INEP 2023",obs:"Inclui EM regular + EJA + Ed. Profissional — meta de universalização até 2016 (original)"},
+     {id:"i10-1",desc:"3.2 — Taxa líquida de matrículas no Ensino Médio",vi:60,va:80,vm:85,un:"%",fonte:"Censo INEP 2023",obs:"Meta ≥85% ao final do PNE — crescimento consistente mas ainda abaixo da meta"}
    ]},
-  {id:"11",numero:"Meta 11",titulo:"Educação profissional técnica",
-   descricao:"Ampliar matrículas da educação profissional técnica de nível médio.",
-   eixo:"Ed. Profissional e Superior",prioridade:"Média",responsavel:"SMED / SEDUC-CE",prazo:"30/12/2026",
-   pneRef:"Objetivo 12 — Metas 12.a, 12.c",
-   estrategias:["Expansão da oferta de cursos técnicos","Apoio ao estágio profissional","Parcerias com setor produtivo"],
+
+  /* ── META 4 · EDUCAÇÃO ESPECIAL ── */
+  {id:"4",numero:"Meta 4",titulo:"Educação especial / inclusiva",
+   descricao:"Universalizar o acesso à educação básica e ao AEE para alunos com deficiência, TGD e altas habilidades.",
+   eixo:"Acesso e Permanência",prioridade:"Alta",responsavel:"SMED / NAEE",prazo:"30/12/2024",
+   pneRef:"Objetivo 10 — Metas 10.a, 10.b (Novo PNE 2026)",
+   estrategias:["Matrícula preferencial na rede regular","Oferta de AEE no NAEE","Formação em educação especial","Adequação arquitetônica"],
    indicadores:[
-     {id:"i11-1",desc:"Matrículas em educação profissional",vi:30,va:48,vm:90,un:"alunos",fonte:"SMED",obs:"Aumento, mas meta distante"}
+     {id:"i8-1",desc:"4.1 — % alunos com deficiência (4-17 anos) na educação básica",vi:80,va:100,vm:100,un:"%",fonte:"Censo INEP 2023",obs:"Meta atingida — 100% dos alunos PcD matriculados em classes comuns"},
+     {id:"i8-2",desc:"4.2 — Nº de salas de recursos multifuncionais implantadas",vi:2,va:4,vm:8,un:"un.",fonte:"SMED",obs:"Necessária ampliação — meta de 8 salas até 2026"},
+     {id:"i8-3",desc:"4.3 — Atendimento de crianças 0-3 anos com deficiência",vi:40,va:72,vm:100,un:"%",fonte:"SMED/NAEE 2023",obs:"Em progresso — cadastro e triagem em parceria com a saúde"}
    ]},
-  {id:"12",numero:"Meta 12",titulo:"Financiamento da educação",
-   descricao:"Ampliar o investimento público em educação municipal conforme legislação.",
-   eixo:"Gestão e Financiamento",prioridade:"Alta",responsavel:"Finanças / TCM",prazo:"30/12/2026",
-   pneRef:"Objetivo 19 — Metas 19.a, 19.b",
-   estrategias:["Acompanhamento da arrecadação","Destinar MDE conforme art. 212 CF","Portais de transparência","Audiências públicas"],
+
+  /* ── META 5 · ALFABETIZAÇÃO ── */
+  {id:"5",numero:"Meta 5",titulo:"Alfabetização na idade certa",
+   descricao:"Alfabetizar todas as crianças até o final do 3º ano do ensino fundamental.",
+   eixo:"Qualidade da Educação",prioridade:"Alta",responsavel:"Coordenação Pedagógica",prazo:"30/12/2024",
+   pneRef:"Objetivo 2 — Metas 2.a, 2.b, 2.c (Novo PNE 2026)",
+   estrategias:["Fortalecimento via PAIC","Avaliações periódicas (SPAECE-Alfa, SAEB)","Formação continuada dos alfabetizadores","Tecnologias educacionais para alfabetização"],
    indicadores:[
-     {id:"i12-1",desc:"% receita investida em MDE",vi:25,va:27.4,vm:25,un:"%",fonte:"LOA/SIOPE 2023",obs:"Acima do mínimo constitucional"},
-     {id:"i12-2",desc:"FUNDEB aplicado corretamente",vi:0,va:100,vm:100,un:"%",fonte:"TCM/SIOPE",obs:"Meta atingida"}
+     {id:"i2-1",desc:"5.1 — % crianças alfabetizadas até o 3º ano do EF",vi:62,va:84,vm:100,un:"%",fonte:"SPAECE-Alfa 2023",obs:"Crescimento expressivo — acima da média estadual. Novo PNE define 100% até 2024"},
+     {id:"i2-2",desc:"Proficiência SPAECE-Alfa — suplementar",vi:140,va:196,vm:210,un:"pts",fonte:"SPAECE 2023",obs:"Nível proficiente atingido — foco em nível avançado conforme novo PNE"}
+   ]},
+
+  /* ── META 6 · TEMPO INTEGRAL ── */
+  {id:"6",numero:"Meta 6",titulo:"Educação em tempo integral",
+   descricao:"Oferecer educação em tempo integral em no mínimo 50% das escolas públicas, atendendo pelo menos 25% dos alunos.",
+   eixo:"Infraestrutura",prioridade:"Média",responsavel:"Secretaria de Educação",prazo:"30/12/2024",
+   pneRef:"Objetivo 6 — Meta 6.a (Novo PNE 2026)",
+   estrategias:["Implantação gradual do tempo integral","Ampliação da infraestrutura","Atividades pedagógicas com ≥7h/dia","Atendimento prioritário a comunidades vulneráveis"],
+   indicadores:[
+     {id:"i6-1",desc:"6.1 — % escolas públicas com oferta de tempo integral",vi:0,va:81,vm:50,un:"%",fonte:"Censo INEP 2024",obs:"Meta superada. 13 de 16 escolas ofertam tempo integral (81%)"},
+     {id:"i6-2",desc:"6.2 — % alunos em tempo integral",vi:0,va:31,vm:25,un:"%",fonte:"Censo INEP 2024",obs:"Meta superada — 31% dos alunos em jornada de tempo integral"}
+   ]},
+
+  /* ── META 7 · QUALIDADE / IDEB ── */
+  {id:"7",numero:"Meta 7",titulo:"Qualidade da educação básica — IDEB",
+   descricao:"Fomentar a qualidade da educação básica em todas as etapas, com melhoria do fluxo escolar e da aprendizagem.",
+   eixo:"Qualidade da Educação",prioridade:"Alta",responsavel:"SMED / INEP",prazo:"30/12/2026",
+   pneRef:"Objetivo 5 — Metas 5.a, 5.b, 5.d (Novo PNE 2026 · IDEB 2023 incorporado)",
+   estrategias:["Diretrizes pedagógicas por pacto interfederativo","Instrumentos de avaliação sistêmica","Políticas de inclusão e diversidade","Garantir acesso a bibliotecas e laboratórios"],
+   indicadores:[
+     {id:"i7-1",desc:"7.1 — IDEB Anos Iniciais",vi:5.7,va:8.3,vm:7.0,un:"pts",fonte:"IDEB 2023",obs:"Série: 5,7(2015)→6,1(2017)→7,2(2019)→8,1(2021)→8,3(2023). 1º lugar estadual. Meta novo PNE: 7,0"},
+     {id:"i7-2",desc:"7.2 — IDEB Anos Finais",vi:4.6,va:5.9,vm:5.5,un:"pts",fonte:"IDEB 2023",obs:"Série: 4,6(2015)→4,8(2017)→5,2(2019)→5,6(2021)→5,9(2023). Meta novo PNE (5,5) atingida"},
+     {id:"i7-4",desc:"7.3 — IDEB Ensino Médio",vi:4.3,va:5.0,vm:5.2,un:"pts",fonte:"IDEB 2023 / SEDUC-CE",obs:"Série: 4,3(2015)→4,7(2017)→5,0(2019)→5,2(2021)→5,0(2023). EM sob gestão estadual"},
+     {id:"i7-5",desc:"7.4 — % alunos nível suficiente EF+EM (5º ano PME)",vi:18,va:32,vm:40,un:"%",fonte:"SAEB 2023",obs:"Em progresso — novo PNE define ≥40% até o 5º ano do plano"},
+     {id:"i7-6",desc:"7.5 — % alunos nível desejável EF+EM (5º ano PME)",vi:8,va:15,vm:20,un:"%",fonte:"SAEB 2023",obs:"Em progresso — meta de ≥20% para nível desejável"},
+     {id:"i7-7",desc:"7.6 — % alunos nível suficiente (final PME)",vi:18,va:32,vm:70,un:"%",fonte:"SAEB 2023",obs:"Meta ambiciosa de 70% — exige esforço sustentado até o final do plano"},
+     {id:"i7-8",desc:"7.7 — % alunos nível desejável (final PME)",vi:8,va:15,vm:40,un:"%",fonte:"SAEB 2023",obs:"Meta de 40% — alinhada ao Objetivo 5 do novo PNE 2026"},
+     {id:"i7-3",desc:"7.8 / SAEB — Proficiência média Matemática",vi:195,va:237,vm:255,un:"pts",fonte:"SAEB 2023",obs:"Novo PNE amplia meta para 255 pts (nível adequado) até 2031 — em trajetória"}
+   ]},
+
+  /* ── META 8 · ESCOLARIDADE 18-29 ANOS ── */
+  {id:"8",numero:"Meta 8",titulo:"Escolaridade da população de 18 a 29 anos",
+   descricao:"Elevar a escolaridade média da população de 18 a 29 anos para no mínimo 12 anos de estudo.",
+   eixo:"Acesso e Permanência",prioridade:"Alta",responsavel:"SMED / SEDUC-CE",prazo:"30/12/2024",
+   pneRef:"Objetivo 7 — Meta 7.a (Novo PNE 2026)",
+   estrategias:["Busca ativa de jovens fora da escola","EJA para jovens","Apoio ao acesso ao ensino superior","Ações afirmativas para redução de desigualdades"],
+   indicadores:[
+     {id:"i8-4",desc:"8.1 — Escolaridade média da população de 18-29 anos",vi:8.2,va:10.5,vm:12,un:"anos",fonte:"IBGE PNAD 2023",obs:"Em progresso — meta de ≥12 anos de estudo até 2024. Requer políticas de permanência"},
+     {id:"i8-5",desc:"8.2 — Equalização de escolaridade entre negros e não-negros",vi:2.1,va:1.2,vm:0,un:"anos dif.",fonte:"IBGE PNAD 2023",obs:"Redução da diferença em andamento — meta de equalização plena ao final do PME"}
+   ]},
+
+  /* ── META 9 · ALFABETIZAÇÃO DE ADULTOS ── */
+  {id:"9",numero:"Meta 9",titulo:"Alfabetização e redução do analfabetismo",
+   descricao:"Elevar a taxa de alfabetização da população com 15 anos ou mais para ≥80% até 2018 e erradicar o analfabetismo absoluto até 2024.",
+   eixo:"EJA e Diversidade",prioridade:"Média",responsavel:"SMED / EJA",prazo:"30/12/2024",
+   pneRef:"Objetivo 11 — Metas 11.a, 11.d, 11.e (Novo PNE 2026 · erradicação até 2035)",
+   estrategias:["Oferta gratuita de EJA","Diagnóstico de demanda","Busca ativa","Programas de transporte e saúde"],
+   indicadores:[
+     {id:"i9-1",desc:"9.1 — Taxa de alfabetização da população ≥15 anos",vi:78,va:93,vm:99,un:"%",fonte:"IBGE PNAD 2023",obs:"Meta original ≥80% (2018) superada. Novo PNE define erradicação até 2035 — em trajetória"},
+     {id:"i9-3",desc:"9.2 — Redução do analfabetismo absoluto (≥15 anos)",vi:22,va:7,vm:0,un:"%",fonte:"IBGE PNAD 2023",obs:"Redução expressiva de 22% para 7% — novo PNE define erradicação plena até 2035"},
+     {id:"i9-4",desc:"9.3 — Redução do analfabetismo funcional (50% de redução)",vi:27,va:18,vm:13.5,un:"%",fonte:"IBGE/INAF 2023",obs:"Meta: reduzir 50% em relação ao índice de 2015 (27% → 13,5%) — em progresso"},
+     {id:"i9-2",desc:"Matrículas na EJA — suplementar",vi:120,va:285,vm:400,un:"alunos",fonte:"SMED",obs:"Crescimento expressivo — suplementar à Meta 9"}
+   ]},
+
+  /* ── META 10 · EJA + EDUCAÇÃO PROFISSIONAL ── */
+  {id:"10",numero:"Meta 10",titulo:"EJA integrada à educação profissional",
+   descricao:"Oferecer no mínimo 10% das matrículas de EJA na forma integrada à educação profissional.",
+   eixo:"EJA e Diversidade",prioridade:"Média",responsavel:"SMED / EJA",prazo:"30/12/2024",
+   pneRef:"Objetivo 12 — Meta 12.a (Novo PNE 2026)",
+   estrategias:["Integração curricular EJA + técnico","Parcerias com SENAI/SENAC","Certificação profissional","Atendimento prioritário a jovens trabalhadores"],
+   indicadores:[
+     {id:"i10-3",desc:"10.1 — % matrículas EJA integradas à educação profissional",vi:0,va:6,vm:10,un:"%",fonte:"SMED 2023",obs:"Meta de ≥10% de integração EJA + profissional — em progresso. Parceria com SENAC iniciada"}
+   ]},
+
+  /* ── META 11 · EDUCAÇÃO PROFISSIONAL TÉCNICA ── */
+  {id:"11",numero:"Meta 11",titulo:"Educação profissional técnica de nível médio",
+   descricao:"Triplicar as matrículas da educação profissional técnica de nível médio, assegurando qualidade e expansão no segmento público.",
+   eixo:"Ed. Profissional e Superior",prioridade:"Média",responsavel:"SMED / SEDUC-CE",prazo:"30/12/2024",
+   pneRef:"Objetivo 12 — Metas 12.a, 12.c (Novo PNE 2026)",
+   estrategias:["Expansão de cursos técnicos","Apoio ao estágio profissional","Parcerias com setor produtivo","Oferta via IFCE EaD"],
+   indicadores:[
+     {id:"i11-1",desc:"11.1 — Triplicação das matrículas em ed. profissional técnica",vi:30,va:48,vm:90,un:"alunos",fonte:"SMED",obs:"Meta de triplicar (30→90 alunos) — crescimento em andamento. Parceria com SEDUC-CE"},
+     {id:"i11-2",desc:"11.2 — % da expansão de vagas no segmento público",vi:40,va:55,vm:50,un:"%",fonte:"SMED 2023",obs:"Meta de ≥50% da expansão no público — atingida com novas turmas IFCE/EaD"}
+   ]},
+
+  /* ── META 12 · EDUCAÇÃO SUPERIOR ── */
+  {id:"12",numero:"Meta 12",titulo:"Educação superior — acesso e expansão",
+   descricao:"Elevar a taxa bruta de matrícula na educação superior para 50% e a taxa líquida para 33% da população de 18 a 24 anos.",
+   eixo:"Ed. Profissional e Superior",prioridade:"Média",responsavel:"MEC / SEDUC-CE",prazo:"30/12/2024",
+   pneRef:"Objetivo 13 — Metas 13.a, 13.b (Novo PNE 2026)",
+   estrategias:["Apoio via PROUNI/FIES","Educação a distância","Articulação com IES parceiras","Residências pedagógicas"],
+   indicadores:[
+     {id:"i12-3",desc:"12.1 — Taxa bruta de matrícula na educação superior",vi:29,va:37,vm:50,un:"%",fonte:"Censo Ed. Superior INEP 2023",obs:"Indicador nacional/estadual de referência — crescimento, mas abaixo da meta de 50%"},
+     {id:"i12-4",desc:"12.2 — Taxa líquida de matrícula 18-24 anos no superior",vi:19,va:26,vm:33,un:"%",fonte:"IBGE PNAD 2023",obs:"Indicador nacional — crescimento consistente, mas meta de 33% ainda não atingida"},
+     {id:"i12-5",desc:"12.3 — % de novas matrículas no segmento público",vi:36,va:38,vm:40,un:"%",fonte:"Censo Ed. Superior INEP 2023",obs:"Meta de 40% no público — muito próximo, requer monitoramento contínuo"}
+   ]},
+
+  /* ── META 13 · QUALIDADE DA EDUCAÇÃO SUPERIOR ── */
+  {id:"13",numero:"Meta 13",titulo:"Qualidade da educação superior",
+   descricao:"Elevar a qualidade da educação superior pelo aumento da proporção de mestres e doutores no corpo docente.",
+   eixo:"Ed. Profissional e Superior",prioridade:"Média",responsavel:"MEC / CAPES",prazo:"30/12/2024",
+   pneRef:"Objetivo 14 — Metas 14.a, 14.b (Novo PNE 2026)",
+   estrategias:["Incentivo à pós-graduação docente","Programas de capacitação","Financiamento CAPES","Bolsas de produtividade"],
+   indicadores:[
+     {id:"i13-1",desc:"13.1 — % mestres e doutores no corpo docente do superior",vi:55,va:68,vm:75,un:"%",fonte:"Censo Ed. Superior INEP 2023",obs:"Indicador nacional — crescimento em direção à meta de 75%"},
+     {id:"i13-2",desc:"13.2 — % doutores no total de docentes do superior",vi:28,va:31,vm:35,un:"%",fonte:"Censo Ed. Superior INEP 2023",obs:"Indicador nacional — crescimento, meta de 35% ainda não atingida"}
+   ]},
+
+  /* ── META 14 · PÓS-GRADUAÇÃO ── */
+  {id:"14",numero:"Meta 14",titulo:"Elevação da titulação em pós-graduação",
+   descricao:"Elevar gradualmente o número de titulados em mestrado para 60.000/ano e em doutorado para 25.000/ano.",
+   eixo:"Ed. Profissional e Superior",prioridade:"Média",responsavel:"MEC / CAPES",prazo:"30/12/2024",
+   pneRef:"Objetivo 15 — Metas 15.a, 15.b (Novo PNE 2026)",
+   estrategias:["Expansão de programas de pós-graduação","DINTER e MINTER para municípios","Financiamento de bolsas CAPES/CNPq","Interiorização da pós-graduação"],
+   indicadores:[
+     {id:"i14-1",desc:"14.1 — Titulação anual de mestres (meta nacional)",vi:48000,va:55000,vm:60000,un:"tit./ano",fonte:"CAPES 2023",obs:"Indicador nacional — em trajetória para 60.000 titulações/ano até 2024"},
+     {id:"i14-2",desc:"14.2 — Titulação anual de doutores (meta nacional)",vi:17000,va:22000,vm:25000,un:"tit./ano",fonte:"CAPES 2023",obs:"Indicador nacional — crescimento consistente em direção à meta de 25.000/ano"}
+   ]},
+
+  /* ── META 15 · FORMAÇÃO INICIAL ── */
+  {id:"15",numero:"Meta 15",titulo:"Formação inicial dos professores",
+   descricao:"Garantir que todos os professores da educação básica possuam formação específica de nível superior na área de conhecimento em que atuam.",
+   eixo:"Formação e Valorização",prioridade:"Alta",responsavel:"Coordenação de Formação / SMED",prazo:"30/12/2024",
+   pneRef:"Objetivo 16 — Metas 16.a, 16.b (Novo PNE 2026)",
+   estrategias:["Levantamento de professores sem licenciatura na área","Parcerias com IES para formação emergencial","Complementações pedagógicas","Licenciaturas via EaD"],
+   indicadores:[
+     {id:"i15-1",desc:"15.1 — % professores com licenciatura na área de atuação",vi:62,va:85,vm:100,un:"%",fonte:"SMED/RH 2023",obs:"Em progresso — novo PNE define 100% até 2024. Cerca de 15% ainda sem licenciatura na área"}
+   ]},
+
+  /* ── META 16 · FORMAÇÃO CONTINUADA ── */
+  {id:"16",numero:"Meta 16",titulo:"Formação continuada e pós-graduação dos professores",
+   descricao:"Garantir formação continuada para todos os profissionais da educação básica e pós-graduação para pelo menos 50% dos professores.",
+   eixo:"Formação e Valorização",prioridade:"Alta",responsavel:"Coordenação de Formação",prazo:"30/12/2024",
+   pneRef:"Objetivo 17 — Metas 17.a, 17.f (Novo PNE 2026)",
+   estrategias:["Planejamento estratégico de formação","Parcerias com IES","Formação em serviço focada em práticas pedagógicas","Incentivo à pós-graduação"],
+   indicadores:[
+     {id:"i4-2",desc:"16.1 — % professores com pós-graduação (especialização+)",vi:15,va:45,vm:50,un:"%",fonte:"SMED/RH 2023",obs:"Meta de ≥50% quase atingida — crescimento consistente"},
+     {id:"i4-1",desc:"16.2 — % profissionais da educação com formação continuada anual",vi:40,va:88,vm:100,un:"%",fonte:"SMED/RH 2023",obs:"Bom progresso — necessário alcançar 100%"}
+   ]},
+
+  /* ── META 17 · VALORIZAÇÃO DO MAGISTÉRIO ── */
+  {id:"17",numero:"Meta 17",titulo:"Valorização dos profissionais do magistério",
+   descricao:"Valorizar os profissionais do magistério das redes públicas, equiparando seu rendimento médio ao dos demais profissionais com escolaridade equivalente.",
+   eixo:"Formação e Valorização",prioridade:"Alta",responsavel:"Prefeitura / SMED",prazo:"30/12/2024",
+   pneRef:"Objetivo 18 — Meta 18.a (Novo PNE 2026)",
+   estrategias:["Acompanhamento do piso salarial nacional","Revisão anual do plano de cargos","Incentivos de produtividade","Transparência salarial"],
+   indicadores:[
+     {id:"i17-1",desc:"17.1 — Equiparação do rendimento docente a profissionais de escolaridade equivalente",vi:78,va:92,vm:100,un:"%",fonte:"SMED/RH 2023",obs:"Em progresso — piso salarial nacional cumprido. Meta de equiparação plena até 2024"}
+   ]},
+
+  /* ── META 18 · PLANO DE CARREIRA ── */
+  {id:"18",numero:"Meta 18",titulo:"Plano de carreira dos profissionais da educação",
+   descricao:"Assegurar planos de carreira para os profissionais da educação básica pública, com base no piso salarial nacional.",
+   eixo:"Formação e Valorização",prioridade:"Alta",responsavel:"Prefeitura / Câmara Municipal",prazo:"30/12/2026",
+   pneRef:"Objetivo 18 — Metas 18.a, 18.b (Novo PNE 2026)",
+   estrategias:["Revisão do Estatuto do Magistério","Concurso público para vagas efetivas","Progressão por titulação e tempo de serviço","Transparência nos planos de carreira"],
+   indicadores:[
+     {id:"i18-1",desc:"18.1 — Plano de carreira com piso nacional reestruturado",vi:0,va:100,vm:100,un:"%",fonte:"Prefeitura/SMED 2023",obs:"Concluído — Estatuto do Magistério municipal atualizado. Prazo original: 2017"},
+     {id:"i18-2",desc:"18.2 — % magistério em cargo efetivo (concurso público)",vi:62,va:78,vm:90,un:"%",fonte:"SMED/RH 2023",obs:"Meta de ≥90% no 3º ano do PME — em progresso"},
+     {id:"i18-3",desc:"18.3 — % profissionais não docentes em cargo efetivo",vi:45,va:65,vm:80,un:"%",fonte:"SMED/RH 2023",obs:"Meta de ≥80% no 3º ano do PME — em progresso"}
+   ]},
+
+  /* ── META 19 · GESTÃO DEMOCRÁTICA ── */
+  {id:"19",numero:"Meta 19",titulo:"Gestão democrática da educação",
+   descricao:"Assegurar condições para a efetivação da gestão democrática da educação, garantindo autonomia pedagógica, administrativa e financeira.",
+   eixo:"Gestão e Financiamento",prioridade:"Média",responsavel:"COMEP / SMED",prazo:"30/12/2024",
+   pneRef:"Objetivo 19 — Meta 19.a (Novo PNE 2026)",
+   estrategias:["Eleição direta para diretores","Fortalecimento dos conselhos escolares","Participação da comunidade no PPP","Transparência das informações escolares"],
+   indicadores:[
+     {id:"i19-1",desc:"19.1 — Condições para gestão democrática efetivadas",vi:0,va:100,vm:100,un:"%",fonte:"SMED/COMEP 2023",obs:"Concluído — legislação municipal aprovada e eleições para diretores realizadas. Prazo: 2017"},
+     {id:"i19-2",desc:"19.2 — Fundo Municipal de Educação (FME) constituído",vi:0,va:100,vm:100,un:"%",fonte:"Prefeitura/Câmara 2023",obs:"FME instalado e em funcionamento — reuniões periódicas realizadas"}
+   ]},
+
+  /* ── META 20 · FINANCIAMENTO ── */
+  {id:"20",numero:"Meta 20",titulo:"Financiamento da educação",
+   descricao:"Ampliar o investimento público em educação para atingir o patamar do CAQ, com implementação plena até o final do plano.",
+   eixo:"Gestão e Financiamento",prioridade:"Alta",responsavel:"Finanças / TCM",prazo:"30/12/2024",
+   pneRef:"Objetivo 19 — Metas 19.a, 19.b (Novo PNE 2026)",
+   estrategias:["Destinar MDE conforme art. 212 CF","Portais de transparência","Audiências públicas","Implementação do CAQ"],
+   indicadores:[
+     {id:"i12-1",desc:"20.1 — % da receita municipal investida em MDE",vi:25,va:27.4,vm:25,un:"%",fonte:"LOA/SIOPE 2023",obs:"Acima do mínimo constitucional (25%). Ampliação do investimento em curso"},
+     {id:"i12-6",desc:"20.2 — Implantação do CAQ inicial",vi:0,va:60,vm:100,un:"%",fonte:"MEC/FNDE 2023",obs:"Em implantação — ações de transição para o novo modelo de custo-aluno qualidade"},
+     {id:"i12-7",desc:"20.3 — Implementação plena do CAQ",vi:0,va:30,vm:100,un:"%",fonte:"MEC/FNDE 2023",obs:"Implementação plena prevista em 3 anos — fase inicial em curso"},
+     {id:"i12-2",desc:"FUNDEB aplicado corretamente — suplementar",vi:0,va:100,vm:100,un:"%",fonte:"TCM/SIOPE",obs:"Meta atingida — prestação de contas aprovada pelo TCM"}
    ]}
 ];
 
 const EIXOS=["Todos os Eixos","Acesso e Permanência","Qualidade da Educação","EJA e Diversidade","Ed. Profissional e Superior","Formação e Valorização","Gestão e Financiamento","Infraestrutura"];
 const STATUSES=["Todos os Status","Em Andamento","Concluída","Atrasada","Não Iniciada"];
-const STORAGE_KEY="pme-pereiro-v6";
+const STORAGE_KEY="pme-pereiro-v8";
+const CUSTOM_METAS_KEY="pme-pereiro-v8-metas";
+const DELETED_KEY="pme-pereiro-v8-deleted";
+const CUSTOM_INDS_KEY="pme-pereiro-v8-inds";
 const MENU=[{id:"dashboard",label:"Dashboard",icon:"📊"},{id:"metas",label:"Metas",icon:"🎯"},{id:"indicadores",label:"Indicadores",icon:"📈"},{id:"relatorios",label:"Relatórios",icon:"📄"},{id:"config",label:"Configurações",icon:"⚙️"}];
 const roleLabel={admin:"Administrador",editor:"Editor",viewer:"Somente leitura"};
 
@@ -366,7 +506,7 @@ function LineChart({metaStats,data}){
     {id:"i1-1",label:"Atend. creche (0-3)",color:"#10b981"},
     {id:"i1-2",label:"Atend. pré-escola",color:"#f59e0b"},
     {id:"i2-1",label:"Alfabetização 3º an...",color:"#3b82f6"},
-    {id:"i5-2",label:"IDEB Anos Iniciais",color:"#8b5cf6"},
+    {id:"i7-1",label:"IDEB Anos Iniciais",color:"#8b5cf6"},
     {id:"i4-1",label:"Formação cont. prof.",color:"#06b6d4"},
   ];
   const points=indicators.map(ind=>{
@@ -418,7 +558,11 @@ function LoginScreen({onLogin}){
   useEffect(()=>{const t=setInterval(()=>setNow(Date.now()),1000);return()=>clearInterval(t)},[]);
   const locked=now<lockUntil;const lockSec=locked?Math.ceil((lockUntil-now)/1000):0;
   const submit=()=>{if(locked||loading)return;const u=user.trim().toLowerCase(),p=pass.trim();if(!u||!p){setError("Preencha usuário e senha.");return}setLoading(true);
-    setTimeout(()=>{const f=USERS.find(x=>x.user===u&&x.hash===hashPass(p));if(f){setError("");onLogin(f)}else{const n=attempts+1;setAttempts(n);if(n>=MAX_ATTEMPTS){setLockUntil(Date.now()+LOCKOUT_MS);setError("Bloqueado por 5 min.")}else setError(`Credenciais inválidas. ${n}/${MAX_ATTEMPTS}`)}setLoading(false)},500)};
+    setTimeout(()=>{
+      const overrides=JSON.parse(localStorage.getItem(LOCAL_USERS_KEY)||"{}");
+      const f=USERS.find(x=>{const h=overrides[x.user]||x.hash;return x.user===u&&h===hashPass(p)});
+      if(f){setError("");onLogin(f)}else{const n=attempts+1;setAttempts(n);if(n>=MAX_ATTEMPTS){setLockUntil(Date.now()+LOCKOUT_MS);setError("Bloqueado por 5 min.")}else setError(`Credenciais inválidas. ${n}/${MAX_ATTEMPTS}`)}
+      setLoading(false)},500)};
   return(
     <div className="login-wrap"><div className="login-orb login-orb-1"/><div className="login-orb login-orb-2"/><div className="login-grid"/>
       <div className="login-card"><div style={{textAlign:"center",marginBottom:28}}><div className="login-logo">🎓</div><div style={{fontSize:9,letterSpacing:4,textTransform:"uppercase",color:"var(--emerald)",fontWeight:700,marginBottom:6}}>COMEP · Pereiro/CE</div><h1 style={{fontSize:22,fontWeight:800,color:"var(--text-50)"}}>PME Pereiro Monitor</h1><p style={{margin:"6px 0 0",fontSize:12,color:"var(--text-500)"}}>Monitoramento e Avaliação · Lei nº 708/2015</p><p style={{margin:"4px 0 0",fontSize:10,color:"var(--text-600)"}}>Diagnóstico para o novo PME 2025–2035 · PNE Lei de 25/03/2026</p></div>
@@ -428,14 +572,107 @@ function LoginScreen({onLogin}){
           {error&&<div className="login-error"><span>🔒</span>{locked?`Bloqueado (${lockSec}s)`:error}</div>}
           <button type="button" onClick={submit} disabled={locked||loading} className="login-btn" style={{marginTop:4}}>{loading?<><div className="spinner" style={{width:16,height:16,borderWidth:2}}/>Autenticando...</>:locked?`Bloqueado (${lockSec}s)`:"Entrar"}</button>
         </div>
-        <div style={{textAlign:"center",marginTop:20,paddingTop:14,borderTop:"1px solid rgba(16,185,129,.08)"}}><p style={{fontSize:10,color:"var(--text-600)",lineHeight:1.6}}>Conselho Municipal de Educação de Pereiro<br/><span style={{color:"var(--text-700)"}}>PME 2015–2024 · Avaliação & Diagnóstico · v6.0</span></p></div>
+        <div style={{textAlign:"center",marginTop:20,paddingTop:14,borderTop:"1px solid rgba(16,185,129,.08)"}}><p style={{fontSize:10,color:"var(--text-600)",lineHeight:1.6}}>Conselho Municipal de Educação de Pereiro<br/><span style={{color:"var(--text-700)"}}>PME 2015–2024 · IDEB 2023 · Novo PNE 2026 · v8.0</span></p></div>
       </div></div>);
 }
 
+/* ═══ COUNT UP ═══ */
+function CountUp({to,decimals=0,suffix=""}){
+  const[n,setN]=useState(0);const t=parseFloat(to)||0;
+  useEffect(()=>{let s=null,r;const run=ts=>{if(!s)s=ts;const p=Math.min((ts-s)/900,1);setN(t*p);if(p<1)r=requestAnimationFrame(run)};r=requestAnimationFrame(run);return()=>cancelAnimationFrame(r)},[t]);
+  return<>{decimals?n.toFixed(decimals):Math.round(n)}{suffix}</>;
+}
+
+/* ═══ CONFIRM MODAL ═══ */
+function ConfirmModal({msg,onConfirm,onCancel}){
+  return(
+    <div className="confirm-overlay" onClick={e=>e.target===e.currentTarget&&onCancel()}>
+      <div className="confirm-box">
+        <div style={{fontSize:32,textAlign:"center",marginBottom:10}}>⚠️</div>
+        <p style={{fontSize:14,fontWeight:600,color:"var(--text-100)",textAlign:"center",marginBottom:6,lineHeight:1.5}}>{msg}</p>
+        <p style={{fontSize:12,color:"var(--text-500)",textAlign:"center",marginBottom:22}}>Esta ação não pode ser desfeita.</p>
+        <div style={{display:"flex",gap:10}}>
+          <button className="btn secondary" style={{flex:1}} onClick={onCancel}>Cancelar</button>
+          <button className="btn" style={{flex:1,background:"linear-gradient(135deg,#ef4444,#dc2626)",color:"white"}} onClick={onConfirm}>Confirmar Exclusão</button>
+        </div>
+      </div>
+    </div>);
+}
+
+/* ═══ NEW META MODAL ═══ */
+function NewMetaModal({onSave,onClose,totalMetas}){
+  const[form,setForm]=useState({numero:`Meta ${totalMetas+1}`,titulo:"",descricao:"",eixo:"Acesso e Permanência",prioridade:"Média",prazo:"",responsavel:""});
+  const[err,setErr]=useState("");
+  const set=k=>e=>setForm(f=>({...f,[k]:sanitize(e.target.value)}));
+  const submit=()=>{
+    if(!form.titulo.trim()||!form.prazo.trim()||!form.responsavel.trim()){setErr("Preencha título, prazo e responsável.");return}
+    onSave({...form,id:`custom-${Date.now()}`,estrategias:[],indicadores:[],pneRef:""});onClose();};
+  return(
+    <div className="confirm-overlay" onClick={e=>e.target===e.currentTarget&&onClose()}>
+      <div className="modal" style={{maxWidth:620,maxHeight:"85vh",overflowY:"auto"}}>
+        <div className="modal-header"><div><h2 style={{fontSize:17,fontWeight:800,color:"var(--text-50)"}}>＋ Nova Meta</h2><p style={{fontSize:12,color:"var(--text-500)",marginTop:3}}>Adicionar nova meta ao PME</p></div><button className="modal-close" onClick={onClose}>✕</button></div>
+        <div className="modal-body">
+          <div className="form-row">
+            <div className="form-group"><label className="form-label">Número / Código</label><input className="form-input" value={form.numero} onChange={set("numero")} placeholder="Ex: Meta 21"/></div>
+            <div className="form-group"><label className="form-label">Prioridade</label><select className="form-input" value={form.prioridade} onChange={set("prioridade")}><option>Alta</option><option>Média</option><option>Baixa</option></select></div>
+          </div>
+          <div className="form-group"><label className="form-label">Título *</label><input className="form-input" value={form.titulo} onChange={set("titulo")} placeholder="Título da meta"/></div>
+          <div className="form-group"><label className="form-label">Descrição</label><textarea className="form-input" rows={3} value={form.descricao} onChange={set("descricao")} placeholder="Descrição detalhada da meta" style={{resize:"vertical"}}/></div>
+          <div className="form-row">
+            <div className="form-group"><label className="form-label">Eixo Temático</label><select className="form-input" value={form.eixo} onChange={set("eixo")}>{EIXOS.slice(1).map(e=><option key={e}>{e}</option>)}</select></div>
+            <div className="form-group"><label className="form-label">Prazo *</label><input className="form-input" value={form.prazo} onChange={set("prazo")} placeholder="DD/MM/AAAA"/></div>
+          </div>
+          <div className="form-group"><label className="form-label">Responsável *</label><input className="form-input" value={form.responsavel} onChange={set("responsavel")} placeholder="Secretaria / Coordenação responsável"/></div>
+          {err&&<div className="login-error" style={{marginBottom:12}}>⚠️ {err}</div>}
+          <div style={{display:"flex",gap:10,justifyContent:"flex-end",marginTop:8}}>
+            <button className="btn secondary" onClick={onClose}>Cancelar</button>
+            <button className="btn primary" onClick={submit}>＋ Criar Meta</button>
+          </div>
+        </div>
+      </div>
+    </div>);
+}
+
+/* ═══ NEW INDICATOR MODAL ═══ */
+function NewIndicatorModal({meta,onSave,onClose}){
+  const[form,setForm]=useState({desc:"",vi:"",va:"",vm:"",un:"%",obs:""});
+  const[err,setErr]=useState("");
+  const set=k=>e=>setForm(f=>({...f,[k]:e.target.value}));
+  const submit=()=>{
+    if(!form.desc.trim()||form.vi===""||form.va===""||form.vm===""){setErr("Preencha nome, valor inicial, valor atual e meta.");return}
+    onSave(meta.id,{id:`cind-${Date.now()}`,desc:sanitize(form.desc),vi:parseFloat(form.vi)||0,va:parseFloat(form.va)||0,vm:parseFloat(form.vm)||0,un:form.un||"%",obs:sanitize(form.obs),fonte:"SMED"});
+    onClose();};
+  return(
+    <div className="confirm-overlay" onClick={e=>e.target===e.currentTarget&&onClose()}>
+      <div className="modal" style={{maxWidth:560,maxHeight:"85vh",overflowY:"auto"}}>
+        <div className="modal-header"><div><h2 style={{fontSize:17,fontWeight:800,color:"var(--text-50)"}}>＋ Adicionar Indicador</h2><p style={{fontSize:12,color:"var(--text-500)",marginTop:3}}>{meta.numero} — {meta.titulo}</p></div><button className="modal-close" onClick={onClose}>✕</button></div>
+        <div className="modal-body">
+          <div className="form-group"><label className="form-label">Nome do Indicador *</label><input className="form-input" value={form.desc} onChange={set("desc")} placeholder="Ex: Taxa de aprovação no 5º ano"/></div>
+          <div className="form-row">
+            <div className="form-group"><label className="form-label">Valor Inicial (linha base) *</label><input type="number" step="any" className="form-input" value={form.vi} onChange={set("vi")} placeholder="0"/></div>
+            <div className="form-group"><label className="form-label">Valor Atual *</label><input type="number" step="any" className="form-input" value={form.va} onChange={set("va")} placeholder="0"/></div>
+          </div>
+          <div className="form-row">
+            <div className="form-group"><label className="form-label">Meta / Valor-Alvo *</label><input type="number" step="any" className="form-input" value={form.vm} onChange={set("vm")} placeholder="100"/></div>
+            <div className="form-group"><label className="form-label">Unidade</label><select className="form-input" value={form.un} onChange={set("un")}><option>%</option><option>pts</option><option>anos</option><option>alunos</option><option>un.</option><option>tit./ano</option><option>p.p.</option><option>anos dif.</option></select></div>
+          </div>
+          <div className="form-group"><label className="form-label">Observação</label><textarea className="form-input" rows={2} value={form.obs} onChange={set("obs")} placeholder="Observações sobre a coleta ou resultado" style={{resize:"vertical"}}/></div>
+          {err&&<div className="login-error" style={{marginBottom:12}}>⚠️ {err}</div>}
+          <div style={{display:"flex",gap:10,justifyContent:"flex-end",marginTop:8}}>
+            <button className="btn secondary" onClick={onClose}>Cancelar</button>
+            <button className="btn primary" onClick={submit}>＋ Adicionar</button>
+          </div>
+        </div>
+      </div>
+    </div>);
+}
+
 /* ═══ META DETAIL MODAL ═══ */
-function MetaModal({meta,data,onUpdate,onClose,readOnly}){
+function MetaModal({meta,data,onUpdate,onClose,readOnly,onAddIndicatorClick,customInds,onRemoveInd}){
   const[tab,setTab]=useState("detalhes");
-  const inds=meta.indicadores.map(ind=>{const d=data[ind.id]||{};return{...ind,va:d.va!==undefined?d.va:ind.va,obs:d.obs||ind.obs}});
+  const builtIn=meta.indicadores.map(ind=>{const d=data[ind.id]||{};return{...ind,va:d.va!==undefined?d.va:ind.va,obs:d.obs||ind.obs,_custom:false}});
+  const extra=((customInds&&customInds[meta.id])||[]).map(ind=>{const d=data[ind.id]||{};return{...ind,va:d.va!==undefined?d.va:ind.va,obs:d.obs||ind.obs,_custom:true}});
+  const inds=[...builtIn,...extra];
   const avgProg=inds.length>0?inds.reduce((s,i)=>s+calcProg(i.vi,i.va,i.vm),0)/inds.length:0;
   const status=getStatus(avgProg);
   return(
@@ -450,10 +687,7 @@ function MetaModal({meta,data,onUpdate,onClose,readOnly}){
             </div>
             <h2 style={{fontSize:18,fontWeight:800,color:"var(--text-50)",lineHeight:1.4}}>{meta.titulo}</h2>
           </div>
-          <div style={{display:"flex",alignItems:"center",gap:8}}>
-            {!readOnly&&<button className="btn primary" style={{padding:"6px 12px",fontSize:11}} onClick={()=>{onClose()}}>✏️ Editar</button>}
-            <button className="modal-close" onClick={onClose}>✕</button>
-          </div>
+          <button className="modal-close" onClick={onClose}>✕</button>
         </div>
         <div className="modal-body">
           <div className="tab-bar">
@@ -485,12 +719,12 @@ function MetaModal({meta,data,onUpdate,onClose,readOnly}){
 
           {tab==="indicadores"&&<div className="fade-in">
             {readOnly&&<div className="alert-info" style={{marginBottom:14}}>🔒 Modo somente leitura.</div>}
-            <div style={{marginBottom:14}}><button className="btn primary" style={{padding:"8px 16px",fontSize:12}}>＋ Adicionar Indicador</button></div>
+            {!readOnly&&<div style={{marginBottom:14}}><button className="btn primary" style={{padding:"8px 16px",fontSize:12}} onClick={onAddIndicatorClick}>＋ Adicionar Indicador</button></div>}
             {inds.map(ind=>{const prog=calcProg(ind.vi,ind.va,ind.vm);const st=getStatus(prog);return(
               <div key={ind.id} className="ind-card">
                 <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:10,marginBottom:10}}>
-                  <div style={{fontSize:14,fontWeight:700,color:"var(--text-100)",lineHeight:1.4}}>{ind.desc}</div>
-                  {!readOnly&&<button style={{background:"none",border:"none",color:"var(--text-600)",cursor:"pointer",fontSize:16,flexShrink:0,padding:2}} title="Remover">🗑️</button>}
+                  <div style={{fontSize:14,fontWeight:700,color:"var(--text-100)",lineHeight:1.4,flex:1}}>{ind.desc}{ind._custom&&<span style={{marginLeft:6,fontSize:9,fontWeight:700,background:"rgba(59,130,246,.15)",color:"var(--blue)",borderRadius:4,padding:"1px 5px",verticalAlign:"middle"}}>CUSTOM</span>}</div>
+                  {!readOnly&&ind._custom&&<button style={{background:"none",border:"none",color:"var(--text-600)",cursor:"pointer",fontSize:16,flexShrink:0,padding:2}} title="Remover indicador" onClick={()=>onRemoveInd(meta.id,ind.id)}>🗑️</button>}
                 </div>
                 <div className="ind-grid">
                   <div className="item"><div className="label">Inicial</div><div className="value" style={{color:"var(--text-400)"}}>{ind.vi} {ind.un}</div></div>
@@ -505,7 +739,7 @@ function MetaModal({meta,data,onUpdate,onClose,readOnly}){
                   <span style={{fontSize:11,color:"var(--text-500)"}}>{ind.un}</span>
                 </div>}
                 <div style={{marginTop:10,fontSize:10,color:"var(--text-500)",fontStyle:"italic"}}>Obs: {ind.obs||"—"}</div>
-                {!readOnly&&<textarea style={{width:"100%",marginTop:6,background:"rgba(0,0,0,.2)",border:"1.5px solid var(--bg-700)",borderRadius:6,padding:"6px 8px",fontSize:11,color:"var(--text-300)",outline:"none",resize:"vertical",minHeight:36,fontFamily:"inherit"}} value={ind.obs} onChange={e=>onUpdate(ind.id,"obs",sanitize(e.target.value))} placeholder="Observações..."/>}
+                {!readOnly&&<textarea style={{width:"100%",marginTop:6,background:"rgba(0,0,0,.2)",border:"1.5px solid var(--bg-700)",borderRadius:6,padding:"6px 8px",fontSize:11,color:"var(--text-300)",outline:"none",resize:"vertical",minHeight:36,fontFamily:"inherit"}} value={ind.obs||""} onChange={e=>onUpdate(ind.id,"obs",sanitize(e.target.value))} placeholder="Observações..."/>}
               </div>)})}
           </div>}
         </div>
@@ -514,28 +748,58 @@ function MetaModal({meta,data,onUpdate,onClose,readOnly}){
 }
 
 /* ═══ REPORT GENERATOR ═══ */
-function generateReport(metas,data,userName){
+function generateReport(metas,data,userName,customInds={}){
   const d=new Date().toLocaleDateString("pt-BR",{day:"2-digit",month:"long",year:"numeric"});
-  let rows="";
+  const eixoColors={"Acesso e Permanência":"#3b82f6","Qualidade da Aprendizagem":"#10b981","Equidade e Inclusão":"#f59e0b","Valorização dos Profissionais":"#8b5cf6","Gestão e Financiamento":"#ef4444"};
+  const stColors={"concluida":"#16a34a","andamento":"#d97706","atrasada":"#dc2626","nao-iniciada":"#64748b"};
+  let total=0,concl=0,andamento=0,atrasada=0,naoIniciada=0,totalProg=0;
   metas.forEach(m=>{
-    const inds=m.indicadores.map(i=>({...i,va:data[i.id]?.va!==undefined?data[i.id].va:i.va,obs:data[i.id]?.obs||i.obs}));
-    const avg=inds.length>0?inds.reduce((s,i)=>s+calcProg(i.vi,i.va,i.vm),0)/inds.length:0;
-    const st=getStatus(avg);
-    rows+=`<tr style="background:#f0fdf4"><td colspan="6" style="padding:10px 12px;font-weight:800;font-size:13px;color:#166534">${m.numero}: ${m.titulo} — ${statusLabel[st]} (${avg.toFixed(0)}%)</td></tr>`;
-    inds.forEach(i=>{const p=calcProg(i.vi,i.va,i.vm);
-      rows+=`<tr><td style="padding:6px 10px;font-weight:500">${i.desc}</td><td style="padding:6px 10px;text-align:center">${i.vi} ${i.un}</td><td style="padding:6px 10px;text-align:center;color:#166534;font-weight:700">${i.va} ${i.un}</td><td style="padding:6px 10px;text-align:center;color:#b45309;font-weight:600">${i.vm} ${i.un}</td><td style="padding:6px 10px;text-align:center;font-weight:700">${p.toFixed(0)}%</td><td style="padding:6px 10px;font-size:10px;color:#64748b">${i.obs||"—"}</td></tr>`});
+    const allI=[...m.indicadores,...(customInds[m.id]||[])].map(i=>({...i,va:data[i.id]?.va!==undefined?data[i.id].va:i.va}));
+    const avg=allI.length>0?allI.reduce((s,i)=>s+calcProg(i.vi,i.va,i.vm),0)/allI.length:0;
+    const st=getStatus(avg);total++;totalProg+=avg;
+    if(st==="concluida")concl++;else if(st==="andamento")andamento++;else if(st==="atrasada")atrasada++;else naoIniciada++;
   });
-  const html=`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Relatório PME Pereiro</title>
-<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Plus Jakarta Sans',Arial,sans-serif;font-size:12px;color:#1e293b;padding:30px}
-h1{font-size:18px;margin-bottom:4px}h2{font-size:13px;color:#64748b;margin-bottom:16px;font-weight:400}
-table{width:100%;border-collapse:collapse;margin-top:12px}th{background:#0f172a;color:white;padding:8px 10px;text-align:left;font-size:9px;text-transform:uppercase;letter-spacing:.5px}
-td{border-bottom:1px solid #e2e8f0}tr:hover{background:#f8fafc}.header{border-bottom:2px solid #10b981;padding-bottom:12px;margin-bottom:16px}
-.footer{margin-top:24px;padding-top:12px;border-top:1px solid #e2e8f0;font-size:10px;color:#94a3b8;text-align:center}
-@media print{body{padding:15px}}</style></head><body>
-<div class="header"><h1>🎓 Relatório de Monitoramento — PME 2015–2024</h1><h2>COMEP — Pereiro/CE · Lei nº 708/2015 · Avaliação e Diagnóstico para o PME 2025–2035</h2>
-<p style="font-size:11px;color:#64748b">Gerado em ${d} por ${userName} · Ref.: Novo PNE (Lei de 25/03/2026)</p></div>
+  const byEixo={};metas.forEach(m=>{if(!byEixo[m.eixo])byEixo[m.eixo]=[];byEixo[m.eixo].push(m)});
+  let rows="";
+  Object.entries(byEixo).forEach(([eixo,ems])=>{
+    const ec=eixoColors[eixo]||"#64748b";
+    rows+=`<tr><td colspan="6" style="background:${ec}18;padding:12px 14px;font-weight:800;font-size:14px;color:${ec};border-left:4px solid ${ec};border-bottom:2px solid ${ec}30">◎ ${eixo}</td></tr>`;
+    ems.forEach(m=>{
+      const allI=[...m.indicadores,...(customInds[m.id]||[])].map(i=>({...i,va:data[i.id]?.va!==undefined?data[i.id].va:i.va,obs:data[i.id]?.obs||i.obs}));
+      const avg=allI.length>0?allI.reduce((s,i)=>s+calcProg(i.vi,i.va,i.vm),0)/allI.length:0;
+      const st=getStatus(avg);const stc=stColors[st]||"#64748b";
+      rows+=`<tr style="background:#f8fafc"><td colspan="6" style="padding:10px 14px;font-weight:700;font-size:12px;color:#1e293b;border-left:4px solid ${stc}">${m.numero}: ${m.titulo} <span style="font-size:10px;background:${stc}20;color:${stc};padding:2px 8px;border-radius:10px;margin-left:6px">${statusLabel[st]} · ${avg.toFixed(0)}%</span></td></tr>`;
+      allI.forEach(i=>{const p=calcProg(i.vi,i.va,i.vm);const pc=p>=100?"#16a34a":p>=60?"#d97706":"#dc2626";
+        rows+=`<tr><td style="padding:6px 12px;color:#475569;font-size:11px">${i.desc}${i.id&&i.id.startsWith("cind-")?'<span style="font-size:9px;background:#dbeafe;color:#2563eb;padding:1px 4px;border-radius:3px;margin-left:4px">custom</span>':""}</td><td style="padding:6px 12px;text-align:center;color:#64748b;font-size:11px">${i.vi} ${i.un}</td><td style="padding:6px 12px;text-align:center;color:#166534;font-weight:700;font-size:11px">${i.va} ${i.un}</td><td style="padding:6px 12px;text-align:center;color:#b45309;font-weight:600;font-size:11px">${i.vm} ${i.un}</td><td style="padding:6px 12px;text-align:center;font-weight:700;font-size:11px;color:${pc}">${p.toFixed(0)}%</td><td style="padding:6px 12px;font-size:10px;color:#94a3b8">${i.obs||"—"}</td></tr>`});
+    });
+  });
+  const html=`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Relatório PME Pereiro — 2026-2036</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Plus Jakarta Sans',Arial,sans-serif;font-size:12px;color:#1e293b;padding:30px;max-width:1200px;margin:0 auto}
+.header{border-bottom:3px solid #10b981;padding-bottom:16px;margin-bottom:20px;display:flex;align-items:flex-start;justify-content:space-between;gap:16}
+.header-left{flex:1}.inst{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#10b981;font-weight:700;margin-bottom:4px}
+h1{font-size:20px;font-weight:800;margin-bottom:4px}.subtitle{font-size:12px;color:#64748b}.header-right{text-align:right;font-size:10px;color:#94a3b8;line-height:1.8}
+.summary{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:20px}
+.sum-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px;text-align:center;border-top:3px solid var(--c)}
+.sum-card .n{font-size:20px;font-weight:800;color:var(--c)}.sum-card .l{font-size:9px;color:#64748b;margin-top:2px;text-transform:uppercase;letter-spacing:.5px}
+table{width:100%;border-collapse:collapse;margin-bottom:24px}th{background:#0f172a;color:white;padding:9px 12px;text-align:left;font-size:9px;text-transform:uppercase;letter-spacing:.5px}
+td{border-bottom:1px solid #f1f5f9}tr:hover td{background:#fafafa}
+.footer{margin-top:20px;padding-top:12px;border-top:2px solid #e2e8f0;font-size:10px;color:#94a3b8;text-align:center;line-height:2}
+@media print{body{padding:15px}.summary{grid-template-columns:repeat(3,1fr)}}</style></head><body>
+<div class="header">
+  <div class="header-left"><div class="inst">COMEP — Conselho Municipal de Educação de Pereiro/CE</div><h1>🎓 Relatório de Monitoramento — PME 2026-2036</h1><div class="subtitle">Lei nº 708/2015 (PME 2015-2024) · Diagnóstico para o novo PME 2026-2036 · Ref.: Novo PNE (Lei de 25/03/2026)</div></div>
+  <div class="header-right">Gerado em<br/><strong>${d}</strong><br/>Por: ${userName}<br/>Sistema v8.0</div>
+</div>
+<div class="summary">
+  <div class="sum-card" style="--c:#3b82f6"><div class="n">${total}</div><div class="l">Total de Metas</div></div>
+  <div class="sum-card" style="--c:#16a34a"><div class="n">${concl}</div><div class="l">Concluídas</div></div>
+  <div class="sum-card" style="--c:#d97706"><div class="n">${andamento}</div><div class="l">Em Andamento</div></div>
+  <div class="sum-card" style="--c:#dc2626"><div class="n">${atrasada}</div><div class="l">Atrasadas</div></div>
+  <div class="sum-card" style="--c:#64748b"><div class="n">${naoIniciada}</div><div class="l">Não Iniciadas</div></div>
+  <div class="sum-card" style="--c:#10b981"><div class="n">${(totalProg/Math.max(total,1)).toFixed(0)}%</div><div class="l">Progresso Geral</div></div>
+</div>
 <table><thead><tr><th>Indicador</th><th>Linha Base</th><th>Valor Atual</th><th>Meta PME</th><th>Progresso</th><th>Observações</th></tr></thead><tbody>${rows}</tbody></table>
-<div class="footer">COMEP — Pereiro/CE · PME 2015–2024 · Diagnóstico para PME 2025–2035 · v6.0</div></body></html>`;
+<div class="footer">COMEP — Pereiro/CE · Secretário Municipal de Educação: Alcides Leite da Silva Neto · PME Monitor v8.0 · IDEB 2023 · Novo PNE 2026<br/>Documento gerado em ${d}</div>
+</body></html>`;
   const w=window.open("","_blank","width=960,height=700");if(w){w.document.write(html);w.document.close();setTimeout(()=>w.print(),500)}
 }
 
@@ -544,26 +808,84 @@ function MainApp(){
   const[loggedUser,setLoggedUser]=useState(null);
   const[activeTab,setActiveTab]=useState("dashboard");
   const[data,setData]=useState({});
+  const[customMetas,setCustomMetas]=useState([]);
+  const[deletedMetaIds,setDeletedMetaIds]=useState([]);
+  const[customInds,setCustomInds]=useState({});
   const[sidebarOpen,setSidebarOpen]=useState(false);
   const[selectedMeta,setSelectedMeta]=useState(null);
   const[filterEixo,setFilterEixo]=useState("Todos os Eixos");
   const[filterStatus,setFilterStatus]=useState("Todos os Status");
   const[search,setSearch]=useState("");
   const[toastMsg,setToastMsg]=useState("");const[toastType,setToastType]=useState("");
+  const[showNewMeta,setShowNewMeta]=useState(false);
+  const[addIndMeta,setAddIndMeta]=useState(null);
+  const[confirmDelMeta,setConfirmDelMeta]=useState(null);
+  const[saveBtnOk,setSaveBtnOk]=useState(false);
+  const[pwdEdit,setPwdEdit]=useState(null);
+  const[pwdValues,setPwdValues]=useState({nova:"",conf:""});
   const mainRef=useRef(null);const toastTimer=useRef(null);
 
-  useEffect(()=>{try{const raw=localStorage.getItem(STORAGE_KEY);if(raw){const p=JSON.parse(raw);if(p&&typeof p==="object")setData(p)}}catch{}},[]);
+  useEffect(()=>{
+    try{const raw=localStorage.getItem(STORAGE_KEY);if(raw){const p=JSON.parse(raw);if(p&&typeof p==="object")setData(p)}}catch{}
+    try{const raw=localStorage.getItem(CUSTOM_METAS_KEY);if(raw)setCustomMetas(JSON.parse(raw)||[])}catch{}
+    try{const raw=localStorage.getItem(DELETED_KEY);if(raw)setDeletedMetaIds(JSON.parse(raw)||[])}catch{}
+    try{const raw=localStorage.getItem(CUSTOM_INDS_KEY);if(raw)setCustomInds(JSON.parse(raw)||{})}catch{}
+  },[]);
 
   const showToast=useCallback((msg,type="success")=>{if(toastTimer.current)clearTimeout(toastTimer.current);setToastMsg(msg);setToastType(type);toastTimer.current=setTimeout(()=>{setToastMsg("");setToastType("")},2600)},[]);
-  const save=useCallback(()=>{try{localStorage.setItem(STORAGE_KEY,JSON.stringify(data));showToast("Dados salvos com sucesso")}catch{showToast("Erro ao salvar","error")}},[data,showToast]);
+
+  const save=useCallback(()=>{
+    try{
+      localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
+      localStorage.setItem(CUSTOM_METAS_KEY,JSON.stringify(customMetas));
+      localStorage.setItem(DELETED_KEY,JSON.stringify(deletedMetaIds));
+      localStorage.setItem(CUSTOM_INDS_KEY,JSON.stringify(customInds));
+      setSaveBtnOk(true);setTimeout(()=>setSaveBtnOk(false),2000);
+      showToast("Dados salvos com sucesso");
+    }catch{showToast("Erro ao salvar","error")}
+  },[data,customMetas,deletedMetaIds,customInds,showToast]);
+
   const updateInd=useCallback((indId,field,value)=>{setData(prev=>({...prev,[indId]:{...prev[indId],[field]:value}}))},[]);
   const isRO=loggedUser?.role==="viewer";
+  const isAdmin=loggedUser?.role==="admin";
 
-  const allInds=useMemo(()=>METAS_PME.flatMap(m=>m.indicadores.map(i=>({...i,va:data[i.id]?.va!==undefined?data[i.id].va:i.va,metaNum:m.numero}))),[data]);
-  const metaStats=useMemo(()=>METAS_PME.map(m=>{
-    const inds=m.indicadores.map(i=>({...i,va:data[i.id]?.va!==undefined?data[i.id].va:i.va}));
+  const addMeta=useCallback(meta=>{setCustomMetas(prev=>[...prev,meta]);showToast("Meta criada com sucesso")},[showToast]);
+
+  const deleteMeta=useCallback(metaId=>{
+    const isCustom=customMetas.some(m=>m.id===metaId);
+    if(isCustom)setCustomMetas(prev=>prev.filter(m=>m.id!==metaId));
+    else setDeletedMetaIds(prev=>[...prev,metaId]);
+    setSelectedMeta(sel=>sel?.id===metaId?null:sel);
+    setConfirmDelMeta(null);showToast("Meta removida");
+  },[customMetas,showToast]);
+
+  const addIndicator=useCallback((metaId,ind)=>{
+    setCustomInds(prev=>({...prev,[metaId]:[...(prev[metaId]||[]),ind]}));
+    showToast("Indicador adicionado");setAddIndMeta(null);
+  },[showToast]);
+
+  const removeCustomInd=useCallback((metaId,indId)=>{
+    setCustomInds(prev=>({...prev,[metaId]:(prev[metaId]||[]).filter(i=>i.id!==indId)}));
+    showToast("Indicador removido");
+  },[showToast]);
+
+  const changePassword=useCallback((username,nova,conf)=>{
+    if(nova.length<6){showToast("Senha deve ter pelo menos 6 caracteres","error");return}
+    if(nova!==conf){showToast("Senhas não coincidem","error");return}
+    const overrides=JSON.parse(localStorage.getItem(LOCAL_USERS_KEY)||"{}");
+    overrides[username]=hashPass(nova);
+    localStorage.setItem(LOCAL_USERS_KEY,JSON.stringify(overrides));
+    setPwdEdit(null);setPwdValues({nova:"",conf:""});showToast("Senha alterada com sucesso");
+  },[showToast]);
+
+  const allMetas=useMemo(()=>[...METAS_PME.filter(m=>!deletedMetaIds.includes(m.id)),...customMetas],[deletedMetaIds,customMetas]);
+
+  const allInds=useMemo(()=>allMetas.flatMap(m=>[...m.indicadores,...(customInds[m.id]||[])].map(i=>({...i,va:data[i.id]?.va!==undefined?data[i.id].va:i.va,metaNum:m.numero}))),[data,allMetas,customInds]);
+
+  const metaStats=useMemo(()=>allMetas.map(m=>{
+    const inds=[...m.indicadores,...(customInds[m.id]||[])].map(i=>({...i,va:data[i.id]?.va!==undefined?data[i.id].va:i.va}));
     const avg=inds.length>0?inds.reduce((s,i)=>s+calcProg(i.vi,i.va,i.vm),0)/inds.length:0;
-    return{...m,avgProg:avg,status:getStatus(avg)}}),[data]);
+    return{...m,avgProg:avg,status:getStatus(avg)}}),[data,allMetas,customInds]);
 
   const counts=useMemo(()=>{const c={concluida:0,andamento:0,atrasada:0,"nao-iniciada":0};metaStats.forEach(m=>c[m.status]++);return c},[metaStats]);
   const totalProg=useMemo(()=>metaStats.length>0?metaStats.reduce((s,m)=>s+m.avgProg,0)/metaStats.length:0,[metaStats]);
@@ -585,16 +907,16 @@ function MainApp(){
     <div className="fade-in" style={{maxWidth:1200,margin:"0 auto"}}>
       <div style={{marginBottom:22}}><h2 style={{fontSize:22,fontWeight:800,color:"var(--text-50)"}}>Dashboard</h2><p style={{color:"var(--text-500)",fontSize:13}}>Visão geral do Plano Municipal de Educação</p></div>
       <div className="stats-grid">
-        {[{l:"Total de Metas",v:METAS_PME.length,c:"#60a5fa",bg:"rgba(59,130,246,.06)",bd:"rgba(59,130,246,.15)",bc:"#3b82f6",i:"🎯"},
+        {[{l:"Total de Metas",v:allMetas.length,c:"#60a5fa",bg:"rgba(59,130,246,.06)",bd:"rgba(59,130,246,.15)",bc:"#3b82f6",i:"🎯"},
           {l:"Concluídas",v:counts.concluida,c:"#34d399",bg:"rgba(16,185,129,.06)",bd:"rgba(16,185,129,.15)",bc:"#10b981",i:"✅"},
           {l:"Em Andamento",v:counts.andamento,c:"#fbbf24",bg:"rgba(234,179,8,.06)",bd:"rgba(234,179,8,.15)",bc:"#f59e0b",i:"🕐"},
           {l:"Atrasadas",v:counts.atrasada,c:"#f87171",bg:"rgba(239,68,68,.06)",bd:"rgba(239,68,68,.15)",bc:"#ef4444",i:"⚠️"},
           {l:"Não Iniciadas",v:counts["nao-iniciada"],c:"#94a3b8",bg:"rgba(148,163,184,.04)",bd:"rgba(148,163,184,.1)",bc:"#64748b",i:"⊖"},
-          {l:"Progresso Geral",v:totalProg.toFixed(0)+"%",c:"#2dd4bf",bg:"rgba(20,184,166,.06)",bd:"rgba(20,184,166,.15)",bc:"#14b8a6",i:"📈"}
+          {l:"Progresso Geral",v:null,pct:totalProg,c:"#2dd4bf",bg:"rgba(20,184,166,.06)",bd:"rgba(20,184,166,.15)",bc:"#14b8a6",i:"📈"}
         ].map((c,i)=>(
-          <div key={i} className="stat-card" style={{background:c.bg,borderColor:c.bd}}>
+          <div key={i} className="stat-card card-enter" style={{background:c.bg,borderColor:c.bd,animationDelay:`${i*.06}s`}}>
             <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between"}}>
-              <div><div className="lbl">{c.l}</div><div className="val" style={{color:c.c,marginTop:4}}>{c.v}</div></div>
+              <div><div className="lbl">{c.l}</div><div className="val" style={{color:c.c,marginTop:4}}>{c.pct!==undefined&&c.pct!==null?<><CountUp to={c.pct} decimals={0}/>%</>:<CountUp to={c.v}/>}</div></div>
               <div className="ico">{c.i}</div>
             </div>
             <div style={{position:"absolute",bottom:0,left:0,right:0,height:2,background:c.bc,opacity:.3}}/>
@@ -607,7 +929,7 @@ function MainApp(){
       <div className="card"><div className="card-header"><span className="card-title">Progresso por Meta</span></div><div className="card-body">
         <div style={{display:"grid",gap:6}}>
         {metaStats.map((m,i)=>(
-          <div key={m.id} style={{display:"flex",alignItems:"center",gap:12,padding:"8px 0",borderBottom:i<metaStats.length-1?"1px solid rgba(148,163,184,.06)":"none",cursor:"pointer",transition:"background .15s",borderRadius:6}} onClick={()=>setSelectedMeta(m)}>
+          <div key={m.id} style={{display:"flex",alignItems:"center",gap:12,padding:"8px 0",borderBottom:i<metaStats.length-1?"1px solid rgba(148,163,184,.06)":"none",cursor:"pointer",transition:"background .15s",borderRadius:6}} onClick={()=>setSelectedMeta(allMetas.find(x=>x.id===m.id))}>
             <span style={{fontSize:11,fontWeight:800,color:"var(--emerald)",fontFamily:"'JetBrains Mono'",width:52,flexShrink:0}}>{m.numero.replace("Meta ","M")}</span>
             <div style={{flex:1,minWidth:0}}>
               <div style={{fontSize:12,fontWeight:600,color:"var(--text-200)",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{m.titulo}</div>
@@ -624,9 +946,12 @@ function MainApp(){
   /* ═══ METAS LIST ═══ */
   const renderMetas=()=>(
     <div className="fade-in" style={{maxWidth:1200,margin:"0 auto"}}>
-      <div style={{marginBottom:18}}><h2 style={{fontSize:22,fontWeight:800,color:"var(--text-50)"}}>Metas do PME</h2><p style={{color:"var(--text-500)",fontSize:13}}>Gerencie todas as metas do Plano Municipal de Educação</p></div>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:18,flexWrap:"wrap",gap:10}}>
+        <div><h2 style={{fontSize:22,fontWeight:800,color:"var(--text-50)"}}>Metas do PME</h2><p style={{color:"var(--text-500)",fontSize:13}}>Gerencie todas as metas do Plano Municipal de Educação</p></div>
+        {!isRO&&<button className="btn primary" style={{padding:"8px 18px",fontSize:12}} onClick={()=>setShowNewMeta(true)}>＋ Nova Meta</button>}
+      </div>
       <div className="card" style={{marginBottom:18}}><div className="card-header">
-        <div style={{display:"flex",alignItems:"center",gap:8}}><span style={{fontSize:14}}>◎</span><span className="card-title">Metas do PME</span></div>
+        <div style={{display:"flex",alignItems:"center",gap:8}}><span style={{fontSize:14}}>◎</span><span className="card-title">Metas do PME</span><span style={{fontSize:11,color:"var(--text-500)",background:"rgba(0,0,0,.2)",borderRadius:12,padding:"2px 8px"}}>{filtered.length}/{allMetas.length}</span></div>
         <div style={{display:"flex",gap:8,flexWrap:"wrap",alignItems:"center"}}>
           <div style={{position:"relative"}}><span style={{position:"absolute",left:10,top:"50%",transform:"translateY(-50%)",fontSize:13,color:"var(--text-500)"}}>🔍</span><input className="search-input" placeholder="Buscar metas..." value={search} onChange={e=>setSearch(e.target.value)}/></div>
           <div style={{display:"flex",alignItems:"center",gap:6}}><span style={{fontSize:12,color:"var(--text-500)"}}>🏷️</span><select className="filter-select" value={filterEixo} onChange={e=>setFilterEixo(e.target.value)}>{EIXOS.map(e=><option key={e}>{e}</option>)}</select></div>
@@ -636,26 +961,28 @@ function MainApp(){
         {filtered.length===0&&<div style={{textAlign:"center",padding:40,color:"var(--text-500)"}}><div style={{fontSize:32,marginBottom:10}}>🔍</div><div style={{fontWeight:600}}>Nenhuma meta encontrada.</div></div>}
         <div style={{display:"grid",gap:10}}>
           {filtered.map((m,idx)=>(
-            <div key={m.id} className="meta-item fade-in" style={{animationDelay:`${Math.min(idx*.03,.3)}s`,"--bar-color":statusColor[m.status]}} onClick={()=>setSelectedMeta(METAS_PME.find(x=>x.id===m.id))}>
+            <div key={m.id} className="meta-item fade-in" style={{animationDelay:`${Math.min(idx*.03,.3)}s`,"--bar-color":statusColor[m.status]}}>
               <div style={{position:"absolute",left:0,top:0,bottom:0,width:3,borderRadius:"0 2px 2px 0",background:statusColor[m.status]}}/>
               <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:14,flexWrap:"wrap"}}>
-                <div style={{flex:1,minWidth:200}}>
+                <div style={{flex:1,minWidth:200,cursor:"pointer"}} onClick={()=>setSelectedMeta(allMetas.find(x=>x.id===m.id))}>
                   <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:4}}>
                     <span style={{fontSize:12,fontWeight:800,color:"var(--emerald)",fontFamily:"'JetBrains Mono'"}}>{m.numero}</span>
                     <span className="badge" style={{background:`${prioColor[m.prioridade]}15`,color:prioColor[m.prioridade],border:`1px solid ${prioColor[m.prioridade]}25`,fontSize:9}}>{m.prioridade}</span>
+                    {m.id&&m.id.startsWith("custom-")&&<span style={{fontSize:9,fontWeight:700,background:"rgba(59,130,246,.15)",color:"var(--blue)",borderRadius:4,padding:"1px 5px"}}>CUSTOM</span>}
                   </div>
                   <div style={{fontSize:14,fontWeight:700,color:"var(--text-100)",marginBottom:3}}>{m.titulo}</div>
                   <div style={{fontSize:11,color:"var(--text-500)",lineHeight:1.5,display:"-webkit-box",WebkitLineClamp:1,WebkitBoxOrient:"vertical",overflow:"hidden"}}>{m.descricao}</div>
                 </div>
-                <div style={{display:"flex",alignItems:"center",gap:16,flexShrink:0}}>
+                <div style={{display:"flex",alignItems:"center",gap:12,flexShrink:0}}>
                   <div style={{textAlign:"center"}}><div style={{fontSize:9,color:"var(--text-600)",fontWeight:600,marginBottom:2}}>📅</div><div style={{fontSize:11,color:"var(--text-400)"}}>{m.prazo}</div></div>
-                  <div style={{textAlign:"center",maxWidth:120}}><div style={{fontSize:9,color:"var(--text-600)",fontWeight:600,marginBottom:2}}>👤</div><div style={{fontSize:10,color:"var(--text-400)",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{m.responsavel}</div></div>
+                  <div style={{textAlign:"center",maxWidth:100}}><div style={{fontSize:9,color:"var(--text-600)",fontWeight:600,marginBottom:2}}>👤</div><div style={{fontSize:10,color:"var(--text-400)",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{m.responsavel}</div></div>
                   <span className={`status-badge status-${m.status}`}>{statusLabel[m.status]}</span>
                   <div style={{display:"flex",alignItems:"center",gap:6}}>
                     <div className="progress-bar" style={{width:60,height:5}}><div className="progress-fill" style={{width:`${m.avgProg}%`,background:statusColor[m.status]}}/></div>
                     <span style={{fontSize:12,fontWeight:700,fontFamily:"'JetBrains Mono'",color:statusColor[m.status],minWidth:32,textAlign:"right"}}>{m.avgProg.toFixed(0)}%</span>
                   </div>
-                  <span style={{color:"var(--text-600)",fontSize:16}}>›</span>
+                  {!isRO&&<button style={{background:"none",border:"none",color:"var(--text-600)",cursor:"pointer",fontSize:15,padding:"2px 4px",borderRadius:4,transition:"color .15s",flexShrink:0}} title="Excluir meta" onClick={e=>{e.stopPropagation();setConfirmDelMeta(m)}} onMouseOver={e=>e.currentTarget.style.color="#ef4444"} onMouseOut={e=>e.currentTarget.style.color="var(--text-600)"}>🗑️</button>}
+                  <span style={{color:"var(--text-600)",fontSize:16,cursor:"pointer"}} onClick={()=>setSelectedMeta(allMetas.find(x=>x.id===m.id))}>›</span>
                 </div>
               </div>
             </div>))}
@@ -673,16 +1000,16 @@ function MainApp(){
           <thead><tr style={{background:"rgba(0,0,0,.15)"}}>
             {["Meta","Indicador","Base","Atual","Meta PME","Progresso","Status","Fonte"].map(h=><th key={h} style={{padding:"10px 12px",textAlign:"left",fontSize:9,fontWeight:700,color:"var(--text-500)",textTransform:"uppercase",letterSpacing:.7,borderBottom:"1px solid var(--bg-700)"}}>{h}</th>)}
           </tr></thead>
-          <tbody>{METAS_PME.flatMap(m=>m.indicadores.map(ind=>{const va=data[ind.id]?.va!==undefined?data[ind.id].va:ind.va;const p=calcProg(ind.vi,va,ind.vm);const st=getStatus(p);
-            return<tr key={ind.id} style={{borderTop:"1px solid rgba(148,163,184,.04)",transition:"background .15s",cursor:"pointer"}} onClick={()=>setSelectedMeta(m)} onMouseOver={e=>e.currentTarget.style.background="rgba(255,255,255,.02)"} onMouseOut={e=>e.currentTarget.style.background="transparent"}>
+          <tbody>{allMetas.flatMap(m=>[...m.indicadores,...(customInds[m.id]||[])].map(ind=>{const va=data[ind.id]?.va!==undefined?data[ind.id].va:ind.va;const p=calcProg(ind.vi,va,ind.vm);const st=getStatus(p);
+            return<tr key={ind.id} style={{borderTop:"1px solid rgba(148,163,184,.04)",transition:"background .15s",cursor:"pointer"}} onClick={()=>setSelectedMeta(allMetas.find(x=>x.id===m.id))} onMouseOver={e=>e.currentTarget.style.background="rgba(255,255,255,.02)"} onMouseOut={e=>e.currentTarget.style.background="transparent"}>
               <td style={{padding:"8px 12px",fontWeight:700,color:"var(--emerald)",fontSize:10,whiteSpace:"nowrap"}}>{m.numero.replace("Meta ","M")}</td>
-              <td style={{padding:"8px 12px",color:"var(--text-200)",fontWeight:500,maxWidth:240}}>{ind.desc}</td>
+              <td style={{padding:"8px 12px",color:"var(--text-200)",fontWeight:500,maxWidth:240}}>{ind.desc}{ind.id&&ind.id.startsWith("cind-")&&<span style={{marginLeft:4,fontSize:8,background:"rgba(59,130,246,.15)",color:"var(--blue)",borderRadius:3,padding:"0 3px"}}>C</span>}</td>
               <td style={{padding:"8px 12px",color:"var(--text-400)",fontFamily:"'JetBrains Mono'",fontSize:10}}>{ind.vi} {ind.un}</td>
               <td style={{padding:"8px 12px",color:"var(--emerald-l)",fontWeight:700,fontFamily:"'JetBrains Mono'",fontSize:10}}>{va} {ind.un}</td>
               <td style={{padding:"8px 12px",color:"var(--amber-l)",fontWeight:600,fontFamily:"'JetBrains Mono'",fontSize:10}}>{ind.vm} {ind.un}</td>
               <td style={{padding:"8px 12px"}}><div className="progress-bar" style={{width:60,height:4,display:"inline-block",verticalAlign:"middle",marginRight:6}}><div className="progress-fill" style={{width:`${p}%`,background:statusColor[st]}}/></div><span style={{fontSize:10,fontWeight:700,fontFamily:"'JetBrains Mono'",color:statusColor[st]}}>{p.toFixed(0)}%</span></td>
               <td style={{padding:"8px 12px"}}><span className={`status-badge status-${st}`} style={{fontSize:9}}>{statusLabel[st]}</span></td>
-              <td style={{padding:"8px 12px",color:"var(--text-500)",fontSize:9,maxWidth:120}}>{ind.fonte}</td>
+              <td style={{padding:"8px 12px",color:"var(--text-500)",fontSize:9,maxWidth:120}}>{ind.fonte||"SMED"}</td>
             </tr>}))}</tbody>
         </table>
       </div></div>
@@ -693,15 +1020,15 @@ function MainApp(){
     <div className="fade-in" style={{maxWidth:1000,margin:"0 auto"}}>
       <div style={{marginBottom:20}}><h2 style={{fontSize:22,fontWeight:800,color:"var(--text-50)"}}>Relatórios</h2><p style={{color:"var(--text-500)",fontSize:13}}>Gere relatórios para impressão ou PDF</p></div>
       <div className="card" style={{marginBottom:16}}><div className="card-header"><span className="card-title">📄 Relatório Geral Completo</span></div><div className="card-body">
-        <p style={{fontSize:12,color:"var(--text-400)",marginBottom:14,lineHeight:1.6}}>Relatório com todas as {METAS_PME.length} metas, {allInds.length} indicadores, valores atuais e diagnóstico para o novo PME 2025–2035.</p>
-        <button className="btn report" onClick={()=>generateReport(METAS_PME,data,loggedUser.name)}>📄 Gerar Relatório Geral</button>
+        <p style={{fontSize:12,color:"var(--text-400)",marginBottom:14,lineHeight:1.6}}>Relatório com todas as {allMetas.length} metas, {allInds.length} indicadores, valores atuais e diagnóstico para o novo PME 2026–2036.</p>
+        <button className="btn report" onClick={()=>generateReport(allMetas,data,loggedUser.name,customInds)}>📄 Gerar Relatório Geral</button>
       </div></div>
       <div className="card"><div className="card-header"><span className="card-title">📊 Relatórios por Eixo</span></div><div className="card-body">
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
-          {EIXOS.slice(1).map(eixo=>{const ms=METAS_PME.filter(m=>m.eixo===eixo);if(ms.length===0)return null;const avg=ms.length>0?metaStats.filter(m=>m.eixo===eixo).reduce((s,m)=>s+m.avgProg,0)/ms.length:0;
-            return<div key={eixo} style={{background:"rgba(0,0,0,.15)",borderRadius:12,padding:16,border:"1px solid var(--bg-700)",cursor:"pointer",transition:"all .2s"}} onClick={()=>generateReport(ms,data,loggedUser.name)} onMouseOver={e=>e.currentTarget.style.borderColor="rgba(16,185,129,.25)"} onMouseOut={e=>e.currentTarget.style.borderColor="var(--bg-700)"}>
+          {EIXOS.slice(1).map(eixo=>{const ms=allMetas.filter(m=>m.eixo===eixo);if(ms.length===0)return null;const avg=metaStats.filter(m=>m.eixo===eixo).reduce((s,m)=>s+m.avgProg,0)/Math.max(ms.length,1);
+            return<div key={eixo} style={{background:"rgba(0,0,0,.15)",borderRadius:12,padding:16,border:"1px solid var(--bg-700)",cursor:"pointer",transition:"all .2s"}} onClick={()=>generateReport(ms,data,loggedUser.name,customInds)} onMouseOver={e=>e.currentTarget.style.borderColor="rgba(16,185,129,.25)"} onMouseOut={e=>e.currentTarget.style.borderColor="var(--bg-700)"}>
               <div style={{fontWeight:700,color:"var(--text-100)",fontSize:13,marginBottom:4}}>{eixo}</div>
-              <div style={{fontSize:10,color:"var(--text-500)",marginBottom:10}}>{ms.length} metas · {ms.flatMap(m=>m.indicadores).length} indicadores</div>
+              <div style={{fontSize:10,color:"var(--text-500)",marginBottom:10}}>{ms.length} metas · {ms.flatMap(m=>[...m.indicadores,...(customInds[m.id]||[])]).length} indicadores</div>
               <div className="progress-bar" style={{height:5,marginBottom:8}}><div className="progress-fill" style={{width:`${avg}%`,background:avg>=80?"#16a34a":avg>=50?"#d97706":"#dc2626"}}/></div>
               <span style={{fontSize:10,color:"var(--blue)",fontWeight:600}}>📄 Gerar Relatório →</span>
             </div>})}
@@ -713,19 +1040,37 @@ function MainApp(){
   const renderConfig=()=>(
     <div className="fade-in" style={{maxWidth:800,margin:"0 auto"}}>
       <div style={{marginBottom:20}}><h2 style={{fontSize:22,fontWeight:800,color:"var(--text-50)"}}>Configurações</h2></div>
-      <div className="grid-2">
+      <div className="grid-2" style={{marginBottom:18}}>
         <div className="card"><div className="card-header"><span className="card-title">👤 Perfil</span></div><div className="card-body" style={{display:"flex",flexDirection:"column",gap:12}}>
           {[["Nome",loggedUser.name],["E-mail",loggedUser.email],["Perfil",roleLabel[loggedUser.role]||loggedUser.role]].map(([l,v])=>(
             <div key={l}><label style={{fontSize:10,fontWeight:700,color:"var(--text-500)",textTransform:"uppercase",display:"block",marginBottom:4}}>{l}</label><div style={{background:"rgba(0,0,0,.2)",border:"1px solid var(--bg-700)",borderRadius:8,padding:"10px 12px",fontSize:12,color:"var(--text-300)"}}>{v}</div></div>))}</div></div>
         <div className="card"><div className="card-header"><span className="card-title">ℹ️ Sobre o Sistema</span></div><div className="card-body">
-          <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:16}}><div style={{width:52,height:52,background:"linear-gradient(135deg,var(--emerald),var(--teal))",borderRadius:14,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,boxShadow:"0 4px 12px rgba(16,185,129,.2)"}}>🎓</div><div><div style={{fontSize:16,fontWeight:800,color:"var(--text-100)"}}>PME Pereiro Monitor</div><div style={{fontSize:12,color:"var(--text-500)"}}>Versão 6.0 · Metodologia INEP/MEC</div></div></div>
-          <p style={{fontSize:12,color:"var(--text-400)",lineHeight:1.7,marginBottom:12}}>Sistema de Monitoramento e Avaliação do Plano Municipal de Educação de Pereiro/CE. Avaliação do PME 2015–2024 (Lei nº 708/2015) e diagnóstico para elaboração do novo PME 2025–2035, em conformidade com o novo Plano Nacional de Educação aprovado pelo Senado em 25/03/2026.</p>
+          <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:16}}><div style={{width:52,height:52,background:"linear-gradient(135deg,var(--emerald),var(--teal))",borderRadius:14,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,boxShadow:"0 4px 12px rgba(16,185,129,.2)"}}>🎓</div><div><div style={{fontSize:16,fontWeight:800,color:"var(--text-100)"}}>PME Pereiro Monitor</div><div style={{fontSize:12,color:"var(--text-500)"}}>Versão 8.0 · IDEB 2023 · Novo PNE 2026</div></div></div>
+          <p style={{fontSize:12,color:"var(--text-400)",lineHeight:1.7,marginBottom:12}}>Sistema de Monitoramento e Avaliação do Plano Municipal de Educação de Pereiro/CE. Avaliação do PME 2015–2024 (Lei nº 708/2015) e diagnóstico para elaboração do novo PME 2026–2036, em conformidade com o novo Plano Nacional de Educação aprovado em 25/03/2026.</p>
           <div style={{background:"rgba(59,130,246,.05)",border:"1px solid rgba(59,130,246,.15)",borderRadius:8,padding:"10px 14px",fontSize:11,color:"var(--text-400)",lineHeight:1.6}}>
-            <strong style={{color:"var(--blue)"}}>📘 Novo PNE:</strong> Aprovado em 25/03/2026 · 19 Objetivos · Vigência de 10 anos · Prazo para PME municipal: 15 meses (Art. 34)
+            <strong style={{color:"var(--blue)"}}>📘 Novo PNE 2026:</strong> Aprovado em 25/03/2026 · 19 Objetivos · Vigência 10 anos · Prazo PME: 15 meses (Art. 34)<br/>
+            <strong style={{color:"var(--emerald)"}}>📊 IDEB 2023:</strong> Anos Iniciais 8,3 · Anos Finais 5,9 · SAEB Matemática 237 pts (INEP/MEC 2024)
           </div>
-          <div style={{marginTop:14,paddingTop:12,borderTop:"1px solid rgba(148,163,184,.06)",fontSize:11,color:"var(--text-600)"}}>© 2025-2026 COMEP — Pereiro/CE · DME: Alcides Leite da Silva Neto</div>
+          <div style={{marginTop:14,paddingTop:12,borderTop:"1px solid rgba(148,163,184,.06)",fontSize:11,color:"var(--text-600)"}}>© 2025-2026 COMEP — Pereiro/CE · Secretário Municipal: Alcides Leite da Silva Neto · v8.0</div>
         </div></div>
       </div>
+      {isAdmin&&<div className="card"><div className="card-header"><span className="card-title">🔐 Gerenciar Senhas</span><span style={{fontSize:10,color:"var(--text-500)"}}>Somente Administradores</span></div><div className="card-body">
+        {USERS.map(u=>(
+          <div key={u.user} className="pwd-row">
+            <div style={{flex:1}}><div style={{fontSize:13,fontWeight:700,color:"var(--text-100)"}}>{u.name}</div><div style={{fontSize:10,color:"var(--text-500)"}}>{u.user} · {roleLabel[u.role]||u.role}</div></div>
+            {pwdEdit===u.user?(
+              <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
+                <input type="password" className="form-input" style={{width:130}} placeholder="Nova senha" value={pwdValues.nova} onChange={e=>setPwdValues(v=>({...v,nova:e.target.value}))}/>
+                <input type="password" className="form-input" style={{width:130}} placeholder="Confirmar" value={pwdValues.conf} onChange={e=>setPwdValues(v=>({...v,conf:e.target.value}))}/>
+                <button className="btn primary" style={{padding:"6px 12px",fontSize:11}} onClick={()=>changePassword(u.user,pwdValues.nova,pwdValues.conf)}>✔ Salvar</button>
+                <button className="btn secondary" style={{padding:"6px 10px",fontSize:11}} onClick={()=>{setPwdEdit(null);setPwdValues({nova:"",conf:""})}}>✕</button>
+              </div>
+            ):(
+              <button className="btn secondary" style={{padding:"5px 12px",fontSize:11}} onClick={()=>{setPwdEdit(u.user);setPwdValues({nova:"",conf:""})}}>🔑 Alterar senha</button>
+            )}
+          </div>
+        ))}
+      </div></div>}
     </div>);
 
   const renderContent=()=>{switch(activeTab){case"dashboard":return renderDashboard();case"metas":return renderMetas();case"indicadores":return renderIndicadores();case"relatorios":return renderRelatorios();case"config":return renderConfig();default:return renderDashboard()}};
@@ -746,12 +1091,17 @@ function MainApp(){
           <div className="title"><button type="button" className="menu-toggle" onClick={()=>setSidebarOpen(true)}>☰</button><span style={{display:"flex",alignItems:"center",gap:6}}>{(MENU.find(m=>m.id===activeTab)||MENU[0]).icon} {(MENU.find(m=>m.id===activeTab)||MENU[0]).label}</span></div>
           <div style={{display:"flex",alignItems:"center",gap:14}}>
             <span className="date">{today}</span>
-            {!isRO&&<button type="button" onClick={save} className="btn primary" style={{padding:"6px 16px",fontSize:11}}>💾 Salvar</button>}
+            {!isRO&&<button type="button" onClick={save} className="btn primary" style={{padding:"6px 16px",fontSize:11,minWidth:90,transition:"all .2s"}}>
+              {saveBtnOk?<span className="save-ok">✔ Salvo!</span>:<>💾 Salvar</>}
+            </button>}
           </div>
         </header>
         <div className="content-area" ref={mainRef}>{renderContent()}</div>
       </div>
-      {selectedMeta&&<MetaModal meta={selectedMeta} data={data} onUpdate={updateInd} onClose={()=>setSelectedMeta(null)} readOnly={isRO}/>}
+      {selectedMeta&&<MetaModal meta={selectedMeta} data={data} onUpdate={updateInd} onClose={()=>setSelectedMeta(null)} readOnly={isRO} onAddIndicatorClick={()=>setAddIndMeta(selectedMeta)} customInds={customInds} onRemoveInd={removeCustomInd}/>}
+      {addIndMeta&&<NewIndicatorModal meta={addIndMeta} onSave={addIndicator} onClose={()=>setAddIndMeta(null)}/>}
+      {showNewMeta&&<NewMetaModal onSave={addMeta} onClose={()=>setShowNewMeta(false)} totalMetas={allMetas.length}/>}
+      {confirmDelMeta&&<ConfirmModal msg={`Excluir "${confirmDelMeta.titulo}"?`} onConfirm={()=>deleteMeta(confirmDelMeta.id)} onCancel={()=>setConfirmDelMeta(null)}/>}
     </div>);
 }
 
