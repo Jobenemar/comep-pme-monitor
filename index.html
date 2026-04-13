@@ -292,7 +292,7 @@ const USERS=[
   {user:"admin",hash:"0e70ec0b9bd9a509f8797122e2f905d7465a37a71cef9eead1a2f048bec97b99",name:"Administrador COMEP",email:"admin@pereiro.ce.gov.br",role:"admin"},
   {user:"jobenemar",hash:"8668122787294b7a60c8fbaf05fb79c741fef8056566127e98d49c0bf44517e7",name:"Jobenemar — Coordenação",email:"jobenemar@pereiro.ce.gov.br",role:"admin"},
   {user:"alcides",hash:"1f0f504d982118ec403e1c62cf37bff0b216274c34b941832ca8e7a5a6a04f3d",name:"Alcides Leite — Secretário Municipal",email:"alcides@pereiro.ce.gov.br",role:"editor"},
-  {user:"secretaria",hash:"92dd030b4d1360983b63c15a9c478e0add8d6c89c7f2e93aa28f2d4ef93b9d7d",name:"Secretaria Municipal",email:"smed@pereiro.ce.gov.br",role:"editor"},
+  {user:"secretaria",hash:"92dd030b4d1360983b63c15a9c478e0add8d6c89c7f2e93aa28f2d4ef93b9d7d",name:"Secretaria Municipal",email:"sme@pereiro.ce.gov.br",role:"editor"},
   {user:"consulta",hash:"5282d106cab36ced081317268f514604051aebe67177fb21cd017d462037a973",name:"Acesso Consulta",email:"consulta@pereiro.ce.gov.br",role:"viewer"},
 ];
 const MAX_ATTEMPTS=5,LOCKOUT_MS=300000;
@@ -323,7 +323,7 @@ const METAS_PME = [
    ]},
   {id:"3",numero:"Meta 3",titulo:"Universalização do Ensino Médio",
    descricao:"Universalizar o atendimento escolar para toda a população de 15 a 17 anos e elevar a taxa líquida de matrículas no ensino médio para 85%.",
-   eixo:"Acesso e Permanência",prioridade:"Alta",responsavel:"SEDUC-CE / SMED",prazo:"30/12/2026",
+   eixo:"Acesso e Permanência",prioridade:"Alta",responsavel:"SEDUC-CE / SME",prazo:"30/12/2026",
    pneRef:"Objetivo 4 — Meta 4.d (Novo PNE 2026)",
    estrategias:["Busca ativa de jovens 15-17 fora da escola","Programas de correção de fluxo","Articulação com educação profissional","Oferta noturna"],
    indicadores:[
@@ -332,13 +332,13 @@ const METAS_PME = [
    ]},
   {id:"4",numero:"Meta 4",titulo:"Educação especial / inclusiva",
    descricao:"Universalizar o acesso à educação básica e ao AEE para alunos com deficiência, TGD e altas habilidades.",
-   eixo:"Acesso e Permanência",prioridade:"Alta",responsavel:"SMED / NAEE",prazo:"30/12/2024",
+   eixo:"Acesso e Permanência",prioridade:"Alta",responsavel:"SME / NAEE",prazo:"30/12/2024",
    pneRef:"Objetivo 10 — Metas 10.a, 10.b (Novo PNE 2026)",
    estrategias:["Matrícula preferencial na rede regular","Oferta de AEE no NAEE","Formação em educação especial","Adequação arquitetônica"],
    indicadores:[
      {id:"i8-1",desc:"4.1 — % alunos com deficiência (4-17 anos) na educação básica",vi:80,va:100,vm:100,un:"%",fonte:"Censo INEP 2023",obs:"Meta atingida — 100% dos alunos PcD matriculados em classes comuns"},
-     {id:"i8-2",desc:"4.2 — Nº de salas de recursos multifuncionais implantadas",vi:2,va:4,vm:8,un:"un.",fonte:"SMED",obs:"Necessária ampliação — meta de 8 salas até 2026"},
-     {id:"i8-3",desc:"4.3 — Atendimento de crianças 0-3 anos com deficiência",vi:40,va:72,vm:100,un:"%",fonte:"SMED/NAEE 2023",obs:"Em progresso — cadastro e triagem em parceria com a saúde"}
+     {id:"i8-2",desc:"4.2 — Nº de salas de recursos multifuncionais implantadas",vi:2,va:4,vm:8,un:"un.",fonte:"SME",obs:"Necessária ampliação — meta de 8 salas até 2026"},
+     {id:"i8-3",desc:"4.3 — Atendimento de crianças 0-3 anos com deficiência",vi:40,va:72,vm:100,un:"%",fonte:"SME/NAEE 2023",obs:"Em progresso — cadastro e triagem em parceria com a saúde"}
    ]},
   {id:"5",numero:"Meta 5",titulo:"Alfabetização na idade certa",
    descricao:"Alfabetizar todas as crianças até o final do 3º ano do ensino fundamental.",
@@ -360,7 +360,7 @@ const METAS_PME = [
    ]},
   {id:"7",numero:"Meta 7",titulo:"Qualidade da educação básica — IDEB",
    descricao:"Fomentar a qualidade da educação básica em todas as etapas, com melhoria do fluxo escolar e da aprendizagem.",
-   eixo:"Qualidade da Educação",prioridade:"Alta",responsavel:"SMED / INEP",prazo:"30/12/2026",
+   eixo:"Qualidade da Educação",prioridade:"Alta",responsavel:"SME / INEP",prazo:"30/12/2026",
    pneRef:"Objetivo 5 — Metas 5.a, 5.b, 5.d (Novo PNE 2026 · IDEB 2023 incorporado)",
    estrategias:["Diretrizes pedagógicas por pacto interfederativo","Instrumentos de avaliação sistêmica","Políticas de inclusão e diversidade","Garantir acesso a bibliotecas e laboratórios"],
    indicadores:[
@@ -375,7 +375,7 @@ const METAS_PME = [
    ]},
   {id:"8",numero:"Meta 8",titulo:"Escolaridade da população de 18 a 29 anos",
    descricao:"Elevar a escolaridade média da população de 18 a 29 anos para no mínimo 12 anos de estudo.",
-   eixo:"Acesso e Permanência",prioridade:"Alta",responsavel:"SMED / SEDUC-CE",prazo:"30/12/2024",
+   eixo:"Acesso e Permanência",prioridade:"Alta",responsavel:"SME / SEDUC-CE",prazo:"30/12/2024",
    pneRef:"Objetivo 7 — Meta 7.a (Novo PNE 2026)",
    estrategias:["Busca ativa de jovens fora da escola","EJA para jovens","Apoio ao acesso ao ensino superior","Ações afirmativas para redução de desigualdades"],
    indicadores:[
@@ -384,31 +384,31 @@ const METAS_PME = [
    ]},
   {id:"9",numero:"Meta 9",titulo:"Alfabetização e redução do analfabetismo",
    descricao:"Elevar a taxa de alfabetização da população com 15 anos ou mais para ≥80% até 2018 e erradicar o analfabetismo absoluto até 2024.",
-   eixo:"EJA e Diversidade",prioridade:"Média",responsavel:"SMED / EJA",prazo:"30/12/2024",
+   eixo:"EJA e Diversidade",prioridade:"Média",responsavel:"SME / EJA",prazo:"30/12/2024",
    pneRef:"Objetivo 11 — Metas 11.a, 11.d, 11.e (Novo PNE 2026 · erradicação até 2035)",
    estrategias:["Oferta gratuita de EJA","Diagnóstico de demanda","Busca ativa","Programas de transporte e saúde"],
    indicadores:[
      {id:"i9-1",desc:"9.1 — Taxa de alfabetização da população ≥15 anos",vi:78,va:93,vm:99,un:"%",fonte:"IBGE PNAD 2023",obs:"Meta original ≥80% (2018) superada. Novo PNE define erradicação até 2035 — em trajetória"},
      {id:"i9-3",desc:"9.2 — Redução do analfabetismo absoluto (≥15 anos)",vi:22,va:7,vm:0,un:"%",fonte:"IBGE PNAD 2023",obs:"Redução expressiva de 22% para 7% — novo PNE define erradicação plena até 2035"},
      {id:"i9-4",desc:"9.3 — Redução do analfabetismo funcional (50% de redução)",vi:27,va:18,vm:13.5,un:"%",fonte:"IBGE/INAF 2023",obs:"Meta: reduzir 50% em relação ao índice de 2015 (27% → 13,5%) — em progresso"},
-     {id:"i9-2",desc:"Matrículas na EJA — suplementar",vi:120,va:285,vm:400,un:"alunos",fonte:"SMED",obs:"Crescimento expressivo — suplementar à Meta 9"}
+     {id:"i9-2",desc:"Matrículas na EJA — suplementar",vi:120,va:285,vm:400,un:"alunos",fonte:"SME",obs:"Crescimento expressivo — suplementar à Meta 9"}
    ]},
   {id:"10",numero:"Meta 10",titulo:"EJA integrada à educação profissional",
    descricao:"Oferecer no mínimo 10% das matrículas de EJA na forma integrada à educação profissional.",
-   eixo:"EJA e Diversidade",prioridade:"Média",responsavel:"SMED / EJA",prazo:"30/12/2024",
+   eixo:"EJA e Diversidade",prioridade:"Média",responsavel:"SME / EJA",prazo:"30/12/2024",
    pneRef:"Objetivo 12 — Meta 12.a (Novo PNE 2026)",
    estrategias:["Integração curricular EJA + técnico","Parcerias com SENAI/SENAC","Certificação profissional","Atendimento prioritário a jovens trabalhadores"],
    indicadores:[
-     {id:"i10-3",desc:"10.1 — % matrículas EJA integradas à educação profissional",vi:0,va:6,vm:10,un:"%",fonte:"SMED 2023",obs:"Meta de ≥10% de integração EJA + profissional — em progresso. Parceria com SENAC iniciada"}
+     {id:"i10-3",desc:"10.1 — % matrículas EJA integradas à educação profissional",vi:0,va:6,vm:10,un:"%",fonte:"SME 2023",obs:"Meta de ≥10% de integração EJA + profissional — em progresso. Parceria com SENAC iniciada"}
    ]},
   {id:"11",numero:"Meta 11",titulo:"Educação profissional técnica de nível médio",
    descricao:"Triplicar as matrículas da educação profissional técnica de nível médio, assegurando qualidade e expansão no segmento público.",
-   eixo:"Ed. Profissional e Superior",prioridade:"Média",responsavel:"SMED / SEDUC-CE",prazo:"30/12/2024",
+   eixo:"Ed. Profissional e Superior",prioridade:"Média",responsavel:"SME / SEDUC-CE",prazo:"30/12/2024",
    pneRef:"Objetivo 12 — Metas 12.a, 12.c (Novo PNE 2026)",
    estrategias:["Expansão de cursos técnicos","Apoio ao estágio profissional","Parcerias com setor produtivo","Oferta via IFCE EaD"],
    indicadores:[
-     {id:"i11-1",desc:"11.1 — Triplicação das matrículas em ed. profissional técnica",vi:30,va:48,vm:90,un:"alunos",fonte:"SMED",obs:"Meta de triplicar (30→90 alunos) — crescimento em andamento. Parceria com SEDUC-CE"},
-     {id:"i11-2",desc:"11.2 — % da expansão de vagas no segmento público",vi:40,va:55,vm:50,un:"%",fonte:"SMED 2023",obs:"Meta de ≥50% da expansão no público — atingida com novas turmas IFCE/EaD"}
+     {id:"i11-1",desc:"11.1 — Triplicação das matrículas em ed. profissional técnica",vi:30,va:48,vm:90,un:"alunos",fonte:"SME",obs:"Meta de triplicar (30→90 alunos) — crescimento em andamento. Parceria com SEDUC-CE"},
+     {id:"i11-2",desc:"11.2 — % da expansão de vagas no segmento público",vi:40,va:55,vm:50,un:"%",fonte:"SME 2023",obs:"Meta de ≥50% da expansão no público — atingida com novas turmas IFCE/EaD"}
    ]},
   {id:"12",numero:"Meta 12",titulo:"Educação superior — acesso e expansão",
    descricao:"Elevar a taxa bruta de matrícula na educação superior para 50% e a taxa líquida para 33% da população de 18 a 24 anos.",
@@ -440,11 +440,11 @@ const METAS_PME = [
    ]},
   {id:"15",numero:"Meta 15",titulo:"Formação inicial dos professores",
    descricao:"Garantir que todos os professores da educação básica possuam formação específica de nível superior na área de conhecimento em que atuam.",
-   eixo:"Formação e Valorização",prioridade:"Alta",responsavel:"Coordenação de Formação / SMED",prazo:"30/12/2024",
+   eixo:"Formação e Valorização",prioridade:"Alta",responsavel:"Coordenação de Formação / SME",prazo:"30/12/2024",
    pneRef:"Objetivo 16 — Metas 16.a, 16.b (Novo PNE 2026)",
    estrategias:["Levantamento de professores sem licenciatura na área","Parcerias com IES para formação emergencial","Complementações pedagógicas","Licenciaturas via EaD"],
    indicadores:[
-     {id:"i15-1",desc:"15.1 — % professores com licenciatura na área de atuação",vi:62,va:85,vm:100,un:"%",fonte:"SMED/RH 2023",obs:"Em progresso — novo PNE define 100% até 2024. Cerca de 15% ainda sem licenciatura na área"}
+     {id:"i15-1",desc:"15.1 — % professores com licenciatura na área de atuação",vi:62,va:85,vm:100,un:"%",fonte:"SME/RH 2023",obs:"Em progresso — novo PNE define 100% até 2024. Cerca de 15% ainda sem licenciatura na área"}
    ]},
   {id:"16",numero:"Meta 16",titulo:"Formação continuada e pós-graduação dos professores",
    descricao:"Garantir formação continuada para todos os profissionais da educação básica e pós-graduação para pelo menos 50% dos professores.",
@@ -452,16 +452,16 @@ const METAS_PME = [
    pneRef:"Objetivo 17 — Metas 17.a, 17.f (Novo PNE 2026)",
    estrategias:["Planejamento estratégico de formação","Parcerias com IES","Formação em serviço focada em práticas pedagógicas","Incentivo à pós-graduação"],
    indicadores:[
-     {id:"i4-2",desc:"16.1 — % professores com pós-graduação (especialização+)",vi:15,va:45,vm:50,un:"%",fonte:"SMED/RH 2023",obs:"Meta de ≥50% quase atingida — crescimento consistente"},
-     {id:"i4-1",desc:"16.2 — % profissionais da educação com formação continuada anual",vi:40,va:88,vm:100,un:"%",fonte:"SMED/RH 2023",obs:"Bom progresso — necessário alcançar 100%"}
+     {id:"i4-2",desc:"16.1 — % professores com pós-graduação (especialização+)",vi:15,va:45,vm:50,un:"%",fonte:"SME/RH 2023",obs:"Meta de ≥50% quase atingida — crescimento consistente"},
+     {id:"i4-1",desc:"16.2 — % profissionais da educação com formação continuada anual",vi:40,va:88,vm:100,un:"%",fonte:"SME/RH 2023",obs:"Bom progresso — necessário alcançar 100%"}
    ]},
   {id:"17",numero:"Meta 17",titulo:"Valorização dos profissionais do magistério",
    descricao:"Valorizar os profissionais do magistério das redes públicas, equiparando seu rendimento médio ao dos demais profissionais com escolaridade equivalente.",
-   eixo:"Formação e Valorização",prioridade:"Alta",responsavel:"Prefeitura / SMED",prazo:"30/12/2024",
+   eixo:"Formação e Valorização",prioridade:"Alta",responsavel:"Prefeitura / SME",prazo:"30/12/2024",
    pneRef:"Objetivo 18 — Meta 18.a (Novo PNE 2026)",
    estrategias:["Acompanhamento do piso salarial nacional","Revisão anual do plano de cargos","Incentivos de produtividade","Transparência salarial"],
    indicadores:[
-     {id:"i17-1",desc:"17.1 — Equiparação do rendimento docente a profissionais de escolaridade equivalente",vi:78,va:92,vm:100,un:"%",fonte:"SMED/RH 2023",obs:"Em progresso — piso salarial nacional cumprido. Meta de equiparação plena até 2024"}
+     {id:"i17-1",desc:"17.1 — Equiparação do rendimento docente a profissionais de escolaridade equivalente",vi:78,va:92,vm:100,un:"%",fonte:"SME/RH 2023",obs:"Em progresso — piso salarial nacional cumprido. Meta de equiparação plena até 2024"}
    ]},
   {id:"18",numero:"Meta 18",titulo:"Plano de carreira dos profissionais da educação",
    descricao:"Assegurar planos de carreira para os profissionais da educação básica pública, com base no piso salarial nacional.",
@@ -469,17 +469,17 @@ const METAS_PME = [
    pneRef:"Objetivo 18 — Metas 18.a, 18.b (Novo PNE 2026)",
    estrategias:["Revisão do Estatuto do Magistério","Concurso público para vagas efetivas","Progressão por titulação e tempo de serviço","Transparência nos planos de carreira"],
    indicadores:[
-     {id:"i18-1",desc:"18.1 — Plano de carreira com piso nacional reestruturado",vi:0,va:100,vm:100,un:"%",fonte:"Prefeitura/SMED 2023",obs:"Concluído — Estatuto do Magistério municipal atualizado. Prazo original: 2017"},
-     {id:"i18-2",desc:"18.2 — % magistério em cargo efetivo (concurso público)",vi:62,va:78,vm:90,un:"%",fonte:"SMED/RH 2023",obs:"Meta de ≥90% no 3º ano do PME — em progresso"},
-     {id:"i18-3",desc:"18.3 — % profissionais não docentes em cargo efetivo",vi:45,va:65,vm:80,un:"%",fonte:"SMED/RH 2023",obs:"Meta de ≥80% no 3º ano do PME — em progresso"}
+     {id:"i18-1",desc:"18.1 — Plano de carreira com piso nacional reestruturado",vi:0,va:100,vm:100,un:"%",fonte:"Prefeitura/SME 2023",obs:"Concluído — Estatuto do Magistério municipal atualizado. Prazo original: 2017"},
+     {id:"i18-2",desc:"18.2 — % magistério em cargo efetivo (concurso público)",vi:62,va:78,vm:90,un:"%",fonte:"SME/RH 2023",obs:"Meta de ≥90% no 3º ano do PME — em progresso"},
+     {id:"i18-3",desc:"18.3 — % profissionais não docentes em cargo efetivo",vi:45,va:65,vm:80,un:"%",fonte:"SME/RH 2023",obs:"Meta de ≥80% no 3º ano do PME — em progresso"}
    ]},
   {id:"19",numero:"Meta 19",titulo:"Gestão democrática da educação",
    descricao:"Assegurar condições para a efetivação da gestão democrática da educação, garantindo autonomia pedagógica, administrativa e financeira.",
-   eixo:"Gestão e Financiamento",prioridade:"Média",responsavel:"COMEP / SMED",prazo:"30/12/2024",
+   eixo:"Gestão e Financiamento",prioridade:"Média",responsavel:"COMEP / SME",prazo:"30/12/2024",
    pneRef:"Objetivo 19 — Meta 19.a (Novo PNE 2026)",
    estrategias:["Eleição direta para diretores","Fortalecimento dos conselhos escolares","Participação da comunidade no PPP","Transparência das informações escolares"],
    indicadores:[
-     {id:"i19-1",desc:"19.1 — Condições para gestão democrática efetivadas",vi:0,va:100,vm:100,un:"%",fonte:"SMED/COMEP 2023",obs:"Concluído — legislação municipal aprovada e eleições para diretores realizadas. Prazo: 2017"},
+     {id:"i19-1",desc:"19.1 — Condições para gestão democrática efetivadas",vi:0,va:100,vm:100,un:"%",fonte:"SME/COMEP 2023",obs:"Concluído — legislação municipal aprovada e eleições para diretores realizadas. Prazo: 2017"},
      {id:"i19-2",desc:"19.2 — Fundo Municipal de Educação (FME) constituído",vi:0,va:100,vm:100,un:"%",fonte:"Prefeitura/Câmara 2023",obs:"FME instalado e em funcionamento — reuniões periódicas realizadas"}
    ]},
   {id:"20",numero:"Meta 20",titulo:"Financiamento da educação",
@@ -501,6 +501,7 @@ const STORAGE_KEY="pme-pereiro-v8";
 const CUSTOM_METAS_KEY="pme-pereiro-v8-metas";
 const DELETED_KEY="pme-pereiro-v8-deleted";
 const CUSTOM_INDS_KEY="pme-pereiro-v8-inds";
+const DELETED_INDS_KEY="pme-pereiro-v8-del-inds";
 const MENU=[{id:"dashboard",label:"Dashboard",icon:"📊"},{id:"metas",label:"Metas",icon:"🎯"},{id:"indicadores",label:"Indicadores",icon:"📈"},{id:"relatorios",label:"Relatórios",icon:"📄"},{id:"config",label:"Configurações",icon:"⚙️"}];
 const roleLabel={admin:"Administrador",editor:"Editor",viewer:"Somente leitura"};
 
@@ -712,7 +713,7 @@ function NewIndicatorModal({meta,onSave,onClose}){
   const set=k=>e=>setForm(f=>({...f,[k]:e.target.value}));
   const submit=()=>{
     if(!form.desc.trim()||form.vi===""||form.va===""||form.vm===""){setErr("Preencha nome, valor inicial, valor atual e meta.");return}
-    onSave(meta.id,{id:`cind-${Date.now()}`,desc:sanitize(form.desc),vi:parseFloat(form.vi)||0,va:parseFloat(form.va)||0,vm:parseFloat(form.vm)||0,un:form.un||"%",obs:sanitize(form.obs),fonte:"SMED"});
+    onSave(meta.id,{id:`cind-${Date.now()}`,desc:sanitize(form.desc),vi:parseFloat(form.vi)||0,va:parseFloat(form.va)||0,vm:parseFloat(form.vm)||0,un:form.un||"%",obs:sanitize(form.obs),fonte:"SME"});
     onClose();};
   return(
     <div className="confirm-overlay" onClick={e=>e.target===e.currentTarget&&onClose()}>
@@ -740,9 +741,9 @@ function NewIndicatorModal({meta,onSave,onClose}){
 }
 
 /* ═══ META DETAIL MODAL ═══ */
-function MetaModal({meta,data,onUpdate,onClose,readOnly,onAddIndicatorClick,customInds,onRemoveInd}){
+function MetaModal({meta,data,onUpdate,onClose,readOnly,onAddIndicatorClick,customInds,onRemoveInd,deletedIndIds}){
   const[tab,setTab]=useState("detalhes");
-  const builtIn=meta.indicadores.map(ind=>{const d=data[ind.id]||{};return{...ind,va:d.va!==undefined?d.va:ind.va,obs:d.obs||ind.obs,_custom:false}});
+  const builtIn=meta.indicadores.filter(i=>!deletedIndIds.includes(i.id)).map(ind=>{const d=data[ind.id]||{};return{...ind,va:d.va!==undefined?d.va:ind.va,obs:d.obs||ind.obs,_custom:false}});
   const extra=((customInds&&customInds[meta.id])||[]).map(ind=>{const d=data[ind.id]||{};return{...ind,va:d.va!==undefined?d.va:ind.va,obs:d.obs||ind.obs,_custom:true}});
   const inds=[...builtIn,...extra];
   const avgProg=inds.length>0?inds.reduce((s,i)=>s+calcProg(i.vi,i.va,i.vm),0)/inds.length:0;
@@ -796,7 +797,7 @@ function MetaModal({meta,data,onUpdate,onClose,readOnly,onAddIndicatorClick,cust
               <div key={ind.id} className="ind-card">
                 <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:10,marginBottom:10}}>
                   <div style={{fontSize:14,fontWeight:700,color:"var(--text-100)",lineHeight:1.4,flex:1}}>{ind.desc}{ind._custom&&<span style={{marginLeft:6,fontSize:9,fontWeight:700,background:"rgba(59,130,246,.15)",color:"var(--blue)",borderRadius:4,padding:"1px 5px",verticalAlign:"middle"}}>CUSTOM</span>}</div>
-                  {!readOnly&&ind._custom&&<button style={{background:"none",border:"none",color:"var(--text-600)",cursor:"pointer",fontSize:16,flexShrink:0,padding:2}} title="Remover indicador" onClick={()=>onRemoveInd(meta.id,ind.id)}>🗑️</button>}
+                  {!readOnly&&<button style={{background:"none",border:"none",color:"var(--text-600)",cursor:"pointer",fontSize:16,flexShrink:0,padding:2,transition:"color .15s"}} title="Remover indicador" onClick={()=>onRemoveInd(meta.id,ind.id)} onMouseOver={e=>e.currentTarget.style.color="#ef4444"} onMouseOut={e=>e.currentTarget.style.color="var(--text-600)"}>🗑️</button>}
                 </div>
                 <div className="ind-grid">
                   <div className="item"><div className="label">Inicial</div><div className="value" style={{color:"var(--text-400)"}}>{ind.vi} {ind.un}</div></div>
@@ -820,12 +821,12 @@ function MetaModal({meta,data,onUpdate,onClose,readOnly,onAddIndicatorClick,cust
 }
 
 /* ═══ REPORT GENERATOR ═══ */
-function generateReport(metas,data,userName,customInds={}){
+function generateReport(metas,data,userName,customInds={},deletedIndIds=[]){
   const d=new Date().toLocaleDateString("pt-BR",{day:"2-digit",month:"long",year:"numeric"});
   const stColors={"concluida":"#16a34a","andamento":"#d97706","atrasada":"#dc2626","nao-iniciada":"#64748b"};
   let total=0,concl=0,andamento=0,atrasada=0,naoIniciada=0,totalProg=0;
   metas.forEach(m=>{
-    const allI=[...m.indicadores,...(customInds[m.id]||[])].map(i=>({...i,va:data[i.id]?.va!==undefined?data[i.id].va:i.va}));
+    const allI=[...m.indicadores.filter(i=>!deletedIndIds.includes(i.id)),...(customInds[m.id]||[])].map(i=>({...i,va:data[i.id]?.va!==undefined?data[i.id].va:i.va}));
     const avg=allI.length>0?allI.reduce((s,i)=>s+calcProg(i.vi,i.va,i.vm),0)/allI.length:0;
     const st=getStatus(avg);total++;totalProg+=avg;
     if(st==="concluida")concl++;else if(st==="andamento")andamento++;else if(st==="atrasada")atrasada++;else naoIniciada++;
@@ -837,7 +838,7 @@ function generateReport(metas,data,userName,customInds={}){
     const ec=eixoColors[eixo]||"#64748b";
     rows+=`<tr><td colspan="6" style="background:${ec}18;padding:12px 14px;font-weight:800;font-size:14px;color:${ec};border-left:4px solid ${ec};border-bottom:2px solid ${ec}30">◎ ${eixo}</td></tr>`;
     ems.forEach(m=>{
-      const allI=[...m.indicadores,...(customInds[m.id]||[])].map(i=>({...i,va:data[i.id]?.va!==undefined?data[i.id].va:i.va,obs:data[i.id]?.obs||i.obs}));
+      const allI=[...m.indicadores.filter(i=>!deletedIndIds.includes(i.id)),...(customInds[m.id]||[])].map(i=>({...i,va:data[i.id]?.va!==undefined?data[i.id].va:i.va,obs:data[i.id]?.obs||i.obs}));
       const avg=allI.length>0?allI.reduce((s,i)=>s+calcProg(i.vi,i.va,i.vm),0)/allI.length:0;
       const st=getStatus(avg);const stc=stColors[st]||"#64748b";
       rows+=`<tr style="background:#f8fafc"><td colspan="6" style="padding:10px 14px;font-weight:700;font-size:12px;color:#1e293b;border-left:4px solid ${stc}">${m.numero}: ${m.titulo} <span style="font-size:10px;background:${stc}20;color:${stc};padding:2px 8px;border-radius:10px;margin-left:6px">${statusLabel[st]} · ${avg.toFixed(0)}%</span></td></tr>`;
@@ -883,6 +884,7 @@ function MainApp(){
   const[customMetas,setCustomMetas]=useState(()=>{try{const r=localStorage.getItem(CUSTOM_METAS_KEY);return r?JSON.parse(r):[]}catch{return[]}});
   const[deletedMetaIds,setDeletedMetaIds]=useState(()=>{try{const r=localStorage.getItem(DELETED_KEY);return r?JSON.parse(r):[]}catch{return[]}});
   const[customInds,setCustomInds]=useState(()=>{try{const r=localStorage.getItem(CUSTOM_INDS_KEY);return r?JSON.parse(r):{}}catch{return{}}});
+  const[deletedIndIds,setDeletedIndIds]=useState(()=>{try{const r=localStorage.getItem(DELETED_INDS_KEY);return r?JSON.parse(r):[]}catch{return[]}});
   const[sidebarOpen,setSidebarOpen]=useState(false);
   const[selectedMeta,setSelectedMeta]=useState(null);
   const[filterEixo,setFilterEixo]=useState("Todos os Eixos");
@@ -918,12 +920,14 @@ function MainApp(){
       if(d.customMetas)setCustomMetas(d.customMetas);
       if(d.deletedMetaIds)setDeletedMetaIds(d.deletedMetaIds);
       if(d.customInds)setCustomInds(d.customInds);
+      if(d.deletedIndIds)setDeletedIndIds(d.deletedIndIds);
       // Also update localStorage as cache
       try{
         if(d.data)localStorage.setItem(STORAGE_KEY,JSON.stringify(d.data));
         if(d.customMetas)localStorage.setItem(CUSTOM_METAS_KEY,JSON.stringify(d.customMetas));
         if(d.deletedMetaIds)localStorage.setItem(DELETED_KEY,JSON.stringify(d.deletedMetaIds));
         if(d.customInds)localStorage.setItem(CUSTOM_INDS_KEY,JSON.stringify(d.customInds));
+        if(d.deletedIndIds)localStorage.setItem(DELETED_INDS_KEY,JSON.stringify(d.deletedIndIds));
       }catch{}
       setSyncStatus("synced");
       setTimeout(()=>{isRemoteUpdate.current=false},100);
@@ -950,12 +954,13 @@ function MainApp(){
       localStorage.setItem(CUSTOM_METAS_KEY,JSON.stringify(customMetas));
       localStorage.setItem(DELETED_KEY,JSON.stringify(deletedMetaIds));
       localStorage.setItem(CUSTOM_INDS_KEY,JSON.stringify(customInds));
+      localStorage.setItem(DELETED_INDS_KEY,JSON.stringify(deletedIndIds));
     }catch{}
     // Save to Firestore if available
     if(FIREBASE_OK&&db&&loggedUser){
       setSyncStatus("saving");
       db.doc(FIRESTORE_DOC).set({
-        data,customMetas,deletedMetaIds,customInds,
+        data,customMetas,deletedMetaIds,customInds,deletedIndIds,
         _updatedAt:Date.now(),_updatedBy:loggedUser.user
       },{merge:true}).then(()=>{
         setSyncStatus("synced");
@@ -971,7 +976,7 @@ function MainApp(){
       setAutoSaveState("saved");
       setTimeout(()=>setAutoSaveState("idle"),2000);
     }
-  },[data,customMetas,deletedMetaIds,customInds,loggedUser]);
+  },[data,customMetas,deletedMetaIds,customInds,deletedIndIds,loggedUser]);
 
   /* ═══ AUTO-SAVE with debounce — skip remote updates ═══ */
   useEffect(()=>{
@@ -981,7 +986,7 @@ function MainApp(){
     setAutoSaveState("saving");
     autoSaveTimer.current=setTimeout(persistAll,1500);
     return()=>{if(autoSaveTimer.current)clearTimeout(autoSaveTimer.current)};
-  },[data,customMetas,deletedMetaIds,customInds,loggedUser,persistAll]);
+  },[data,customMetas,deletedMetaIds,customInds,deletedIndIds,loggedUser,persistAll]);
 
   const save=useCallback(()=>{
     if(autoSaveTimer.current)clearTimeout(autoSaveTimer.current);
@@ -1009,8 +1014,13 @@ function MainApp(){
     showToast("Indicador adicionado");setAddIndMeta(null);
   },[showToast]);
 
-  const removeCustomInd=useCallback((metaId,indId)=>{
-    setCustomInds(prev=>({...prev,[metaId]:(prev[metaId]||[]).filter(i=>i.id!==indId)}));
+  const removeIndicator=useCallback((metaId,indId)=>{
+    const isCustom=indId.startsWith("cind-");
+    if(isCustom){
+      setCustomInds(prev=>({...prev,[metaId]:(prev[metaId]||[]).filter(i=>i.id!==indId)}));
+    } else {
+      setDeletedIndIds(prev=>[...prev,indId]);
+    }
     showToast("Indicador removido");
   },[showToast]);
 
@@ -1032,12 +1042,12 @@ function MainApp(){
 
   const allMetas=useMemo(()=>[...METAS_PME.filter(m=>!deletedMetaIds.includes(m.id)),...customMetas],[deletedMetaIds,customMetas]);
 
-  const allInds=useMemo(()=>allMetas.flatMap(m=>[...m.indicadores,...(customInds[m.id]||[])].map(i=>({...i,va:data[i.id]?.va!==undefined?data[i.id].va:i.va,metaNum:m.numero}))),[data,allMetas,customInds]);
+  const allInds=useMemo(()=>allMetas.flatMap(m=>[...m.indicadores.filter(i=>!deletedIndIds.includes(i.id)),...(customInds[m.id]||[])].map(i=>({...i,va:data[i.id]?.va!==undefined?data[i.id].va:i.va,metaNum:m.numero}))),[data,allMetas,customInds,deletedIndIds]);
 
   const metaStats=useMemo(()=>allMetas.map(m=>{
-    const inds=[...m.indicadores,...(customInds[m.id]||[])].map(i=>({...i,va:data[i.id]?.va!==undefined?data[i.id].va:i.va}));
+    const inds=[...m.indicadores.filter(i=>!deletedIndIds.includes(i.id)),...(customInds[m.id]||[])].map(i=>({...i,va:data[i.id]?.va!==undefined?data[i.id].va:i.va}));
     const avg=inds.length>0?inds.reduce((s,i)=>s+calcProg(i.vi,i.va,i.vm),0)/inds.length:0;
-    return{...m,avgProg:avg,status:getStatus(avg)}}),[data,allMetas,customInds]);
+    return{...m,avgProg:avg,status:getStatus(avg)}}),[data,allMetas,customInds,deletedIndIds]);
 
   const counts=useMemo(()=>{const c={concluida:0,andamento:0,atrasada:0,"nao-iniciada":0};metaStats.forEach(m=>c[m.status]++);return c},[metaStats]);
 
@@ -1158,7 +1168,7 @@ function MainApp(){
           <thead><tr style={{background:"rgba(0,0,0,.15)"}}>
             {["Meta","Indicador","Base","Atual","Meta PME","Progresso","Status","Fonte"].map(h=><th key={h} style={{padding:"10px 12px",textAlign:"left",fontSize:9,fontWeight:700,color:"var(--text-500)",textTransform:"uppercase",letterSpacing:.7,borderBottom:"1px solid var(--bg-700)"}}>{h}</th>)}
           </tr></thead>
-          <tbody>{allMetas.flatMap(m=>[...m.indicadores,...(customInds[m.id]||[])].map(ind=>{const va=data[ind.id]?.va!==undefined?data[ind.id].va:ind.va;const p=calcProg(ind.vi,va,ind.vm);const st=getStatus(p);
+          <tbody>{allMetas.flatMap(m=>[...m.indicadores.filter(i=>!deletedIndIds.includes(i.id)),...(customInds[m.id]||[])].map(ind=>{const va=data[ind.id]?.va!==undefined?data[ind.id].va:ind.va;const p=calcProg(ind.vi,va,ind.vm);const st=getStatus(p);
             return<tr key={ind.id} style={{borderTop:"1px solid rgba(148,163,184,.04)",transition:"background .15s",cursor:"pointer"}} onClick={()=>setSelectedMeta(allMetas.find(x=>x.id===m.id))} onMouseOver={e=>e.currentTarget.style.background="rgba(255,255,255,.02)"} onMouseOut={e=>e.currentTarget.style.background="transparent"}>
               <td style={{padding:"8px 12px",fontWeight:700,color:"var(--emerald)",fontSize:10,whiteSpace:"nowrap"}}>{m.numero.replace("Meta ","M")}</td>
               <td style={{padding:"8px 12px",color:"var(--text-200)",fontWeight:500,maxWidth:240}}>{ind.desc}{ind.id&&ind.id.startsWith("cind-")&&<span style={{marginLeft:4,fontSize:8,background:"rgba(59,130,246,.15)",color:"var(--blue)",borderRadius:3,padding:"0 3px"}}>C</span>}</td>
@@ -1167,7 +1177,7 @@ function MainApp(){
               <td style={{padding:"8px 12px",color:"var(--amber-l)",fontWeight:600,fontFamily:"'JetBrains Mono'",fontSize:10}}>{ind.vm} {ind.un}</td>
               <td style={{padding:"8px 12px"}}><div className="progress-bar" style={{width:60,height:4,display:"inline-block",verticalAlign:"middle",marginRight:6}}><div className="progress-fill" style={{width:`${p}%`,background:statusColor[st]}}/></div><span style={{fontSize:10,fontWeight:700,fontFamily:"'JetBrains Mono'",color:statusColor[st]}}>{p.toFixed(0)}%</span></td>
               <td style={{padding:"8px 12px"}}><span className={`status-badge status-${st}`} style={{fontSize:9}}>{statusLabel[st]}</span></td>
-              <td style={{padding:"8px 12px",color:"var(--text-500)",fontSize:9,maxWidth:120}}>{ind.fonte||"SMED"}</td>
+              <td style={{padding:"8px 12px",color:"var(--text-500)",fontSize:9,maxWidth:120}}>{ind.fonte||"SME"}</td>
             </tr>}))}</tbody>
         </table>
       </div></div>
@@ -1179,14 +1189,14 @@ function MainApp(){
       <div style={{marginBottom:20}}><h2 style={{fontSize:22,fontWeight:800,color:"var(--text-50)"}}>Relatórios</h2><p style={{color:"var(--text-500)",fontSize:13}}>Gere relatórios para impressão ou PDF</p></div>
       <div className="card" style={{marginBottom:16}}><div className="card-header"><span className="card-title">📄 Relatório Geral Completo</span></div><div className="card-body">
         <p style={{fontSize:12,color:"var(--text-400)",marginBottom:14,lineHeight:1.6}}>Relatório com todas as {allMetas.length} metas, {allInds.length} indicadores, valores atuais e diagnóstico para o novo PME 2026–2036.</p>
-        <button className="btn report" onClick={()=>generateReport(allMetas,data,loggedUser.name,customInds)}>📄 Gerar Relatório Geral</button>
+        <button className="btn report" onClick={()=>generateReport(allMetas,data,loggedUser.name,customInds,deletedIndIds)}>📄 Gerar Relatório Geral</button>
       </div></div>
       <div className="card"><div className="card-header"><span className="card-title">📊 Relatórios por Eixo</span></div><div className="card-body">
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
           {EIXOS.slice(1).map(eixo=>{const ms=allMetas.filter(m=>m.eixo===eixo);if(ms.length===0)return null;const avg=metaStats.filter(m=>m.eixo===eixo).reduce((s,m)=>s+m.avgProg,0)/Math.max(ms.length,1);
-            return<div key={eixo} style={{background:"rgba(0,0,0,.15)",borderRadius:12,padding:16,border:"1px solid var(--bg-700)",cursor:"pointer",transition:"all .2s"}} onClick={()=>generateReport(ms,data,loggedUser.name,customInds)} onMouseOver={e=>e.currentTarget.style.borderColor="rgba(16,185,129,.25)"} onMouseOut={e=>e.currentTarget.style.borderColor="var(--bg-700)"}>
+            return<div key={eixo} style={{background:"rgba(0,0,0,.15)",borderRadius:12,padding:16,border:"1px solid var(--bg-700)",cursor:"pointer",transition:"all .2s"}} onClick={()=>generateReport(ms,data,loggedUser.name,customInds,deletedIndIds)} onMouseOver={e=>e.currentTarget.style.borderColor="rgba(16,185,129,.25)"} onMouseOut={e=>e.currentTarget.style.borderColor="var(--bg-700)"}>
               <div style={{fontWeight:700,color:"var(--text-100)",fontSize:13,marginBottom:4}}>{eixo}</div>
-              <div style={{fontSize:10,color:"var(--text-500)",marginBottom:10}}>{ms.length} metas · {ms.flatMap(m=>[...m.indicadores,...(customInds[m.id]||[])]).length} indicadores</div>
+              <div style={{fontSize:10,color:"var(--text-500)",marginBottom:10}}>{ms.length} metas · {ms.flatMap(m=>[...m.indicadores.filter(i=>!deletedIndIds.includes(i.id)),...(customInds[m.id]||[])]).length} indicadores</div>
               <div className="progress-bar" style={{height:5,marginBottom:8}}><div className="progress-fill" style={{width:`${avg}%`,background:avg>=80?"#16a34a":avg>=50?"#d97706":"#dc2626"}}/></div>
               <span style={{fontSize:10,color:"var(--blue)",fontWeight:600}}>📄 Gerar Relatório →</span>
             </div>})}
@@ -1265,7 +1275,7 @@ function MainApp(){
         </header>
         <div className="content-area" ref={mainRef}>{renderContent()}</div>
       </div>
-      {selectedMeta&&<MetaModal meta={selectedMeta} data={data} onUpdate={updateInd} onClose={()=>setSelectedMeta(null)} readOnly={isRO} onAddIndicatorClick={()=>setAddIndMeta(selectedMeta)} customInds={customInds} onRemoveInd={removeCustomInd}/>}
+      {selectedMeta&&<MetaModal meta={selectedMeta} data={data} onUpdate={updateInd} onClose={()=>setSelectedMeta(null)} readOnly={isRO} onAddIndicatorClick={()=>setAddIndMeta(selectedMeta)} customInds={customInds} onRemoveInd={removeIndicator} deletedIndIds={deletedIndIds}/>}
       {addIndMeta&&<NewIndicatorModal meta={addIndMeta} onSave={addIndicator} onClose={()=>setAddIndMeta(null)}/>}
       {showNewMeta&&<NewMetaModal onSave={addMeta} onClose={()=>setShowNewMeta(false)} totalMetas={allMetas.length}/>}
       {confirmDelMeta&&<ConfirmModal msg={`Excluir "${confirmDelMeta.titulo}"?`} onConfirm={()=>deleteMeta(confirmDelMeta.id)} onCancel={()=>setConfirmDelMeta(null)}/>}
