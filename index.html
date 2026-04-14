@@ -82,12 +82,12 @@ input,select,textarea,button{font-family:inherit}
 <script type="text/babel">
 const {useState,useEffect,useCallback,useRef,useMemo}=React;
 const FIREBASE_CONFIG = {
-  apiKey: "SUA_API_KEY",
-  authDomain: "SEU_PROJETO.firebaseapp.com",
-  projectId: "SEU_PROJETO",
-  storageBucket: "SEU_PROJETO.appspot.com",
-  messagingSenderId: "000000000000",
-  appId: "1:000000000000:web:xxxxxxxxxxxxxxxx"
+  apiKey: "AIzaSy...",           // ← do console Firebase
+  authDomain: "pme-pereiro-monitor.firebaseapp.com",
+  projectId: "pme-pereiro-monitor",
+  storageBucket: "pme-pereiro-monitor.appspot.com",
+  messagingSenderId: "123456789",
+  appId: "1:123456789:web:abc123"
 };
 let db = null;let FIREBASE_OK = false;
 try{if(FIREBASE_CONFIG.apiKey!=="SUA_API_KEY"){firebase.initializeApp(FIREBASE_CONFIG);db=firebase.firestore();db.enablePersistence({synchronizeTabs:true}).catch(()=>{});FIREBASE_OK=true;console.log("✅ Firebase conectado")}else{console.warn("⚠️ Firebase não configurado — usando localStorage")}}catch(e){console.warn("⚠️ Firebase indisponível",e)}
